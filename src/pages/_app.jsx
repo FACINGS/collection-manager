@@ -4,13 +4,13 @@ import Footer from '@components/Footer';
 import { ChainProvider } from '@contexts/ChainContext';
 
 function MyApp({ Component, pageProps }) {
-    return (
-        <ChainProvider>
-            <Header />
-            <Component {...pageProps} />
-            <Footer />
-        </ChainProvider>
-    )
+  return (
+    <ChainProvider>
+      <Header />
+      <Component {...pageProps} />
+      <Footer />
+    </ChainProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;

@@ -5,7 +5,6 @@
 1. Anchor
 2. If testing locally: either (a) js dev env or (b) docker.
 
-
 ## 1. Running the app
 
 Option 1. Locally: `yarn dev`
@@ -18,9 +17,7 @@ Option 3. Public dev instance
 
 https://collectionmanager.test.facings.io
 
-
 ## 2. Testing Milestone 1 deliverables
-
 
 ### Deliverable 1: Base Implementation
 
@@ -28,13 +25,11 @@ https://collectionmanager.test.facings.io
 
 Navigating to the app, you will see a list of collections with "about section" near the bottom, and login functionality in the header.
 
-
 ### Deliverable 2: Login & Account
 
-> When logged in, (a) show account, (b) RAM usage, (c) log out link, and (d) list of user's collections 
+> When logged in, (a) show account, (b) RAM usage, (c) log out link, and (d) list of user's collections
 
 Proceed to login. The app will ask you to launch Anchor to authenticate. Once you do so, you will notice that your account name is in the header. Clicking it will show your current RAM usage, as well as a link to log out. If you have logged in with an account which has already published collections, you will be seeing them now as well.
-
 
 ### Deliverable 3: Collection viewer
 
