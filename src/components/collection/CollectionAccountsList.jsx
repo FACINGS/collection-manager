@@ -60,8 +60,7 @@ export function CollectionAccountsList({ accounts, collection }) {
                                 </button>
                             ) 
                         }
-                    </div>
-                    
+                    </div>                    
                 )}
             </div>
         </div>

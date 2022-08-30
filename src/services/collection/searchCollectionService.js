@@ -1,8 +1,8 @@
 import api from '@services/api';
 
-export async function searchCollectionService({ match, page, offset }) {
+export async function searchCollectionService({ match, author, page, offset }) {
     try {
-        const response = await api.get(`/atomicassets/v1/collections?match=${match}`, {
+        const response = await api.get(`/atomicassets/v1/collections?${author ? `author=${author}&` : ''}match=${match}`, {
             params: {
                 page: page || 1,
                 limit: 12,

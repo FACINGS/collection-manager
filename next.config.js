@@ -7,7 +7,7 @@ const nextConfig = {
       domains: [
         'wax.bloks.io',
         'bloks.io',
-        'ipfs.ledgerwise.io',
+        'facings.mypinata.cloud',
         'robohash.org'
       ],
   },

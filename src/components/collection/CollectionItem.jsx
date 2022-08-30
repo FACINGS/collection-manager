@@ -34,7 +34,7 @@ export function CollectionItem(collection) {
                     {collection.name || 'No name'}
                 </p>
                 <p className="text-primary">
-                    By {collection.author}
+                    by {collection.author}
                 </p>
             </div>
         </div>

@@ -1,5 +1,5 @@
 
-export default function About() {    
+export function About() {    
     return (
         <div id="about" className="container mx-auto flex flex-col gap-4 px-4"> 
             <h2 className="text-4xl text-center">About</h2>

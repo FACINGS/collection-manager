@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { ipfsEndpoint } from '@configs/globalsConfig';
-import Image from 'next/image';
 import { collectionShowMore } from '@hooks/collectionShowMore';
 import { collectionTemplatesService } from '@services/collection/collectionTemplatesService';
 import { LoadingIcon } from '@components/icons/LoadingIcon';
+import { CollectionCard } from '@components/collection/CollectionCard';
 
 export function CollectionTemplatesList({ templates, collection, totalTemplates }) {
 
@@ -27,26 +26,7 @@ export function CollectionTemplatesList({ templates, collection, totalTemplates 
                 <div className="w-full flex flex-row flex-wrap justify-start max-w-screen-md">
                     { 
                         templatesList.map((template, index) => {
-                            return (
-                                <div key={index} className="flex flex-col items-center m-4 w-fit h-fit">
-                                    <div className="bg-primary w-auto flex justify-start rounded-t-lg overflow-hidden">
-                                        { template.immutable_data.video ? 
-                                            <video muted autoPlay loop playsInline className="w-40 h-40 object-cover">
-                                                <source src={`${ipfsEndpoint}/${template.immutable_data.video}`} type="video/mp4" />
-                                            </video>
-                                        : 
-                                            <Image alt={template.name} src={`${ipfsEndpoint}/${template.immutable_data.img}`} width="160" height="160" objectFit="cover"/>
-                                        }
-                                    </div>
-                                    <div className={`w-40 h-fit shadow-md p-2 max-w-40 rounded-b-lg flex flex-col bg-primary text-white text-center items-center relative`}>
-                                        <h3 className="text-base font-bold border-solid border-white border-2 rounded-full w-fit px-4 absolute -top-[20%] bg-primary">#{template.template_id}</h3>                      
-                                        <div className="flex flex-col text-white text-center pt-2 w-full">                    
-                                            <p className="text-base font-bold w-full truncate">{template.name ? template.name : 'No name'}</p>
-                                            <p className="text-sm">{template.issued_supply} Assets</p>                        
-                                        </div>
-                                    </div>
-                                </div>
-                            )
+                            return <CollectionCard item={template} key={index} isTemplate />;                            
                         })
                     }
                 </div>
