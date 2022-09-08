@@ -2,7 +2,7 @@
 
 An NFT Collection Manager for the EOS/AtomicAssets ecosystem built by [FACINGS](https://facings.io) as per our [ENF Grant Proposal](https://github.com/eosnetworkfoundation/grant-framework/blob/main/applications/facings-nft-collection-manager.md).
 
-This project is meant to both work as a stand-alone NFT publishing platform, as well as a launchpad for NFT developers on WAX.
+This project is meant to both work as a stand-alone NFT publishing platform, as well as a launchpad for NFT developers on EOS.
 
 
 The core feature set is very simple:
