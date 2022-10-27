@@ -1,6 +1,6 @@
 module.exports = {
-    appName: process.env.NEXT_PUBLIC_APP_NAME,
-    aaEndpoint: process.env.NEXT_PUBLIC_AA_ENDPOINT,
-    ipfsEndpoint: process.env.NEXT_PUBLIC_IPFS_ENDPOINT,
-    enableChainSelection: process.env.NEXT_PUBLIC_ENABLE_CHAIN_SELECTION === 'true',
+  appName: process.env.NEXT_PUBLIC_APP_NAME,
+  ipfsEndpoint: process.env.NEXT_PUBLIC_IPFS_ENDPOINT,
+  ipfsJwt: process.env.NEXT_PUBLIC_IPFS_API_JWT,
+  chainKeyDefault: process.env.NEXT_PUBLIC_CHAIN_KEY_DEFAULT,
 };

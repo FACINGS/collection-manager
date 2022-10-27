@@ -28,10 +28,10 @@ Important principles:
 
 ## Getting Started - Development
 
-Ensure you have Next.js installed:
+Ensure all project dependencies are installed:
 
 ```bash
-yarn next
+yarn
 ```
 
 The following command will prep the environment, and, using the API endpoints

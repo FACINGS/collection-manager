@@ -1,10 +1,10 @@
-import api from '@services/api';
+import { api } from '@libs/api';
+import * as chainsConfig from '@configs/chainsConfig';
 
-export async function getCollectionService(collection) {
-    try {
-        const response = await api.get(`/atomicassets/v1/collections/${collection}`)
-        return response;
-    } catch (e) {
-        console.error(e);
-    }
+export async function getCollectionService(chainKey, { collectionName }) {
+  const url = `${chainsConfig[chainKey].aaEndpoint}/atomicassets/v1/collections/${collectionName}`;
+
+  const response = await api.get(url);
+
+  return response;
 }

@@ -3,8 +3,74 @@
 @tailwind utilities;
 
 @layer base {
-    body {
-      @apply bg-gray-50;
-      @apply antialiased;
-    }
+  body {
+    @apply bg-neutral-900 text-white antialiased;
+  }
+
+  body,
+  input,
+  textarea,
+  button {
+    font-family: 'Outfit', sans-serif;
+    @apply font-normal text-base;
+  }
+}
+
+@layer components {
+  .headline-1 {
+    @apply text-[2rem] leading-[2.5rem] md:text-5xl md:leading-[3.5rem] lg:text-7xl lg:leading-[5rem] font-bold;
+  }
+  .headline-2 {
+    @apply text-[1.625rem] leading-[2.125rem] md:text-[2rem] md:leading-[2.5rem] lg:text-[2.5rem] lg:leading-[3rem] font-bold;
+  }
+  .headline-3 {
+    @apply text-xl md:text-2xl xl:text-[2rem] xl:leading-[2.5rem] font-bold;
+  }
+
+  .title-1 {
+    @apply text-lg leading-[1.625rem] md:text-xl font-bold;
+  }
+
+  .body-1 {
+    @apply text-base md:text-lg md:leading-[1.625rem];
+  }
+  .body-2 {
+    @apply text-sm leading-[1.375rem] md:text-base;
+  }
+  .body-3 {
+    @apply text-xs leading-[1.25rem] md:text-sm md:leading-[1.375rem];
+  }
+
+  .btn {
+    @apply text-base leading-[1.5rem] font-bold px-[calc(2rem-1px)] py-[calc(1rem-1px)] border border-white rounded hover:bg-neutral-700 disabled:opacity-75 disabled:cursor-not-allowed;
+  }
+  .btn-small {
+    @apply text-sm leading-[1.375rem] py-2 px-4;
+  }
+  .btn-ghost {
+    @apply border-transparent;
+  }
+  .btn-small.btn-square {
+    @apply px-[calc(0.5rem-1px)]
+  }
+  .btn-square {
+    @apply px-[calc(1rem-1px)]
+  }
+
+  .badge-small {
+    @apply text-sm leading-[1.375rem] px-2 py-[0.125rem] bg-neutral-800 text-neutral-400 rounded-3xl text-center min-w-[2rem];
+  }
+  .badge-medium {
+    @apply text-base px-2 py-1 bg-neutral-800 text-neutral-400 rounded-3xl text-center min-w-[2rem];
+  }
+  .badge-large {
+    @apply text-lg leading-[1.625rem] px-4 py-2 bg-neutral-800 text-neutral-400 rounded-3xl text-center min-w-[2rem];
+  }
+
+  .tab-list {
+    @apply flex md:justify-center gap-4 border-b border-neutral-700 overflow-auto;
+  }
+  .tab {
+    @apply body-1 font-bold px-4 py-[calc(1rem-2px)] border border-transparent flex gap-2 ui-not-selected:text-neutral-400 ui-selected:border-b-white ui-selected:text-white whitespace-nowrap focus:outline-none;
+  }
 }

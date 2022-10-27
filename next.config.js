@@ -1,16 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+  reactStrictMode: false,
+  swcMinify: false,
   distDir: '.next',
   images: {
-      domains: [
-        'wax.bloks.io',
-        'bloks.io',
-        'ipfs.ledgerwise.io',
-        'robohash.org'
-      ],
+    domains: [
+      'wax.bloks.io',
+      'bloks.io',
+      'facings.mypinata.cloud',
+      'robohash.org',
+      'ipfs.ledgerwise.io',
+    ],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

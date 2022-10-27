@@ -1,69 +1,77 @@
 import { useState } from 'react';
-import Image from 'next/image';
-import { collectionShowMore } from '@hooks/collectionShowMore';
+
 import { collectionAccountsService } from '@services/collection/collectionAccountsService';
-import { LoadingIcon } from '@components/icons/LoadingIcon';
 
-export function CollectionAccountsList({ accounts, collection }) {
+import { Card } from '@components/Card';
+import { CardContainer } from '@components/CardContainer';
+import { SeeMoreButton } from '@components/SeeMoreButton';
 
-    const [ counter, setCounter ] = useState(12);
-    
-    const [ accountsList, setAccountsList ] = useState(accounts);
-    const [ isLoading, setIsLoading ] = useState(false);
-    const [ page, setPage ] = useState(1);
+export function CollectionAccountsList({
+  chainKey,
+  initialAccounts,
+  collectionName,
+}) {
+  const [accounts, setAccounts] = useState(initialAccounts);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const showMoreParameters = {
-        page,
-        setPage, 
-        collection,
-        setIsLoading, 
-        updateList: setAccountsList,
-        service: collectionAccountsService, 
+  const limit = 12;
+  const currentPage = Math.ceil(accounts.length / limit);
+  const offset = (currentPage - 1) * limit;
+  const isEndOfList = accounts.length % limit > 0;
+
+  async function handleSeeMoreAccounts() {
+    setIsLoading(true);
+
+    try {
+      const { data } = await collectionAccountsService(chainKey, {
+        collectionName,
+        page: currentPage + 1,
+        offset,
+      });
+
+      setAccounts((state) => [...state, ...data.data]);
+    } catch (error) {
+      console.error(error);
     }
-    
-    return (
-        <div className="flex flex-col md:max-w-auto max-w-fit">
-            <div className="flex flex-col gap-8">
-                <h1 className="text-xl font-bold">Accounts holding this collection ({accountsList.length})</h1>              
-                <div className="w-full flex flex-row flex-wrap justify-center md:justify-start max-w-screen-md">
-                    { 
-                        accountsList.map((account, index) => {
-                            return (
-                                <div key={index} className="flex flex-col items-center m-4 w-fit h-fit">
-                                    <div className="bg-primary w-full flex justify-center rounded-t-lg overflow-hidden px-4 pt-4">
-                                        <Image alt={account.name} src={`https://robohash.org/${account.account}.png?set=set4`} width="80" height="80" objectFit="contain"/>
-                                    </div>
-                                    <div className={`w-40 h-fit shadow-md p-4 max-w-40 rounded-b-lg flex flex-col bg-primary text-white text-center items-center relative`}>
-                                        <p className="text-base font-bold w-full truncate">{account.account}</p>
-                                        <p className="text-sm">{account.assets} Assets</p>                        
-                                    </div>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-                { !(accountsList.length < counter) && (
-                    <div className="container flex justify-center my-2">
-                        { isLoading ? 
-                            (
-                                <div className="flex flex-row w-fit h-fit justify-center rounded-full items-center gap-4 bg-primary py-2 px-4 border-primary border-2">
-                                    <LoadingIcon />
-                                    <p className="text-white font-bold">Loading...</p>
-                                </div>
-                            ) : (
-                                <button 
-                                    onClick={() => {collectionShowMore(showMoreParameters); setCounter(counter + 12)}}
-                                    disabled={isLoading}
-                                    className="text-primary hover:text-white bg-white hover:bg-primary font-bold border-solid border-primary py-2 px-4 border-2 rounded-full"
-                                >
-                                    See more
-                                </button>
-                            ) 
-                        }
-                    </div>
-                    
-                )}
+
+    setIsLoading(false);
+  }
+
+  return (
+    <section className="container">
+      <h2 className="headline-2 my-8 flex items-center gap-2">Accounts</h2>
+
+      {accounts.length > 0 ? (
+        <>
+          <CardContainer>
+            {accounts.map((account) => (
+              <Card
+                key={account.account}
+                image={
+                  account.account
+                    ? `https://robohash.org/${account.account}.png?set=set4`
+                    : ''
+                }
+                title={account.account}
+                subtitle={`${account.assets} NFTs`}
+              />
+            ))}
+          </CardContainer>
+
+          {!isEndOfList && (
+            <div className="flex justify-center mt-8">
+              <SeeMoreButton
+                isLoading={isLoading}
+                onClick={handleSeeMoreAccounts}
+              />
             </div>
+          )}
+        </>
+      ) : (
+        <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+          <h4 className="title-1">There is no account in this collection</h4>
         </div>
-    )
+      )}
+    </section>
+  );
 }

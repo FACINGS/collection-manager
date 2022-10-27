@@ -1,0 +1,2 @@
+# case-sensitive full codebase search
+grep -r $1 --exclude-dir node_modules --exclude-dir .next --exclude-dir build --exclude-dir .git . || echo 'no matches'
