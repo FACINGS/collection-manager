@@ -34,8 +34,8 @@ const schema = yup.object().shape({
       message: 'Only lowercase letters (a-z) and numbers 1-5 are allowed.',
       excludeEmptyString: false,
     })
-    .eosName('Must be 12 characters (a-z, 1-5) with no spaces.')
-    .length(12, 'Must have exactly 12 characters.'),
+    .eosName('Must be 12 characters (a-z, 1-5) with no spaces.'),
+    /*.length(12, 'Must have exactly 12 characters.'),*/
   displayName: yup.string().required().label('Display name'),
   website: yup.string().required().url().label('Website'),
   marketFee: yup
