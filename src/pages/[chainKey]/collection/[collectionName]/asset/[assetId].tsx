@@ -25,7 +25,10 @@ interface AssetViewProps {
 function Asset({ ual, chainKey, asset }: AssetViewProps) {
   /*const image = asset.data.image;*/
   /* Proton NFTs use data.image rather than data.img like on WAX */
-  const image = chainKey === "proton" || chainKey === "proton-test" ? asset.data.image : asset.data.img;
+  const image =
+    chainKey === 'proton' || chainKey === 'proton-test'
+      ? asset.data.image
+      : asset.data.img;
 
   const video = asset.data.video;
   const collection = asset.collection;

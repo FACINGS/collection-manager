@@ -19,7 +19,6 @@ const nextConfig = {
       'ipfs.glbdex.com',
     ],
   },
-  
 };
 
 module.exports = nextConfig;
