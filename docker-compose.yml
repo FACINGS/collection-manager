@@ -7,8 +7,8 @@ x-common: &commons
     mem_swappiness: 0
     memswap_limit: 0
     healthcheck:
-        interval: 10s
-        timeout: 10s
+        interval: 30s
+        timeout: 30s
         retries: 3
         start_period: 60s
 
@@ -20,4 +20,4 @@ services:
     ports:
       - 3000:3000
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:3000/"]
+      test: ["CMD", "curl", "http://localhost:3000/eos"]

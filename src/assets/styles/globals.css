@@ -42,10 +42,10 @@
   }
 
   .btn {
-    @apply text-base leading-[1.5rem] font-bold px-[calc(2rem-1px)] py-[calc(1rem-1px)] border border-white rounded hover:bg-neutral-700 disabled:opacity-75 disabled:cursor-not-allowed;
+    @apply inline-block text-base leading-[1.5rem] font-bold px-[calc(2rem-1px)] py-[calc(1rem-1px)] border border-white rounded hover:bg-neutral-700 disabled:opacity-75 disabled:cursor-not-allowed;
   }
   .btn-small {
-    @apply text-sm leading-[1.375rem] py-2 px-4;
+    @apply text-sm leading-[1.375rem] py-[calc(0.5rem-1px)] px-4;
   }
   .btn-ghost {
     @apply border-transparent;

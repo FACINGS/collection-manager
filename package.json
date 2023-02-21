@@ -11,29 +11,33 @@
   },
   "dependencies": {
     "@alienworlds/ual-wax": "^1.6.1",
-    "@headlessui/react": "^1.7.2",
+    "@headlessui/react": "^1.7.4",
     "@headlessui/tailwindcss": "^0.1.1",
-    "@hookform/resolvers": "^2.9.8",
+    "@hookform/resolvers": "^2.9.10",
     "@waxio/waxjs": "^1.1.0",
-    "axios": "^0.27.2",
+    "axios": "^1.1.3",
     "eosjs": "^22.1.0",
-    "next": "12.3.1",
+    "is-ipfs": "^7.0.3",
+    "next": "13.0.3",
     "phosphor-react": "^1.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.36.1",
+    "react-hook-form": "^7.39.4",
     "ual-anchor": "^1.3.0",
     "ual-reactjs-renderer": "^0.3.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.12",
-    "eslint": "8.24.0",
-    "eslint-config-next": "12.3.1",
+    "@types/node": "18.11.17",
+    "@types/react": "18.0.26",
+    "autoprefixer": "^10.4.13",
+    "eslint": "8.27.0",
+    "eslint-config-next": "13.0.3",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "postcss": "^8.4.16",
+    "postcss": "^8.4.19",
     "prettier": "^2.7.1",
-    "tailwindcss": "^3.1.8"
+    "tailwindcss": "^3.2.4",
+    "typescript": "4.9.4"
   }
 }
