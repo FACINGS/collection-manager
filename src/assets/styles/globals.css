@@ -51,10 +51,10 @@
     @apply border-transparent;
   }
   .btn-small.btn-square {
-    @apply px-[calc(0.5rem-1px)]
+    @apply px-[calc(0.5rem-1px)];
   }
   .btn-square {
-    @apply px-[calc(1rem-1px)]
+    @apply px-[calc(1rem-1px)];
   }
 
   .badge-small {

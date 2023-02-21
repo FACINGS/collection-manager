@@ -103,8 +103,10 @@ export function CollectionAssetsList({
                   key={asset.asset_id}
                   id={asset.template && asset.template.template_id}
                   href={`/${chainKey}/collection/${collectionName}/asset/${asset.asset_id}`}
+                  /* Proton NFTs use data.image rather than data.img like on WAX */
                   image={
-                    asset.data.img ? `${ipfsEndpoint}/${asset.data.img}` : ''
+                    chainKey === "proton" || chainKey === "proton-test" ? 
+                      `${ipfsEndpoint}/${asset.data.image}` : `${ipfsEndpoint}/${asset.data.img}`
                   }
                   video={
                     asset.data.video
@@ -157,8 +159,10 @@ export function CollectionAssetsList({
                   key={asset.asset_id}
                   id={asset.template && asset.template.template_id}
                   href={`/${chainKey}/collection/${collectionName}/asset/${asset.asset_id}`}
+                  /* Proton NFTs use data.image rather than data.img like on WAX */
                   image={
-                    asset.data.img ? `${ipfsEndpoint}/${asset.data.img}` : ''
+                    chainKey === "proton" || chainKey === "proton-test" ? 
+                      `${ipfsEndpoint}/${asset.data.image}` : `${ipfsEndpoint}/${asset.data.img}`
                   }
                   video={
                     asset.data.video
