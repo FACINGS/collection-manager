@@ -355,11 +355,11 @@ function Transfer({ ual }) {
                           id={asset.template_mint}
                           onClick={() => handleAssetSelection(asset)}
                           image={
-                            asset.data.image
-                              ? `${ipfsEndpoint}/${asset.data['image']}`
-                              : asset.data.img
+                            asset.data['img']
                               ? `${ipfsEndpoint}/${asset.data['img']}`
-                              : asset.data.glbthumb
+                              : asset.data['image']
+                              ? `${ipfsEndpoint}/${asset.data['image']}`
+                              : asset.data['glbthumb']
                               ? `${ipfsEndpoint}/${asset.data['glbthumb']}`
                               : ''
                           }
