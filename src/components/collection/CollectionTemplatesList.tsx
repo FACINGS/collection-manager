@@ -75,11 +75,20 @@ export function CollectionTemplatesList({
                 key={template.template_id}
                 id={template.template_id}
                 href={`/${chainKey}/collection/${collectionName}/template/${template.template_id}`}
-                image={
+                /* Proton uses data.image as default */
+                /*image={
                   template.immutable_data.img
                     ? `${ipfsEndpoint}/${template.immutable_data.img}`
                     : ''
                 }
+                */
+                image={
+                  template.immutable_data.image
+                    ? `${ipfsEndpoint}/${template.immutable_data.image}`
+                    : template.immutable_data.img
+                      ? `${ipfsEndpoint}/${template.immutable_data.img}`
+                      : ''
+                }                
                 video={
                   template.immutable_data.video
                     ? `${ipfsEndpoint}/${template.immutable_data.video}`

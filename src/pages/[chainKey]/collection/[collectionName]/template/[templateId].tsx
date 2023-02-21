@@ -26,6 +26,7 @@ interface TemplateViewProps {
 
 function Template({ ual, chainKey, template }: TemplateViewProps) {
   const image = template.immutable_data.img;
+  /*const image = chainKey === "proton" || chainKey === "proton-test" ? `${ipfsEndpoint}/${template.immutable_data.image}` : `${ipfsEndpoint}/${template.immutable_data.img}`;*/
   const video = template.immutable_data.video;
   const collection = template.collection;
 

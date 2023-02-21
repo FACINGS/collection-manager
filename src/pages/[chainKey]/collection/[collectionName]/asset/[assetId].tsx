@@ -24,10 +24,10 @@ interface AssetViewProps {
 
 function Asset({ ual, chainKey, asset }: AssetViewProps) {
   /*const image = asset.data.image;*/
-  /* Proton NFTs use data.image rather than data.img like on WAX */
+  /* Proton NFTs use data.image rather than data.img like on WAX, also added support for GLBDEX thumbs */
   const image =
     chainKey === 'proton' || chainKey === 'proton-test'
-      ? asset.data.image
+      ? asset.data.image 
       : asset.data.img;
 
   const video = asset.data.video;

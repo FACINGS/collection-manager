@@ -355,10 +355,21 @@ function Transfer({ ual }) {
                           id={asset.template_mint}
                           onClick={() => handleAssetSelection(asset)}
                           image={
+                            asset.data.image
+                            ? `${ipfsEndpoint}/${asset.data['image']}`
+                            : asset.data.img
+                              ? `${ipfsEndpoint}/${asset.data['img']}`
+                              : asset.data.glbthumb
+                                ? `${ipfsEndpoint}/${asset.data['glbthumb']}`
+                                : ''
+                          }
+                          /* Proton uses data.image as default */
+                          /*image={
                             asset.data['img']
                               ? `${ipfsEndpoint}/${asset.data['img']}`
                               : ''
                           }
+                          */
                           video={
                             asset.data['video']
                               ? `${ipfsEndpoint}/${asset.data['video']}`
@@ -443,10 +454,20 @@ function Transfer({ ual }) {
                               <Card
                                 id={asset.template_mint}
                                 onClick={() => handleAssetSelection(asset)}
-                                image={
+                                /* Proton uses data.image as default, also added support for GLBDEX thumbs */                               
+                                /*image={
                                   asset.data.img
                                     ? `${ipfsEndpoint}/${asset.data.img}`
                                     : ''
+                                }*/
+                                image={
+                                  asset.data.image 
+                                  ? `${ipfsEndpoint}/${asset.data.image}`
+                                  : asset.data.img 
+                                    ? `${ipfsEndpoint}/${asset.data.img}`
+                                    : asset.data.glbthumb
+                                      ? `${ipfsEndpoint}/${asset.data.glbthumb}`
+                                      : ''
                                 }
                                 video={
                                   asset.data.video
