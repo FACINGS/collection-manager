@@ -86,9 +86,9 @@ export function CollectionTemplatesList({
                   template.immutable_data.image
                     ? `${ipfsEndpoint}/${template.immutable_data.image}`
                     : template.immutable_data.img
-                      ? `${ipfsEndpoint}/${template.immutable_data.img}`
-                      : ''
-                }                
+                    ? `${ipfsEndpoint}/${template.immutable_data.img}`
+                    : ''
+                }
                 video={
                   template.immutable_data.video
                     ? `${ipfsEndpoint}/${template.immutable_data.video}`
