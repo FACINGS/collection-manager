@@ -1,6 +1,6 @@
+import { WebAuth } from '@proton/ual-webauth';
 import { Anchor } from 'ual-anchor';
 import { Wax } from '@alienworlds/ual-wax';
-/*import { WebAuth } from '@proton/ual-webauth';*/
 
 module.exports = {
   eos: {
@@ -49,7 +49,7 @@ module.exports = {
   proton: {
     name: 'Proton',
     imageUrl: 'https://wax.bloks.io/img/chains/proton.png',
-    authenticators: [Anchor],
+    authenticators: [WebAuth, Anchor],
     aaEndpoint: process.env.NEXT_PUBLIC_PROTON_MAINNET_AA_ENDPOINT,
     chainId: process.env.NEXT_PUBLIC_PROTON_MAINNET_CHAIN_ID,
     protocol: process.env.NEXT_PUBLIC_PROTON_MAINNET_PROTOCOL,
@@ -59,7 +59,7 @@ module.exports = {
   'proton-test': {
     name: 'Proton (Testnet)',
     imageUrl: 'https://wax.bloks.io/img/chains/proton.png',
-    authenticators: [Anchor],
+    authenticators: [WebAuth, Anchor],
     aaEndpoint: process.env.NEXT_PUBLIC_PROTON_TESTNET_AA_ENDPOINT,
     chainId: process.env.NEXT_PUBLIC_PROTON_TESTNET_CHAIN_ID,
     protocol: process.env.NEXT_PUBLIC_PROTON_TESTNET_PROTOCOL,
