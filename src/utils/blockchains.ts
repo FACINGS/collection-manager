@@ -1,4 +1,4 @@
-import * as chains from '@configs/chainsConfig';
+import chains from '@configs/chainsConfig';
 
 interface BlockchainsProps {
   chainId: string;

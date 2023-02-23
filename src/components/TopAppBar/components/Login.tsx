@@ -7,7 +7,7 @@ import { CaretDown } from 'phosphor-react';
 import { getAccount } from '@services/account/getAccount';
 import { getChainKeyByChainId } from '@utils/getChainKeyByChainId';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 
 interface LoginComponentProps {
   chainKey: string;
