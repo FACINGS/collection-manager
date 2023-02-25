@@ -13,6 +13,7 @@ const nextConfig = {
       'facings.mypinata.cloud',
       'robohash.org',
       'ipfs.ledgerwise.io',
+      'proton.mypinata.cloud',
     ],
   },
 };
