@@ -195,8 +195,9 @@ function NewSchema({ ual, collection, chainKey }: NewSchemaProps) {
 
       <Modal ref={attributeModalRef} title="Add img or video attribute">
         <p className="body-2 mt-2">
-          Your schema must contain at least one <strong>img</strong> or{' '}
-          <strong>video</strong> attribute.
+          Your schema must contain at least one <strong>img</strong> attribute
+          with type <strong>Image</strong> or one <strong>video</strong>{' '}
+          attribute with type <strong>Text</strong>.
         </p>
       </Modal>
 

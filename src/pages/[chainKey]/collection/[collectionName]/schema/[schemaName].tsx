@@ -8,22 +8,47 @@ import { ipfsEndpoint, appName } from '@configs/globalsConfig';
 
 import { Card } from '@components/Card';
 import { Header } from '@components/Header';
+import { CollectionHints } from '@components/collection/CollectionHints';
 
-import { isAuthorizedAccount } from '@utils/isAuthorizedAccount';
-
+import { getSchemaService } from '@services/schema/getSchemaService';
 import {
-  getSchemaService,
+  getCollectionService,
+  CollectionProps,
+} from '@services/collection/getCollectionService';
+import {
+  collectionAssetsService,
+  AssetProps,
+} from '@services/collection/collectionAssetsService';
+import {
+  collectionSchemasService,
   SchemaProps,
-} from '@services/schema/getSchemaService';
+} from '@services/collection/collectionSchemasService';
+import {
+  collectionTemplatesService,
+  TemplateProps,
+} from '@services/collection/collectionTemplatesService';
+
 import { collectionTabs } from '@utils/collectionTabs';
+import { isAuthorizedAccount } from '@utils/isAuthorizedAccount';
 
 interface SchemaViewProps {
   ual: any;
   chainKey: string;
   schema: SchemaProps;
+  assets: AssetProps[];
+  schemas: SchemaProps[];
+  templates: TemplateProps[];
+  collection: CollectionProps;
 }
 
-function Schema({ chainKey, ual, schema }: SchemaViewProps) {
+function Schema({
+  chainKey,
+  ual,
+  schema,
+  assets,
+  schemas,
+  templates,
+}: SchemaViewProps) {
   const collection = schema.collection;
 
   const hasAuthorization = isAuthorizedAccount(ual, collection);
@@ -55,13 +80,21 @@ function Schema({ chainKey, ual, schema }: SchemaViewProps) {
           {hasAuthorization && (
             <Link
               href={`/${chainKey}/collection/${collection.collection_name}/schema/${schema.schema_name}/edit`}
-              className="btn mt-4"
+              className="btn w-fit"
             >
               Update Schema
             </Link>
           )}
         </Header.Content>
       </Header.Root>
+
+      <CollectionHints
+        assets={assets}
+        schemas={schemas}
+        chainKey={chainKey}
+        templates={templates}
+        collection={collection}
+      />
 
       <Tab.Group>
         <Tab.List className="tab-list mb-4 md:mb-8">
@@ -108,15 +141,28 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const schemaName = params.schemaName as string;
 
   try {
-    const { data } = await getSchemaService(chainKey, {
-      collectionName,
-      schemaName,
-    });
+    const [
+      { data: collection },
+      { data: templates },
+      { data: schemas },
+      { data: assets },
+      { data: schema },
+    ] = await Promise.all([
+      getCollectionService(chainKey, { collectionName }),
+      collectionTemplatesService(chainKey, { collectionName }),
+      collectionSchemasService(chainKey, { collectionName }),
+      collectionAssetsService(chainKey, { collectionName }),
+      getSchemaService(chainKey, { collectionName, schemaName }),
+    ]);
 
     return {
       props: {
         chainKey,
-        schema: data.data,
+        schema: schema.data,
+        assets: assets.data,
+        schemas: schemas.data,
+        templates: templates.data,
+        collection: collection.data,
       },
     };
   } catch (error) {

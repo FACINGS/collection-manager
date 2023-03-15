@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { withUAL } from 'ual-reactjs-renderer';
@@ -6,28 +7,57 @@ import { GetServerSideProps } from 'next';
 
 import { ipfsEndpoint, appName } from '@configs/globalsConfig';
 
+import { getTemplateService } from '@services/template/getTemplateService';
 import {
-  getTemplateService,
+  getCollectionService,
+  CollectionProps,
+} from '@services/collection/getCollectionService';
+import {
+  collectionAssetsService,
+  AssetProps,
+} from '@services/collection/collectionAssetsService';
+import {
+  collectionSchemasService,
+  SchemaProps,
+} from '@services/collection/collectionSchemasService';
+import {
+  collectionTemplatesService,
   TemplateProps,
-} from '@services/template/getTemplateService';
+} from '@services/collection/collectionTemplatesService';
 
 import { isAuthorizedAccount } from '@utils/isAuthorizedAccount';
 import { collectionTabs } from '@utils/collectionTabs';
+import { handlePreview } from '@utils/handlePreview';
 
 import { Card } from '@components/Card';
 import { Header } from '@components/Header';
 import { Attributes } from '@components/Attributes';
+import { CollectionHints } from '@components/collection/CollectionHints';
 
 interface TemplateViewProps {
   ual: any;
   chainKey: string;
   template: TemplateProps;
+  assets: AssetProps[];
+  schemas: SchemaProps[];
+  templates: TemplateProps[];
+  collection: CollectionProps;
 }
 
-function Template({ ual, chainKey, template }: TemplateViewProps) {
-  const image = template.immutable_data.img;
-  const video = template.immutable_data.video;
+function Template({
+  ual,
+  chainKey,
+  template,
+  assets,
+  schemas,
+  templates,
+}: TemplateViewProps) {
   const collection = template.collection;
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    handlePreview(template, setImages);
+  }, [template]);
 
   const hasAuthorization = isAuthorizedAccount(ual, collection);
 
@@ -61,14 +91,22 @@ function Template({ ual, chainKey, template }: TemplateViewProps) {
           {hasAuthorization && (
             <Link
               href={`/${chainKey}/collection/${collection.collection_name}/template/${template.template_id}/edit`}
-              className="btn mt-4"
+              className="btn mt-4 w-fit"
             >
-              Update Template
+              Lock Template
             </Link>
           )}
         </Header.Content>
-        <Header.Banner imageIpfs={image} videoIpfs={video} />
+        <Header.Banner images={images} />
       </Header.Root>
+
+      <CollectionHints
+        assets={assets}
+        schemas={schemas}
+        chainKey={chainKey}
+        templates={templates}
+        collection={collection}
+      />
 
       <Tab.Group>
         <Tab.List className="tab-list mb-14">
@@ -149,15 +187,28 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const templateId = params.templateId as string;
 
   try {
-    const { data: template } = await getTemplateService(chainKey, {
-      collectionName,
-      templateId,
-    });
+    const [
+      { data: collection },
+      { data: templates },
+      { data: schemas },
+      { data: assets },
+      { data: template },
+    ] = await Promise.all([
+      getCollectionService(chainKey, { collectionName }),
+      collectionTemplatesService(chainKey, { collectionName }),
+      collectionSchemasService(chainKey, { collectionName }),
+      collectionAssetsService(chainKey, { collectionName }),
+      getTemplateService(chainKey, { collectionName, templateId }),
+    ]);
 
     return {
       props: {
-        template: template.data,
         chainKey,
+        assets: assets.data,
+        schemas: schemas.data,
+        template: template.data,
+        templates: templates.data,
+        collection: collection.data,
       },
     };
   } catch (error) {

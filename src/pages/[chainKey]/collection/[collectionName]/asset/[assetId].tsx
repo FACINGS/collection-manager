@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import Link from 'next/link';
 import Head from 'next/head';
@@ -6,15 +7,15 @@ import { GetServerSideProps } from 'next';
 
 import { ipfsEndpoint, appName } from '@configs/globalsConfig';
 
-import { Card } from '@components/Card';
-
 import { getAssetService, AssetProps } from '@services/asset/getAssetService';
 
+import { Card } from '@components/Card';
 import { Header } from '@components/Header';
 import { Attributes } from '@components/Attributes';
 
 import { isAuthorizedAccount } from '@utils/isAuthorizedAccount';
 import { collectionTabs } from '@utils/collectionTabs';
+import { handlePreview } from '@utils/handlePreview';
 
 interface AssetViewProps {
   ual: any;
@@ -23,9 +24,12 @@ interface AssetViewProps {
 }
 
 function Asset({ ual, chainKey, asset }: AssetViewProps) {
-  const image = asset.data.img;
-  const video = asset.data.video;
   const collection = asset.collection;
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    handlePreview(asset, setImages);
+  }, [asset]);
 
   const hasAuthorization = isAuthorizedAccount(ual, collection) as boolean;
 
@@ -65,7 +69,7 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
             </Link>
           )}
         </Header.Content>
-        <Header.Banner imageIpfs={image} videoIpfs={video} />
+        <Header.Banner images={images} />
       </Header.Root>
 
       <Tab.Group>
@@ -99,25 +103,29 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
                     <span>Mint Number</span>
                     <div>
                       <span className="font-bold pr-2">
-                        {asset.template_mint !== '0'
-                          ? asset.template_mint
-                          : 'Minting...'}
+                        {asset.template_mint}
                       </span>
-                      <span className="">
-                        (max:{' '}
-                        {parseInt(asset.template.max_supply, 10) || 'Infinite'})
-                      </span>
+                      {asset.template && (
+                        <span className="">
+                          (max:{' '}
+                          {parseInt(asset.template.max_supply, 10) ||
+                            'Infinite'}
+                          )
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
-                    <span>Template ID</span>
-                    <Link
-                      href={`/${chainKey}/collection/${collection.collection_name}/template/${asset.template.template_id}`}
-                      className="font-bold underline"
-                    >
-                      {asset.template.template_id}
-                    </Link>
-                  </div>
+                  {asset.template && (
+                    <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                      <span>Template ID</span>
+                      <Link
+                        href={`/${chainKey}/collection/${collection.collection_name}/template/${asset.template.template_id}`}
+                        className="font-bold underline"
+                      >
+                        {asset.template.template_id}
+                      </Link>
+                    </div>
+                  )}
                   <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
                     <span>Schema</span>
                     <Link
@@ -150,7 +158,11 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
                   key={schema.name}
                   name={schema.name}
                   type={schema.type}
-                  value={asset.template.immutable_data[schema.name]}
+                  value={
+                    asset.template
+                      ? asset.template.immutable_data[schema.name]
+                      : asset.immutable_data[schema.name]
+                  }
                 />
               ))}
             </Attributes.List>

@@ -23,9 +23,11 @@ import { Modal } from '@components/Modal';
 import { Switch } from '@components/Switch';
 import { Header } from '@components/Header';
 import { InputPreview } from '@components/InputPreview';
-import { usePermission } from '@hooks/usePermission';
 
 import { appName } from '@configs/globalsConfig';
+import { usePermission } from '@hooks/usePermission';
+import { handlePreview } from '@utils/handlePreview';
+
 interface ModalProps {
   title: string;
   message?: string;
@@ -59,14 +61,19 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
     collectionAuthorizedAccounts: collection.authorized_accounts,
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [images, setImages] = useState([]);
   const [isSaved, setIsSaved] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [modal, setModal] = useState<ModalProps>({
     title: '',
     message: '',
     details: '',
     isError: false,
   });
+
+  useEffect(() => {
+    handlePreview(asset, setImages);
+  }, [asset]);
 
   const {
     register,
@@ -80,9 +87,6 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
   const mutableDataList = asset.schema.format.filter(
     (attribute) => asset.template.immutable_data[attribute.name] === undefined
   );
-
-  const assetImage: string = asset.data.img;
-  const assetVideo: string = asset.data.video;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -257,7 +261,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
         ]}
       >
         <Header.Content title={asset.name} />
-        <Header.Banner imageIpfs={assetImage} videoIpfs={assetVideo} />
+        <Header.Banner images={images} />
       </Header.Root>
 
       <Modal ref={modalRef} title={modal.title}>

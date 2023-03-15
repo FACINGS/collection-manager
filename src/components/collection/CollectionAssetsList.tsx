@@ -50,6 +50,7 @@ export function CollectionAssetsList({
     try {
       const { data } = await collectionAssetsService(chainKey, {
         collectionName,
+        burned: false,
         page: currentPage + 1,
         offset,
       });
@@ -112,7 +113,7 @@ export function CollectionAssetsList({
                       : ''
                   }
                   title={asset.name}
-                  subtitle={`By ${asset.owner}`}
+                  subtitle={asset.owner && `Owned by ${asset.owner}`}
                 />
               ))}
             </CardContainer>

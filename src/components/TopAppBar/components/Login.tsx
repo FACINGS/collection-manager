@@ -83,7 +83,7 @@ function LoginComponent({ chainKey, ual }: LoginComponentProps) {
         <CaretDown size={16} weight="bold" className="ui-open:rotate-180" />
       </Menu.Button>
 
-      <Menu.Items className="absolute z-10 bg-neutral-800 top-14 md:right-0 right-4 rounded w-[calc(100%-2rem)] md:w-full">
+      <Menu.Items className="absolute z-10 bg-neutral-800 top-14 md:right-0 right-4 rounded w-[calc(100%-2rem)] md:w-auto">
         <Menu.Item disabled>
           <div className="ui-active:bg-neutral-700 md:body-3 body-1 font-bold text-white p-4 border-b border-neutral-700">
             <h4 className="whitespace-nowrap mb-1">Available Resources</h4>

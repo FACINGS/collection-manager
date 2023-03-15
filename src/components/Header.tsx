@@ -1,9 +1,8 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { ImageSquare, CaretRight } from 'phosphor-react';
+import { CaretRight } from 'phosphor-react';
 import { ReactNode } from 'react';
 
-import { ipfsEndpoint } from '@configs/globalsConfig';
+import { Carousel } from '@components/Carousel';
 
 interface HeaderRootProps {
   border?: boolean;
@@ -22,8 +21,11 @@ interface HeaderSearchProps {
 }
 
 interface HeaderBannerProps {
-  imageIpfs?: string;
-  videoIpfs?: string;
+  unique?: boolean;
+  images?: {
+    ipfs: string;
+    type: string;
+  }[];
 }
 
 function HeaderRoot({ border, breadcrumb, children }: HeaderRootProps) {
@@ -80,47 +82,10 @@ function HeaderSearch({ children }: HeaderSearchProps) {
   return <div className="flex-1 md:max-w-[16rem]">{children}</div>;
 }
 
-function HeaderBanner({ imageIpfs, videoIpfs }: HeaderBannerProps) {
+function HeaderBanner({ images, unique }: HeaderBannerProps) {
   return (
     <div className="flex-1">
-      <div className="relative w-full md:max-w-[14rem] lg:max-w-sm mx-auto aspect-square">
-        {imageIpfs ? (
-          <>
-            <Image
-              src={`${ipfsEndpoint}/${imageIpfs}`}
-              fill
-              className="object-contain"
-              sizes="max-w-lg"
-              alt=""
-            />
-            <div className="absolute blur-3xl -z-10 w-[calc(100%+4rem)] h-[calc(100%+4rem)] -left-[2rem] -top-[2rem] hidden md:block">
-              <Image
-                src={`${ipfsEndpoint}/${imageIpfs}`}
-                fill
-                className="object-contain"
-                quality={1}
-                alt=""
-                sizes="max-w-2xl"
-                priority
-              />
-            </div>
-          </>
-        ) : videoIpfs ? (
-          <video
-            muted
-            autoPlay
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          >
-            <source src={`${ipfsEndpoint}/${videoIpfs}`} type="video/mp4" />
-          </video>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-neutral-700 text-white rounded-xl">
-            <ImageSquare size={64} />
-          </div>
-        )}
-      </div>
+      <Carousel images={images} unique={unique} />
     </div>
   );
 }

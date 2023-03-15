@@ -86,7 +86,9 @@ export function CollectionTemplatesList({
                     : ''
                 }
                 title={template.name}
-                subtitle={`${template.issued_supply} NFTs`}
+                subtitle={`${template.issued_supply} ${
+                  Number(template.issued_supply) > 1 ? 'NFTs' : 'NFT'
+                }`}
               />
             ))}
           </CardContainer>

@@ -1,6 +1,7 @@
-import { TrashSimple } from 'phosphor-react';
+import { TrashSimple, HandGrabbing } from 'phosphor-react';
 import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import * as yup from 'yup';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
@@ -87,6 +88,7 @@ export function Attributes({ attributes }: AttributeProps) {
   } = useFormContext();
 
   const {
+    move,
     fields: attributesFields,
     append: attributesAppend,
     prepend: attributesPrepend,
@@ -126,6 +128,12 @@ export function Attributes({ attributes }: AttributeProps) {
     attributesRemove(index);
   }
 
+  const handleDrag = ({ source, destination }) => {
+    if (destination) {
+      move(source.index, destination.index);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="body-2 text-white">
@@ -148,45 +156,74 @@ export function Attributes({ attributes }: AttributeProps) {
         </div>
       </div>
 
-      {attributesFields.map((field, index) => (
-        <div
-          key={field.id}
-          className="flex flex-col sm:flex-row gap-4 sm:border-0 border-b border-neutral-700 pb-4 sm:pb-0"
-        >
-          <div className="flex-1">
-            <Input
-              {...register(`attributes.${index}.name`)}
-              error={errors.attributes?.[index]?.name?.message}
-              placeholder="Attribute name"
-              type="text"
-            />
-          </div>
-          <div className="flex-1 flex gap-4">
-            <div className="flex-1">
-              <Controller
-                control={control}
-                name={`attributes.${index}.type`}
-                render={({ field }) => (
-                  <Select
-                    onChange={field.onChange}
-                    selectedValue={field.value}
-                    options={attributeOptions}
-                  />
-                )}
-              />
+      <DragDropContext onDragEnd={handleDrag}>
+        <Droppable droppableId="attributes">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {attributesFields.map((field, index) => {
+                return (
+                  <Draggable
+                    key={index}
+                    draggableId={`field-${index}`}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        key={field.id}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                      >
+                        <div className="flex w-full flex-col sm:flex-row gap-4 sm:border-0 border-b border-neutral-700 pb-4">
+                          <div className="flex-1">
+                            <Input
+                              {...register(`attributes.${index}.name`)}
+                              error={errors.attributes?.[index]?.name?.message}
+                              placeholder="Attribute name"
+                              type="text"
+                            />
+                          </div>
+                          <div className="flex-1 flex gap-4">
+                            <div className="flex-1">
+                              <Controller
+                                control={control}
+                                name={`attributes.${index}.type`}
+                                render={({ field }) => (
+                                  <Select
+                                    onChange={field.onChange}
+                                    selectedValue={field.value}
+                                    options={attributeOptions}
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div className="flex-none">
+                              <button
+                                type="button"
+                                className="btn btn-square"
+                                onClick={() => handleRemoveAttribute(index)}
+                              >
+                                <TrashSimple size={24} />
+                              </button>
+                            </div>
+                          </div>
+                          <div
+                            {...provided.dragHandleProps}
+                            className="btn btn-ghost btn-square"
+                          >
+                            <HandGrabbing size={24} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
             </div>
-            <div className="flex-none">
-              <button
-                type="button"
-                className="btn btn-square"
-                onClick={() => handleRemoveAttribute(index)}
-              >
-                <TrashSimple size={24} />
-              </button>
-            </div>
-          </div>
-        </div>
-      ))}
+          )}
+        </Droppable>
+      </DragDropContext>
+
       <div className="flex gap-4">
         <button type="button" className="btn" onClick={handleAppendAttribute}>
           Add attribute

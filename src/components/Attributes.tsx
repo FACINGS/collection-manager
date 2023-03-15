@@ -23,18 +23,18 @@ function AttributesItem({ name, value, type }: AttributesItemProps) {
     <div className="flex justify-between items-center py-3 body-2 gap-8 text-white border-b border-neutral-700">
       <span>{name}</span>
       {type === 'bool' ? (
-        <span className="font-bold break-all">{`${Boolean(value)}`}</span>
-      ) : isIPFS.cid(value) ? (
+        <span className="font-bold break-keep">{`${Boolean(value)}`}</span>
+      ) : isIPFS.cid(value) || isIPFS.cidPath(value) ? (
         <a
           href={`${ipfsEndpoint}/${value}`}
-          className="font-bold underline"
+          className="font-bold underline break-all"
           target="_blank"
           rel="noreferrer"
         >
           {value}
         </a>
       ) : (
-        <span className="font-bold break-all">{value}</span>
+        <span className="font-bold break-keep">{value}</span>
       )}
     </div>
   );

@@ -46,7 +46,10 @@
       ],
       "@components/*": [
         "src/components/*"
-      ]
+      ],
+      "@plugins/*": [
+        "src/plugins/*"
+      ],
     }
   },
   "include": [

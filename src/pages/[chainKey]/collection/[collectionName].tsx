@@ -35,7 +35,9 @@ import { CollectionTemplatesList } from '@components/collection/CollectionTempla
 import { CollectionAccountsList } from '@components/collection/CollectionAccountsList';
 import { CollectionSchemasList } from '@components/collection/CollectionSchemasList';
 import { CollectionAssetsList } from '@components/collection/CollectionAssetsList';
+import { CollectionPlugins } from '@components/collection/CollectionPlugins';
 import { CollectionStats } from '@components/collection/CollectionStats';
+import { CollectionHints } from '@components/collection/CollectionHints';
 
 import { isAuthorizedAccount } from '@utils/isAuthorizedAccount';
 import { collectionTabs } from '@utils/collectionTabs';
@@ -120,7 +122,7 @@ function Collection({
                 href={`/${chainKey}/author/${collection.author}`}
                 className="btn"
               >
-                By {collection.author}
+                Created by {collection.author}
               </Link>
             )}
             <a
@@ -133,8 +135,19 @@ function Collection({
             </a>
           </div>
         </Header.Content>
-        <Header.Banner imageIpfs={collection.img} />
+        <Header.Banner
+          images={[{ ipfs: collection.img, type: 'image' }]}
+          unique
+        />
       </Header.Root>
+
+      <CollectionHints
+        assets={assets}
+        schemas={schemas}
+        chainKey={chainKey}
+        templates={templates}
+        collection={collection}
+      />
 
       <Tab.Group
         selectedIndex={selectedTabIndex}
@@ -161,6 +174,9 @@ function Collection({
             <span className="badge-small">{stats.assets ?? '0'}</span>
           </Tab>
           <Tab className="tab">{collectionTabs[4].name}</Tab>
+          {hasAuthorization && (
+            <Tab className="tab">{collectionTabs[5].name}</Tab>
+          )}
         </Tab.List>
         <Tab.Panels>
           <Tab.Panel>
@@ -202,6 +218,12 @@ function Collection({
               collectionName={collection.collection_name}
             />
           </Tab.Panel>
+          <Tab.Panel>
+            <CollectionPlugins
+              chainKey={chainKey}
+              collectionName={collection.collection_name}
+            />
+          </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
     </>
@@ -225,7 +247,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       getCollectionService(chainKey, { collectionName }),
       collectionStatsService(chainKey, { collectionName }),
       collectionTemplatesService(chainKey, { collectionName }),
-      collectionAssetsService(chainKey, { collectionName }),
+      collectionAssetsService(chainKey, { collectionName, burned: false }),
       collectionAssetsService(chainKey, { collectionName, burned: true }),
       collectionSchemasService(chainKey, { collectionName }),
       collectionAccountsService(chainKey, { collectionName }),

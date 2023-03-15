@@ -20,7 +20,7 @@ export const collectionTabs = [
     key: 'accounts',
   },
   {
-    name: 'Details',
-    key: 'details',
+    name: 'Add-ons',
+    key: 'add-ons',
   },
 ];

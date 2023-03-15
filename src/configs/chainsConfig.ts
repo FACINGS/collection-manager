@@ -1,5 +1,5 @@
 import { Anchor } from 'ual-anchor';
-import { Wax } from '@alienworlds/ual-wax';
+import { Wax } from '@eosdacio/ual-wax';
 
 module.exports = {
   eos: {
@@ -34,6 +34,7 @@ module.exports = {
     host: process.env.NEXT_PUBLIC_WAX_TESTNET_HOST,
     port: process.env.NEXT_PUBLIC_WAX_TESTNET_PORT,
   },
+
   jungle4: {
     name: 'Jungle4 (EOS Testnet)',
     imageUrl: 'https://bloks.io/img/chains/jungle.png',

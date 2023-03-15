@@ -429,7 +429,7 @@ function NewTemplate({
                         schemaAttribute.isImmutable ? '' : 'opacity-50'
                       }`}
                     >
-                      <span className="body-2 font-bold text-white uppercase whitespace-nowrap">
+                      <span className="body-2 font-bold text-white whitespace-nowrap">
                         {schemaAttribute.name}
                       </span>
                     </div>
@@ -493,7 +493,7 @@ function NewTemplate({
                           })}
                           type="number"
                           name={schemaAttribute.name}
-                          placeholder="number"
+                          placeholder="whole number"
                         />
                       ) : schemaAttribute.type === 'double' ? (
                         <Input

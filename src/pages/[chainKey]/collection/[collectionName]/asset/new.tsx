@@ -1,24 +1,17 @@
 import { useState, useEffect, Fragment, useRef } from 'react';
-import Image from 'next/image';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
 import { Listbox, Transition } from '@headlessui/react';
-import {
-  CaretDown,
-  Check,
-  CircleNotch,
-  ImageSquare,
-  TrashSimple,
-} from 'phosphor-react';
+import { CaretDown, Check, CircleNotch, TrashSimple } from 'phosphor-react';
 import { GetServerSideProps } from 'next';
 
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { ipfsEndpoint, appName } from '@configs/globalsConfig';
+import { appName } from '@configs/globalsConfig';
 
 import { collectionTabs } from '@utils/collectionTabs';
 
@@ -43,7 +36,10 @@ import { Input } from '@components/Input';
 import { Modal } from '@components/Modal';
 import { Switch } from '@components/Switch';
 import { Header } from '@components/Header';
+import { Carousel } from '@components/Carousel';
+
 import { usePermission } from '@hooks/usePermission';
+import { handlePreview } from '@utils/handlePreview';
 
 interface NewAssetProps {
   ual: any;
@@ -89,10 +85,9 @@ function NewAsset({
     collectionAuthorizedAccounts: collection.authorized_accounts,
   });
 
-  const [templateImage, setTemplateImage] = useState<string>(null);
-  const [templateVideo, setTemplateVideo] = useState<string>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [images, setImages] = useState([]);
   const [isSaved, setIsSaved] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState<SchemaProps>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateProps>(null);
   const [modal, setModal] = useState<ModalProps>({
@@ -162,8 +157,7 @@ function NewAsset({
 
   useEffect(() => {
     if (selectedTemplate) {
-      setTemplateImage(selectedTemplate.immutable_data?.img);
-      setTemplateVideo(selectedTemplate.immutable_data?.video);
+      handlePreview(selectedTemplate, setImages);
     }
   }, [selectedTemplate]);
 
@@ -388,7 +382,7 @@ function NewAsset({
             <div className="flex flex-col gap-8">
               <div className="flex flex-col w-full">
                 <h3 className="headline-2 block mb-4">Select schema</h3>
-                {schemas.length > 0 ? (
+                {schemas.length > 0 && selectedSchema ? (
                   <Listbox value={selectedSchema} onChange={setSelectedSchema}>
                     <div className="relative">
                       <Listbox.Button className="relative w-full cursor-default border border-neutral-700 rounded body-1 bg-neutral-800 p-4 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
@@ -460,7 +454,7 @@ function NewAsset({
               </div>
               <div className="flex flex-col w-full">
                 <h3 className="headline-2 block mb-4">Select template</h3>
-                {templateOptions.length > 0 ? (
+                {templateOptions.length > 0 && selectedTemplate ? (
                   <Listbox
                     value={selectedTemplate}
                     onChange={setSelectedTemplate}
@@ -538,36 +532,7 @@ function NewAsset({
                 )}
               </div>
             </div>
-            <div className="w-full aspect-square bg-neutral-700 relative rounded-md overflow-hidden">
-              {templateVideo && (
-                <video
-                  muted
-                  autoPlay
-                  loop
-                  playsInline
-                  className="w-full h-full object-cover"
-                >
-                  <source src={templateVideo} type="video/mp4" />
-                </video>
-              )}
-              {selectedTemplate && templateImage && (
-                <div className="w-full h-full relative">
-                  <Image
-                    alt={selectedTemplate.name}
-                    src={`${ipfsEndpoint}/${templateImage}`}
-                    fill
-                    priority
-                    sizes="max-w-lg"
-                    className="object-contain"
-                  />
-                </div>
-              )}
-              {!templateVideo && !templateImage && (
-                <div className="w-full h-full flex items-center justify-center text-white">
-                  <ImageSquare size={96} />
-                </div>
-              )}
-            </div>
+            <Carousel images={images} />
           </div>
 
           {schemas.length > 0 &&

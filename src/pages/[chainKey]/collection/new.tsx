@@ -28,14 +28,10 @@ const schema = yup.object().shape({
   image: yup.mixed().test('image', 'Image is required', (value) => {
     return value.length > 0;
   }),
-  collectionName: yup
-    .string()
-    .matches(/^[a-z1-5.]+$/, {
-      message: 'Only lowercase letters (a-z) and numbers 1-5 are allowed.',
-      excludeEmptyString: false,
-    })
-    .eosName('Must be 12 characters (a-z, 1-5) with no spaces.')
-    .length(12, 'Must have exactly 12 characters.'),
+  collectionName: yup.string().matches(/^[a-z1-5.]+$/, {
+    message: 'Only lowercase letters (a-z) and numbers 1-5 are allowed.',
+    excludeEmptyString: false,
+  }),
   displayName: yup.string().required().label('Display name'),
   website: yup.string().required().url().label('Website'),
   marketFee: yup
@@ -54,6 +50,7 @@ function CreateNewCollection({ ual }) {
   const [previewImageSrc, setPreviewImageSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [collectionNameError, setCollectionNameError] = useState('');
   const [modal, setModal] = useState({
     title: '',
     message: '',
@@ -72,6 +69,7 @@ function CreateNewCollection({ ual }) {
   });
 
   const image = watch('image');
+  const collectionName = watch('collectionName');
 
   useEffect(() => {
     if (image && image.length > 0) {
@@ -94,6 +92,40 @@ function CreateNewCollection({ ual }) {
     }, 2000);
     return () => clearTimeout(timer);
   }, [isSaved]);
+
+  useEffect(() => {
+    if (collectionName && ual.activeUser.accountName) {
+      if (!isValidCollectionName(collectionName, ual.activeUser?.accountName)) {
+        setCollectionNameError(
+          'Must be up to 12 characters (a-z, 1-5) with no spaces.'
+        );
+        setIsLoading(false);
+        return;
+      } else {
+        setCollectionNameError('');
+      }
+    }
+  }, [collectionName, ual]);
+
+  function isValidCollectionName(collectionName, userAccount) {
+    if (collectionName.length > 12) {
+      return false;
+    }
+
+    console.log(collectionName.startsWith(`.`));
+
+    if (
+      (collectionName.length <= 12 &&
+        (collectionName === userAccount ||
+          (collectionName.endsWith(`.${userAccount}`) &&
+            !collectionName.startsWith('.')))) ||
+      (collectionName.length === 12 && !collectionName.includes('.'))
+    ) {
+      return true;
+    }
+
+    return false;
+  }
 
   async function onSubmit({
     image,
@@ -121,6 +153,11 @@ function CreateNewCollection({ ual }) {
 
     try {
       const data = await uploadImageToIpfsService(image[0]);
+
+      if (collectionNameError) {
+        setIsLoading(false);
+        return;
+      }
 
       await createCollectionService({
         activeUser: ual.activeUser,
@@ -316,9 +353,9 @@ function CreateNewCollection({ ual }) {
           <div className="col-span-4 md:col-span-3 lg:col-start-7 lg:col-span-6 flex flex-col gap-8">
             <Input
               {...register('collectionName')}
-              error={errors.collectionName?.message}
+              error={errors.collectionName?.message || collectionNameError}
               label="Collection name"
-              hint="Must be 12 characters (a-z, 1-5) with no spaces."
+              hint="Must be up to 12 characters (a-z, 1-5) with no spaces."
               type="text"
               maxLength={12}
             />

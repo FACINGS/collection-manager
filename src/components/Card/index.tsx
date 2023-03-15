@@ -27,7 +27,9 @@ export function Card({
       <Link
         href={href}
         prefetch={false}
-        className="bg-neutral-800 rounded-xl overflow-hidden cursor-pointer hover:scale-105 duration-300"
+        className={`bg-neutral-800 rounded-xl overflow-hidden cursor-pointer hover:scale-105 duration-300 ${
+          !id && 'flex flex-col justify-end'
+        }`}
       >
         <CardContent
           id={id}

@@ -19,9 +19,11 @@ import { collectionTabs } from '@utils/collectionTabs';
 
 import { Modal } from '@components/Modal';
 import { Header } from '@components/Header';
-import { usePermission } from '@hooks/usePermission';
 
 import { appName } from '@configs/globalsConfig';
+import { usePermission } from '@hooks/usePermission';
+import { handlePreview } from '@utils/handlePreview';
+
 interface ModalProps {
   title: string;
   message?: string;
@@ -60,8 +62,11 @@ function EditTemplate({
     isError: false,
   });
 
-  const image = template.immutable_data.img;
-  const video = template.immutable_data.video;
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    handlePreview(template, setImages);
+  }, [template]);
 
   const enableLock = Number(template.issued_supply) > 0;
 
@@ -153,7 +158,7 @@ function EditTemplate({
         ]}
       >
         <Header.Content title={template.name} />
-        <Header.Banner imageIpfs={image} videoIpfs={video} />
+        <Header.Banner images={images} />
       </Header.Root>
 
       <Modal ref={modalRef} title={modal.title}>
