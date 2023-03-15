@@ -21,7 +21,7 @@
     "eosjs": "^22.1.0",
     "framer-motion": "^9.0.3",
     "is-ipfs": "^7.0.3",
-    "next": "13.0.3",
+    "next": "13.2.3",
     "phosphor-react": "^1.4.1",
     "react": "18.2.0",
     "react-beautiful-dnd": "^13.1.1",
