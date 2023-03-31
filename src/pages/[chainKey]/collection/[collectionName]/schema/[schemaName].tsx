@@ -88,13 +88,15 @@ function Schema({
         </Header.Content>
       </Header.Root>
 
-      <CollectionHints
-        assets={assets}
-        schemas={schemas}
-        chainKey={chainKey}
-        templates={templates}
-        collection={collection}
-      />
+      {hasAuthorization && (
+        <CollectionHints
+          assets={assets}
+          schemas={schemas}
+          chainKey={chainKey}
+          templates={templates}
+          collection={collection}
+        />
+      )}
 
       <Tab.Group>
         <Tab.List className="tab-list mb-4 md:mb-8">

@@ -36,7 +36,7 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
   return (
     <>
       <Head>
-        <title>{`Asset #${asset.asset_id} - ${appName}`}</title>
+        <title>{`NFT #${asset.asset_id} - ${appName}`}</title>
       </Head>
 
       <Header.Root
@@ -56,16 +56,13 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
           [asset.name],
         ]}
       >
-        <Header.Content
-          title={asset.name}
-          subtitle={`Asset #${asset.asset_id}`}
-        >
+        <Header.Content title={asset.name} subtitle={`NFT #${asset.asset_id}`}>
           {hasAuthorization && !asset.burned_by_account && (
             <Link
               href={`/${chainKey}/collection/${collection.collection_name}/asset/${asset.asset_id}/edit`}
               className="btn mt-4"
             >
-              Update Asset
+              Update NFT
             </Link>
           )}
         </Header.Content>

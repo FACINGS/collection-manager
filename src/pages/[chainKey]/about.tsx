@@ -58,7 +58,7 @@ export default function About() {
             <ol className="list-decimal pl-6 body-1 text-neutral-200">
               <li className="pl-1">Login and view resource usage</li>
               <li className="pl-1">
-                View/explore collections (schemas, templates, and assets)
+                View/explore collections (schemas, templates, and NFTs)
               </li>
               <li className="pl-1">Create and edit collections</li>
             </ol>

@@ -105,7 +105,7 @@ function NewTemplate({
     (schemaAttribute) => schemaAttribute.isImmutable
   );
 
-  const { register, handleSubmit, control, reset } = useForm<any>({
+  const { register, handleSubmit, control, reset, setValue } = useForm<any>({
     defaultValues: {
       schemaName: schemasOptions[0]?.value,
       transferable: true,
@@ -176,6 +176,7 @@ function NewTemplate({
       });
 
       const immutableData = [];
+      let floatError = {};
 
       schemasAttributes.forEach(({ name, type, isImmutable }) => {
         if (!isImmutable) {
@@ -195,10 +196,19 @@ function NewTemplate({
             value: ['uint8', Number(attributeValue)],
           });
         } else if (type === 'double') {
-          immutableData.push({
-            key: name,
-            value: ['float64', Number(attributeValue)],
-          });
+          const floatValue = parseFloat(attributeValue);
+
+          if (!isNaN(floatValue)) {
+            immutableData.push({
+              key: name,
+              value: ['float64', floatValue],
+            });
+          } else {
+            floatError = {
+              ...floatError,
+              ...{ error: true, attribute: name, type: type },
+            };
+          }
         } else if (type === 'uint64') {
           immutableData.push({
             key: name,
@@ -211,6 +221,20 @@ function NewTemplate({
           });
         }
       });
+
+      if (floatError['error']) {
+        modalRef.current?.openModal();
+        const message = `Attribute "${floatError['attribute']}" with type "${floatError['type']}" has an invalid value.`;
+
+        setModal({
+          title: 'Error',
+          message,
+          isError: true,
+        });
+
+        setIsLoading(false);
+        return;
+      }
 
       await createTemplateService({
         activeUser: ual.activeUser,
@@ -344,16 +368,20 @@ function NewTemplate({
             Redirecting...
           </span>
         ) : (
-          <Disclosure>
-            <Disclosure.Button className="btn btn-small mt-4">
-              Details
-            </Disclosure.Button>
-            <Disclosure.Panel>
-              <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
-                {modal.details}
-              </pre>
-            </Disclosure.Panel>
-          </Disclosure>
+          <>
+            {modal.details && (
+              <Disclosure>
+                <Disclosure.Button className="btn btn-small mt-4">
+                  Details
+                </Disclosure.Button>
+                <Disclosure.Panel>
+                  <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                    {modal.details}
+                  </pre>
+                </Disclosure.Panel>
+              </Disclosure>
+            )}
+          </>
         )}
       </Modal>
 
@@ -386,7 +414,7 @@ function NewTemplate({
                 name="transferable"
                 render={({ field }) => (
                   <Switch
-                    label="Assets can be transferred"
+                    label="NFTs can be transferred"
                     onChange={field.onChange}
                     checked={field.value}
                   />
@@ -397,7 +425,7 @@ function NewTemplate({
                 name="burnable"
                 render={({ field }) => (
                   <Switch
-                    label="Assets can be burned"
+                    label="NFTs can be burned"
                     onChange={field.onChange}
                     checked={field.value}
                   />
@@ -415,7 +443,7 @@ function NewTemplate({
               <p className="body-1 text-neutral-400 max-w-3xl mb-8">
                 Every attribute that is filled in here will be immutable. If you
                 leave the attribute blank, you will be able to set that data
-                during asset creation and it will be mutable.
+                during NFT creation and it will be mutable.
               </p>
 
               {schemasAttributes.map(
@@ -436,28 +464,30 @@ function NewTemplate({
                     <div className="col-span-12 sm:col-span-6 lg:col-span-6 xl:col-span-6">
                       {schemaAttribute.type === 'image' ? (
                         <InputPreview
-                          {...register(schemaAttribute.name, {
-                            onChange: () => {
-                              handleSetImmutableAttributes({
-                                schemaAttributeIndex,
-                                isImmutable: true,
-                              });
-                            },
-                          })}
+                          {...register(schemaAttribute.name)}
+                          onChange={() => {
+                            handleSetImmutableAttributes({
+                              schemaAttributeIndex,
+                              isImmutable: true,
+                            });
+                          }}
+                          setValue={setValue}
                           title="Add Image"
+                          description="Upload or drag and drop an image"
                           accept="image/*"
                         />
                       ) : schemaAttribute.name === 'video' ? (
                         <InputPreview
-                          {...register(schemaAttribute.name, {
-                            onChange: () => {
-                              handleSetImmutableAttributes({
-                                schemaAttributeIndex,
-                                isImmutable: true,
-                              });
-                            },
-                          })}
+                          {...register(schemaAttribute.name)}
+                          onChange={() => {
+                            handleSetImmutableAttributes({
+                              schemaAttributeIndex,
+                              isImmutable: true,
+                            });
+                          }}
+                          setValue={setValue}
                           title="Add Video"
+                          description="Upload or drag and drop a video"
                           accept="video/*"
                         />
                       ) : schemaAttribute.type === 'bool' ? (
@@ -505,10 +535,10 @@ function NewTemplate({
                               });
                             },
                           })}
-                          type="number"
+                          type="text"
                           name={schemaAttribute.name}
-                          placeholder="number"
-                          step="0.01"
+                          placeholder="decimal number"
+                          pattern="-?\d+(\.\d+)?([eE][+-]?\d+)?"
                         />
                       ) : schemaAttribute.type === 'ipfs' ? (
                         <InputPreview
@@ -589,18 +619,18 @@ function NewTemplate({
                                   <strong className="text-white">
                                     Immutable:
                                   </strong>{' '}
-                                  This field will be set on the template. This
-                                  field (even if left blank) will not be
-                                  editable later.
+                                  This attribute will be set on the template.
+                                  This attribute (even if left blank) will not
+                                  be editable later.
                                 </p>
                               ) : (
                                 <p className="body-3">
                                   <strong className="text-white">
                                     Mutable:
                                   </strong>{' '}
-                                  This field will not be set on the template.
-                                  You will have the option to set a custom value
-                                  on each NFT you mint.
+                                  This attribute will not be set on the
+                                  template. You will have the option to set a
+                                  custom value on each NFT you mint.
                                 </p>
                               )}
                             </Popover.Panel>

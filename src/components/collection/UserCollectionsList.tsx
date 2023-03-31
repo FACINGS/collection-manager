@@ -50,7 +50,7 @@ function UserCollectionsListComponent({
           match,
           page,
           offset,
-          author,
+          authorizedAccount: author,
         });
 
         setCollections((state) => [...state, ...data.data]);
@@ -80,7 +80,7 @@ function UserCollectionsListComponent({
     const newWaitToSearch = setTimeout(async () => {
       const { data: collections } = await listCollectionsService(chainKey, {
         match: value || '',
-        author,
+        authorizedAccount: author,
       });
       setMatch(value);
       setCollections(collections.data);

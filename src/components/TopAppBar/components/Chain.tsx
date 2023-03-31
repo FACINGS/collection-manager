@@ -41,7 +41,7 @@ function ChainComponent({ chainKey, ual }: ChainComponentProps) {
     <Menu as="div" className="relative">
       <Menu.Button className="flex gap-3 items-center py-3 whitespace-nowrap">
         <Image width={32} height={32} src={chainConfig?.imageUrl} alt="" />
-        <div className="flex items-center gap-1 title-1 ui-open:text-white ui-not-open:text-neutral-400">
+        <div className="flex items-center gap-1 title-1 text-white">
           {chainConfig?.name}
           <CaretDown size={16} weight="bold" className="ui-open:rotate-180" />
         </div>

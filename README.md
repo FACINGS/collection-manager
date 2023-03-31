@@ -8,15 +8,26 @@ This project is meant to both work as a stand-alone NFT publishing platform, as 
 The core feature set is very simple:
 
 1. Login and view resource usage
-2. View/explore collections (schemas, templates, and assets)
+2. View/explore collections (schemas, templates, and NFTs)
 3. Create and edit collections
-
+4. Mint and transfer NFTs
 
 Important principles:
 
 1. Keep the core simple and secure with minimal dependencies
 2. Allow publishers, developers, and businesses to build faster
 3. Grow open-source community around core EOS/AtomicAssets needs
+
+
+## Documentation
+
+1. **Getting Started** (this README document) - Project overview and "Getting Started" guide for devs.
+2. **[User Guide](docs/user-guide.md)** - For users. Basic tutorial explaining how to create a collection and mint NFTs.
+3. **[Plugin System](docs/plugins.md)** - For devs, describing how the plugin system works.
+4. **[Contributing](CONTRIBUTING.md)** - For devs, describing how to contribute to this project.
+5. **[Testing Guide](docs/testing-guide.md)** - For reviewers/testers, full run-through of functionality.
+6. **[Data Import Plugin](docs/plugin-import.md)** - For users, guide to using the CSV import plugin.
+7. **[Data Types](docs/data-types.md)** - An overview of AtomicAssets data types.
 
 
 ## Dependencies
@@ -35,7 +46,7 @@ yarn
 ```
 
 The following command will prep the environment, and, using the API endpoints
-specified in `.env.development`, start the application server in development
+specified in `.env`, start the application server in development
 mode with features like hot-code reloading and dev-friendly error reporting.
 
 ```bash
@@ -66,11 +77,9 @@ Variables set in `.env.local` always override any defaults set.
 
 ## Testnet
 
-There are not yet any public AA endpoints for the EOS testnet. If you do not
-want to publish on EOS mainnet, you may try on WAX. To do so, you should enable
-chain selection at your `.env.local` file and change the AA endpoint to
-`https://aawt.facings.waxpub.net`.
+If you do not wish to publish on EOS mainnet, you may select the "Jungle4 (EOS Testnet)" chain in the upper left-hand corner.
 
+Currently this app supports both [EOS Jungle4 Testnet](https://eosinabox.com/) and [WAX Testnet](https://waxsweden.org/create-testnet-account/). (Click either link to create a free testnet account.)
 
 ## License
 

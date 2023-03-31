@@ -100,13 +100,15 @@ function Template({
         <Header.Banner images={images} />
       </Header.Root>
 
-      <CollectionHints
-        assets={assets}
-        schemas={schemas}
-        chainKey={chainKey}
-        templates={templates}
-        collection={collection}
-      />
+      {hasAuthorization && (
+        <CollectionHints
+          assets={assets}
+          schemas={schemas}
+          chainKey={chainKey}
+          templates={templates}
+          collection={collection}
+        />
+      )}
 
       <Tab.Group>
         <Tab.List className="tab-list mb-14">

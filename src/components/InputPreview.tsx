@@ -21,11 +21,13 @@ interface InputPreviewComponentProps
   error?: string;
   onChange: (prop: any) => void;
   accept?: string;
+  setValue?: (name: any, value: any) => void;
 }
 
 function InputPreviewComponent(
   {
     onChange,
+    setValue,
     title,
     description,
     ipfsHash,
@@ -40,24 +42,38 @@ function InputPreviewComponent(
   const [waitToSearch, setWaitToSearch] = useState(null);
   const [messageError, setMessageError] = useState(error);
 
-  function handleOnChangeFile(event) {
+  async function handleOnChangeFile(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
     onChange(event);
     setPreviewSrc('');
 
-    const files = event.target.files;
+    const files = event.target.files ?? event.dataTransfer.files;
 
     if (files.length > 0) {
       const [file] = files;
-      const fileReader = new FileReader();
+      const preview = await getPreviewSrc(file);
 
-      fileReader.onload = () => {
-        setPreviewSrc(fileReader.result);
-      };
+      setPreviewSrc(preview);
 
-      fileReader.readAsDataURL(file);
+      if (event.dataTransfer) {
+        setValue(props.name, files);
+        document.getElementById(props.name)['value'] = files[0].name;
+      }
     } else {
       setPreviewSrc(null);
     }
+  }
+
+  function getPreviewSrc(file) {
+    return new Promise((resolve) => {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.readAsDataURL(file);
+    });
   }
 
   function handleOnChangeIpfs(event) {
@@ -114,6 +130,12 @@ function InputPreviewComponent(
     }
   }, [handleIpfsPreview, ipfsHash]);
 
+  function handleDragOver(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+  }
+
   return (
     <div className="w-full">
       <label
@@ -160,6 +182,9 @@ function InputPreviewComponent(
           <div
             className="w-full h-full flex flex-col justify-center items-center gap-2 text-center"
             onClick={handleToggleIpfs}
+            id="dropZone"
+            onDragOver={(event) => handleDragOver(event)}
+            onDrop={(event) => handleOnChangeFile(event)}
           >
             <UploadSimple size={56} />
             {title && <p className="title-1">{title}</p>}
@@ -179,6 +204,7 @@ function InputPreviewComponent(
                 type="text"
                 placeholder="IPFS hash"
                 onChange={handleOnChangeIpfs}
+                id={props.name}
                 className="w-full body-1 text-white bg-transparent focus:outline-none placeholder:text-neutral-500"
               />
             ) : (

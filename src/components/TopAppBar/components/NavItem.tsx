@@ -5,6 +5,7 @@ import Link from 'next/link';
 interface NavItemProps extends LinkHTMLAttributes<HTMLAnchorElement> {
   children: ReactNode;
   href?: string;
+  target?: string;
 }
 
 export function NavItem({ children, href, ...rest }: NavItemProps) {

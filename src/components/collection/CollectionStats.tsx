@@ -32,7 +32,7 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
   const statsContent = [
     ['Name', collection.collection_name],
     ['Created', new Date(Number(collection.created_at_time)).toLocaleString()],
-    ['Assets', stats.assets ?? 0],
+    ['NFTs', stats.assets ?? 0],
     ['Burned', stats.burned ?? 0],
     ['Templates', stats.templates],
     ['Schemas', stats.schemas],

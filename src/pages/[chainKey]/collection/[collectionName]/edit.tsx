@@ -881,6 +881,7 @@ function EditCollection({
                 {collection.authorized_accounts.length > 0 ? (
                   <Table
                     list={collection.authorized_accounts}
+                    exception={collection.author}
                     action={onSubmitRemoveAccountAuthorization}
                   />
                 ) : (

@@ -371,7 +371,7 @@ function Transfer({ ual }) {
                           href={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
                           className="btn btn-small whitespace-nowrap w-full text-center truncate"
                         >
-                          View Asset
+                          View NFT
                         </Link>
                       </div>
                     ))}
@@ -462,7 +462,7 @@ function Transfer({ ual }) {
                               className="btn btn-small whitespace-nowrap w-full text-center truncate"
                               target="_blank"
                             >
-                              View Asset
+                              View NFT
                             </Link>
                           </div>
                         );

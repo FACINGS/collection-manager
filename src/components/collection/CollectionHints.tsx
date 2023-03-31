@@ -36,7 +36,7 @@ export function CollectionHints({
     if (schemas.length === 0) {
       setContent({
         title: `Create your first schema`,
-        description: `Schemas allows you to set the desired NFT attributes and their types.`,
+        description: `Schemas allow you to define the metadata fields that are included in your NFTs.`,
         redirect: `/${chainKey}/collection/${collection?.collection_name}/schema/new`,
         button: 'Create Schema',
       });
@@ -45,7 +45,7 @@ export function CollectionHints({
     if (templates.length === 0 && schemas.length > 0) {
       setContent({
         title: `Create your first template`,
-        description: `Templates allow you to set values for your schema attributes, and will be used to mint NFTs.`,
+        description: `Templates allow you to define the permanent metadata values for a given run of NFTs, using a pre-defined schema.`,
         redirect: `/${chainKey}/collection/${collection?.collection_name}/template/new`,
         button: 'Create Template',
       });
@@ -53,8 +53,8 @@ export function CollectionHints({
 
     if (templates.length > 0 && schemas.length > 0 && assets.length === 0) {
       setContent({
-        title: `Create your first NFT`,
-        description: `Your NFT will be based on the schema and templates you've created.`,
+        title: `Mint your first NFT`,
+        description: `You can mint one or many NFTs using a pre-defined template, and optionally set mutable data that can be changed by the collection owner later.`,
         redirect: `/${chainKey}/collection/${collection?.collection_name}/asset/new`,
         button: 'Create NFT',
       });

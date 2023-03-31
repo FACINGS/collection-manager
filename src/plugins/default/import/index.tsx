@@ -7,7 +7,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { name, subtitle } from './config';
+import { pluginInfo } from './config';
+import { Review } from './review';
 
 import { Modal } from '@components/Modal';
 
@@ -25,6 +26,57 @@ interface ImportProps {
   ual: any;
 }
 
+interface ActionsProps {
+  account: string;
+  name: string;
+  authorization: {
+    actor: string;
+    permission: string;
+  }[];
+  data: {
+    authorized_creator: string;
+    collection_name: string;
+    schema_name: string;
+    schema_format?: {
+      name: string;
+      type: string;
+    }[];
+    transferable?: boolean;
+    burnable?: boolean;
+    max_supply?: string;
+    immutable_data?: {
+      key: string;
+      value: [string, any];
+    }[];
+  };
+}
+
+interface SchemaAttributesProps {
+  name: string;
+  type: string;
+}
+
+interface InvalidTypeProps {
+  property: string;
+  type: string;
+}
+
+interface RequiredPropertiesProps {
+  property: string;
+  templateIndex: number;
+}
+
+interface UniquePropertiesProps {
+  property: string;
+  data: any[];
+}
+
+interface InvalidUniqueProperties {
+  property: string;
+  repeated: string;
+  rows: any[];
+}
+
 function Import({ ual }: ImportProps) {
   const modalRef = useRef(null);
   const router = useRouter();
@@ -32,13 +84,21 @@ function Import({ ual }: ImportProps) {
   const { chainKey, collectionName } = router.query;
 
   const [fileName, setFileName] = useState<string>('');
-  const [actions, setActions] = useState([]);
-  const [schemaAttributes, setSchemaAttributes] = useState([]);
+  const [actions, setActions] = useState<ActionsProps[]>([]);
+  const [schemaAttributes, setSchemaAttributes] = useState<
+    SchemaAttributesProps[]
+  >([]);
   const [templates, setTemplates] = useState([]);
-  const [invalidType, setInvalidType] = useState([]);
-  const [requiredProperties, setRequiredProperties] = useState([]);
-  const [uniqueProperties, setUniqueProperties] = useState([]);
-  const [invalidUniqueProperties, setInvalidUniqueProperties] = useState([]);
+  const [invalidType, setInvalidType] = useState<InvalidTypeProps[]>([]);
+  const [requiredProperties, setRequiredProperties] = useState<
+    RequiredPropertiesProps[]
+  >([]);
+  const [uniqueProperties, setUniqueProperties] = useState<
+    UniquePropertiesProps[]
+  >([]);
+  const [invalidUniqueProperties, setInvalidUniqueProperties] = useState<
+    InvalidUniqueProperties[]
+  >([]);
   const [modal, setModal] = useState<ModalProps>({
     title: '',
     message: '',
@@ -210,15 +270,15 @@ function Import({ ual }: ImportProps) {
       .slice(0, string.indexOf('\n'))
       .replace(/(\r)/g, '')
       .split(',')
-      .filter((header) => header !== '');
+      .filter((header) => header !== '') as string[];
 
-    const sysflagIndex = filteredHeaders.indexOf('sysflag');
+    const sysflagIndex = filteredHeaders.indexOf('sysflag') as number;
 
     const rows = string
       .slice(string.indexOf('\n') + 1)
       .replace(/(\r)/g, '')
       .split('\n')
-      .slice(0, sysflagIndex);
+      .slice(0, sysflagIndex) as string[];
 
     let headersInfo = [];
     const templatesInfo = [];
@@ -245,7 +305,13 @@ function Import({ ual }: ImportProps) {
           ...{ [sysflag]: header },
         };
       } else {
-        templatesInfo.push(rowItem.slice(0, headers.length - 1));
+        const templateRow = rowItem
+          ?.slice(0, headers.length - 1)
+          ?.filter((item) => item !== '');
+
+        if (templateRow?.length) {
+          templatesInfo.push([...templateRow]);
+        }
       }
     });
 
@@ -520,16 +586,16 @@ function Import({ ual }: ImportProps) {
   return (
     <>
       <div className="container">
-        <div className="flex flex-col py-16 gap-8">
+        <div className="flex flex-col pb-8 gap-16">
           <div className="flex flex-col gap-4">
-            <h1 className="headline-1">{name}</h1>
-            <span className="body-1">{subtitle}</span>
+            <h1 className="headline-1">{pluginInfo.name}</h1>
+            <span className="body-1">{pluginInfo.description}</span>
           </div>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-8"
+            className="flex flex-col gap-16"
           >
-            <div className="flex gap-4 border-b pb-4 border-neutral-700 w-fit">
+            <div className="flex gap-4 border-b pb-4 my-4 border-neutral-700 w-fit max-w-sm">
               <label className="flex flex-row items-center">
                 <input
                   {...register('csvFile')}
@@ -541,8 +607,11 @@ function Import({ ual }: ImportProps) {
                 <div className="btn btn-small">Upload</div>
               </label>
             </div>
+
+            {actions.length > 0 && <Review actions={actions} />}
+
             <button className="btn w-fit" disabled={!fileName}>
-              {name}
+              {pluginInfo.name}
             </button>
           </form>
         </div>

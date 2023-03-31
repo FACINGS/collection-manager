@@ -352,7 +352,7 @@ function NewAsset({
   return (
     <>
       <Head>
-        <title>{`New Asset - ${appName}`}</title>
+        <title>{`New NFT - ${appName}`}</title>
       </Head>
 
       <Header.Root
@@ -367,10 +367,10 @@ function NewAsset({
             collectionTabs[3].name,
             `/${chainKey}/collection/${collection.collection_name}?tab=${collectionTabs[3].key}`,
           ],
-          ['New Asset'],
+          ['New NFT'],
         ]}
       >
-        <Header.Content title="New Asset" />
+        <Header.Content title="New NFT" />
       </Header.Root>
 
       <div className="container py-8">
@@ -532,7 +532,11 @@ function NewAsset({
                 )}
               </div>
             </div>
-            <Carousel images={images} />
+            {selectedTemplate && (
+              <div className="flex1">
+                <Carousel images={images} />
+              </div>
+            )}
           </div>
 
           {schemas.length > 0 &&
@@ -542,15 +546,15 @@ function NewAsset({
             <>
               <div className="flex flex-col w-full gap-4">
                 <div className="flex flex-col w-full">
-                  <h3 className="headline-2 block">Asset data</h3>
+                  <h3 className="headline-2 block">NFT data</h3>
                   <p className="body-1 text-neutral-400 mb-4">
-                    Mint to your own account or airdrop the asset to specific
+                    Mint to your own account or airdrop the NFT to specific
                     accounts.
                   </p>
                 </div>
                 <div className="flex flex-col body-2 text-white gap-4">
                   <div className="flex gap-4 font-bold">
-                    <span className="flex-1">Asset Recipient</span>
+                    <span className="flex-1">NFT Recipient</span>
                     <div className="flex-1">
                       <span className="pr-2">Number of Copies</span>
                       <span className="font-normal text-neutral-400">
@@ -780,7 +784,7 @@ function NewAsset({
                 (selectedTemplate && !selectedTemplate.immutable_data)
               }
             >
-              {isSaved ? 'Saved' : 'Create asset'}
+              {isSaved ? 'Saved' : 'Create NFT'}
             </button>
           )}
         </form>

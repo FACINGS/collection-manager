@@ -2,21 +2,73 @@ import { withUAL } from 'ual-reactjs-renderer';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 
-function Plugin({ plugin }) {
-  const DynamicComponent = dynamic(() =>
-    import(`../../../../../plugins/${plugin}`).then((mod) => mod)
-  );
+import { Header } from '@components/Header';
 
-  return <DynamicComponent />;
+import { collectionTabs } from '@utils/collectionTabs';
+import { isAuthorizedAccount } from '@utils/isAuthorizedAccount';
+
+import {
+  getCollectionService,
+  CollectionProps,
+} from '@services/collection/getCollectionService';
+
+interface PluginProps {
+  ual: any;
+  type: string;
+  plugin: string;
+  chainKey: string;
+  collection: CollectionProps;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const plugin = params.plugin as string;
+function Plugin({ ual, plugin, type, collection, chainKey }: PluginProps) {
+  const DynamicComponent = dynamic(() =>
+    import(`../../../../../plugins/${type}/${plugin}`).then((mod) => mod)
+  );
+
+  const hasAuthorization = isAuthorizedAccount(ual, collection) as boolean;
+
+  return (
+    <>
+      <Header.Root
+        breadcrumb={[
+          [
+            hasAuthorization ? 'My Collections' : 'Explorer',
+            hasAuthorization ? `/${chainKey}` : `/${chainKey}/explorer`,
+          ],
+          [
+            collection.collection_name,
+            `/${chainKey}/collection/${collection.collection_name}`,
+          ],
+          [
+            collectionTabs[5].name,
+            `/${chainKey}/collection/${collection.collection_name}?tab=${collectionTabs[5].key}`,
+          ],
+          [plugin],
+        ]}
+      ></Header.Root>
+
+      <DynamicComponent />
+    </>
+  );
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const plugin = query.plugin as string;
+  const type = query.type as string;
+  const chainKey = query.chainKey as string;
+  const collectionName = query.collectionName as string;
 
   try {
+    const { data: collection } = await getCollectionService(chainKey, {
+      collectionName,
+    });
+
     return {
       props: {
         plugin,
+        type,
+        collection: collection.data,
+        chainKey,
       },
     };
   } catch (error) {

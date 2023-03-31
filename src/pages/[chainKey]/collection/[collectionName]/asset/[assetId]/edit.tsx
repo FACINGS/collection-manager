@@ -221,7 +221,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
       const details = JSON.stringify(e, undefined, 2);
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
-        'Unable to burn asset';
+        'Unable to burn NFT';
 
       setModal({
         title: 'Error',
@@ -239,7 +239,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
   return (
     <>
       <Head>
-        <title>{`Update Asset #${asset.asset_id} - ${appName}`}</title>
+        <title>{`Update NFT #${asset.asset_id} - ${appName}`}</title>
       </Head>
 
       <Header.Root
@@ -288,7 +288,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
       <Tab.Group>
         <Tab.List className="tab-list mb-4 md:mb-8">
           <Tab className="tab">Mutable data</Tab>
-          {asset.is_burnable && <Tab className="tab">Burn asset</Tab>}
+          {asset.is_burnable && <Tab className="tab">Burn NFT</Tab>}
         </Tab.List>
         <Tab.Panels className="container">
           <Tab.Panel>
@@ -405,11 +405,11 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
             <Tab.Panel>
               <div className="container mx-auto flex flex-col text-center items-center gap-8">
                 <span className="body-1 text-amber-400">
-                  Note: Burning an asset does not decrement the issued supply of
+                  Note: Burning an NFT does not decrement the issued supply of
                   the parent template.
                 </span>
                 <button className="btn w-fit" onClick={onBurnAsset}>
-                  Burn asset
+                  Burn NFT
                 </button>
               </div>
             </Tab.Panel>

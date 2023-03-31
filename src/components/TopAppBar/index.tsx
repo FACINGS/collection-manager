@@ -37,6 +37,13 @@ export function TopAppBar() {
           >
             Transfer
           </NavItem>
+          <NavItem
+            href="https://github.com/FACINGS/collection-manager/tree/main/docs/user-guide.md"
+            onClick={() => setOpen(false)}
+            target="_blank"
+          >
+            Docs
+          </NavItem>
           <NavItem href={`/${chainKey}/about`} onClick={() => setOpen(false)}>
             About
           </NavItem>

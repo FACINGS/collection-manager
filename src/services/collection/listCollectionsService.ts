@@ -8,6 +8,7 @@ interface OptionsProps {
   author?: string;
   match?: string;
   limit?: number;
+  authorizedAccount?: string;
 }
 
 export interface CollectionProps {
@@ -42,12 +43,13 @@ export const listCollectionsService = async (
 ): Promise<AxiosResponse<DataProps>> => {
   const url = `${chainsConfig[chainKey].aaEndpoint}/atomicassets/v1/collections`;
 
-  const { page = 1, offset = 0, author, match } = options;
+  const { page = 1, offset = 0, author, match, authorizedAccount } = options;
 
   const response = await api.get(url, {
     params: {
       author,
       match,
+      authorized_account: authorizedAccount,
       page,
       limit: 12,
       offset,
