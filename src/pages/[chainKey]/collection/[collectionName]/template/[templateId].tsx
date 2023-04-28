@@ -44,6 +44,7 @@ interface TemplateViewProps {
   collection: CollectionProps;
 }
 
+<<<<<<< HEAD
 function Template({
   ual,
   chainKey,
@@ -52,6 +53,14 @@ function Template({
   schemas,
   templates,
 }: TemplateViewProps) {
+=======
+function Template({ ual, chainKey, template }: TemplateViewProps) {
+  const image =
+    template.immutable_data.img ||
+    template.immutable_data.image ||
+    template.immutable_data.glbthumb;
+  const video = template.immutable_data.video;
+>>>>>>> db625b6 (fix missing thumbnails on collection list, transfer pages)
   const collection = template.collection;
   const [images, setImages] = useState([]);
 

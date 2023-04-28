@@ -19,7 +19,7 @@ import { CardContainer } from '@components/CardContainer';
 import { SeeMoreButton } from '@components/SeeMoreButton';
 import { Header } from '@components/Header';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 import { ipfsEndpoint, chainKeyDefault, appName } from '@configs/globalsConfig';
 
 import { transferAssetService } from '@services/asset/transferAssetService';
@@ -355,8 +355,8 @@ function Transfer({ ual }) {
                           id={asset.template_mint}
                           onClick={() => handleAssetSelection(asset)}
                           image={
-                            asset.data['img']
-                              ? `${ipfsEndpoint}/${asset.data['img']}`
+                            asset.data['img'] || asset.data['image']
+                              ? `${ipfsEndpoint}/${asset.data['img'] || asset.data['image']}`
                               : ''
                           }
                           video={
@@ -444,8 +444,8 @@ function Transfer({ ual }) {
                                 id={asset.template_mint}
                                 onClick={() => handleAssetSelection(asset)}
                                 image={
-                                  asset.data.img
-                                    ? `${ipfsEndpoint}/${asset.data.img}`
+                                  asset.data.image
+                                    ? `${ipfsEndpoint}/${asset.data.image}`
                                     : ''
                                 }
                                 video={

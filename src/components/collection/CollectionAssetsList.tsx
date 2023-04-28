@@ -105,7 +105,13 @@ export function CollectionAssetsList({
                   id={asset.template && asset.template.template_id}
                   href={`/${chainKey}/collection/${collectionName}/asset/${asset.asset_id}`}
                   image={
-                    asset.data.img ? `${ipfsEndpoint}/${asset.data.img}` : ''
+                    asset.data.img
+                      ? `${ipfsEndpoint}/${asset.data.img}`
+                      : asset.data.image
+                      ? `${ipfsEndpoint}/${asset.data.image}`
+                      : asset.data.glbthumb
+                      ? `${ipfsEndpoint}/${asset.data.glbthumb}`
+                      : ''
                   }
                   video={
                     asset.data.video
@@ -159,7 +165,13 @@ export function CollectionAssetsList({
                   id={asset.template && asset.template.template_id}
                   href={`/${chainKey}/collection/${collectionName}/asset/${asset.asset_id}`}
                   image={
-                    asset.data.img ? `${ipfsEndpoint}/${asset.data.img}` : ''
+                    asset.data.img
+                      ? `${ipfsEndpoint}/${asset.data.img}`
+                      : asset.data.image
+                      ? `${ipfsEndpoint}/${asset.data.image}`
+                      : asset.data.glbthumb
+                      ? `${ipfsEndpoint}/${asset.data.glbthumb}`
+                      : ''
                   }
                   video={
                     asset.data.video

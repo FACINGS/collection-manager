@@ -76,8 +76,14 @@ export function CollectionTemplatesList({
                 id={template.template_id}
                 href={`/${chainKey}/collection/${collectionName}/template/${template.template_id}`}
                 image={
-                  template.immutable_data.img
-                    ? `${ipfsEndpoint}/${template.immutable_data.img}`
+                  template.immutable_data.img ||
+                  template.immutable_data.image ||
+                  template.immutable_data.glbthumb
+                    ? `${ipfsEndpoint}/${
+                        template.immutable_data.img ||
+                        template.immutable_data.image ||
+                        template.immutable_data.glbthumb
+                      }`
                     : ''
                 }
                 video={

@@ -5,7 +5,7 @@ import { CollectionItemsList } from '@components/collection/CollectionItemsList'
 
 import { listCollectionsService } from '@services/collection/listCollectionsService';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 import { appName } from '@configs/globalsConfig';
 
 import { CollectionProps } from '@services/collection/listCollectionsService';
