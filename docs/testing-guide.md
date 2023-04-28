@@ -91,7 +91,17 @@ Note that many published collections may not have any published shemas or templa
 
 ## 3. Testing Stage 2, Milestone 1 deliverables
 
-### UX Improvements
+### Deliverable 1: TypeScript Implementation
+
+Two ways of verifying TypeScript migration:
+
+1. Visit https://github.com/FACINGS/collection-manager - on the right-hand panel, you will see "Languages - TypeScript - 98.9%"
+2. In the CLI:
+   - Run `find src/** -type f | wc -l` to count all source code files (`104`).
+   - Run `find src/** -type f | grep '.ts' | wc -l` to count all TypeScript files (`104`)
+   - Run `yarn lint` to find `No ESLint warnings or errors`
+
+### Deliverable 2: UX Improvements
 
 1. Jungle4 EOS testnet support
    - On the main page of the app, when logged out, you will be able to select Jungle4 in the upper-left select menu.
@@ -112,3 +122,9 @@ Note that many published collections may not have any published shemas or templa
    - better defaults for schema: friendlier handling of `img` and `video` fields on the create schema page
    - allow blank immutable fields: when creating templates, there is a toggle switch allowing the user to specify that a blank value should be added as immutable (as opposed to left out of the template definition)
    - improved input validations: collection and schema name fields now follow precise rules of EOS account names
+
+### Deliverable 3: Plugin Architecture
+
+Documentation of the plugin system and instructions on how to install a sample plugin from GitHub or create a plugin from scratch are found here:
+
+https://github.com/FACINGS/collection-manager/blob/main/docs/plugins.md
