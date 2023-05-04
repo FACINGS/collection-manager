@@ -348,7 +348,7 @@ function Transfer({ ual }) {
               {selectedAssets.length > 0 ? (
                 <div className="flex flex-col gap-8">
                   <h3 className="headline-3">Selected NFTs</h3>
-                  <CardContainer>
+                  <CardContainer style="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 sm:gap-8">
                     {selectedAssets.map((asset, index) => (
                       <div key={index} className="w-full flex flex-col gap-4">
                         <Card
@@ -366,13 +366,8 @@ function Transfer({ ual }) {
                           }
                           title={asset.name}
                           subtitle={`by ${asset.collection.author}`}
+                          viewLink={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
                         />
-                        <Link
-                          href={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
-                          className="btn btn-small whitespace-nowrap w-full text-center truncate"
-                        >
-                          View NFT
-                        </Link>
                       </div>
                     ))}
                   </CardContainer>
@@ -426,7 +421,7 @@ function Transfer({ ual }) {
                   value={match}
                 />
                 {filteredAssets.length > 0 ? (
-                  <CardContainer>
+                  <CardContainer style="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 sm:gap-8">
                     {filteredAssets.map((asset, index) => {
                       if (asset.is_transferable) {
                         return (
@@ -435,7 +430,7 @@ function Transfer({ ual }) {
                             className="w-full flex flex-col gap-4"
                           >
                             <div
-                              className={`${
+                              className={`cursor-pointer ${
                                 selectedAssets.includes(asset) &&
                                 'border-4 rounded-xl'
                               }`}
@@ -455,15 +450,9 @@ function Transfer({ ual }) {
                                 }
                                 title={asset.name}
                                 subtitle={`by ${asset.collection.author}`}
+                                viewLink={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
                               />
                             </div>
-                            <Link
-                              href={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
-                              className="btn btn-small whitespace-nowrap w-full text-center truncate"
-                              target="_blank"
-                            >
-                              View NFT
-                            </Link>
                           </div>
                         );
                       }

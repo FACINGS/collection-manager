@@ -15,7 +15,6 @@ import { appName } from '@configs/globalsConfig';
 
 import { collectionTabs } from '@utils/collectionTabs';
 
-import { uploadImageToIpfsService } from '@services/collection/uploadImageToIpfsService';
 import { collectionAssetsService } from '@services/collection/collectionAssetsService';
 import { createAssetService } from '@services/asset/createAssetService';
 import { getAccount } from '@services/account/getAccount';
@@ -37,9 +36,11 @@ import { Modal } from '@components/Modal';
 import { Switch } from '@components/Switch';
 import { Header } from '@components/Header';
 import { Carousel } from '@components/Carousel';
+import { InputPreview } from '@components/InputPreview';
 
 import { usePermission } from '@hooks/usePermission';
 import { handlePreview } from '@utils/handlePreview';
+import { handleAttributesData } from '@utils/handleAttributesData';
 
 interface NewAssetProps {
   ual: any;
@@ -62,11 +63,6 @@ interface FormDataProps {
     numberOfCopies: number;
   }[];
   attributes: { [key: string]: any }[];
-}
-
-interface MutableDataProps {
-  key: string;
-  value: any[];
 }
 
 function NewAsset({
@@ -136,6 +132,7 @@ function NewAsset({
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     mode: 'onBlur',
@@ -209,59 +206,10 @@ function NewAsset({
     setIsLoading(true);
 
     try {
-      const mutableData: MutableDataProps[] = [];
-
-      for (const key in attributes) {
-        const attribute = attributes[key];
-
-        const item = mutableDataList.find((item) => item.name === key);
-
-        if (item && attribute) {
-          if (item.type === 'image' && attribute.length > 0) {
-            const pinataImage = await uploadImageToIpfsService(attribute[0]);
-
-            mutableData.push({
-              key: key,
-              value: ['string', pinataImage ? pinataImage['IpfsHash'] : ''],
-            });
-          }
-
-          if (item.type === 'bool') {
-            mutableData.push({
-              key: key,
-              value: ['uint8', attribute ? 1 : 0],
-            });
-          }
-
-          if (item.type === 'ipfs') {
-            mutableData.push({
-              key: key,
-              value: ['string', attribute],
-            });
-          }
-
-          if (item.type === 'double') {
-            mutableData.push({
-              key: key,
-              value: ['float64', attribute],
-            });
-          }
-
-          if (item.type === 'uint64') {
-            mutableData.push({
-              key: key,
-              value: [item.type, attribute],
-            });
-          }
-
-          if (item.type === 'string') {
-            mutableData.push({
-              key: key,
-              value: [item.type, attribute],
-            });
-          }
-        }
-      }
+      const mutableData = await handleAttributesData({
+        attributes: attributes,
+        dataList: mutableDataList,
+      });
 
       const actions = [];
 
@@ -642,20 +590,24 @@ function NewAsset({
                         return (
                           <div
                             key={index}
-                            className="flex md:flex-row flex-col gap-4"
+                            className="grid grid-cols-12 gap-4 mt-8 pb-8 lg:pb-0 lg:mt-4 border-b border-neutral-700 lg:border-none"
                           >
-                            <div className="p-4 border flex items-center justify-center border-neutral-700 rounded">
-                              <span className="w-full md:w-56 text-center body-2 uppercase whitespace-nowrap">
+                            <div className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-4 p-3 flex items-center justify-center border border-neutral-700 rounded">
+                              <span className="title-1 text-white whitespace-nowrap">
                                 {item.name}
                               </span>
                             </div>
-                            <Input
-                              type="text"
-                              placeholder={item.type}
-                              value={selectedTemplate.immutable_data[item.name]}
-                              readOnly
-                              disabled
-                            />
+                            <div className="col-span-12 sm:col-span-6 lg:col-span-8 xl:col-span-8">
+                              <Input
+                                type="text"
+                                placeholder={item.type}
+                                value={
+                                  selectedTemplate.immutable_data[item.name]
+                                }
+                                readOnly
+                                disabled
+                              />
+                            </div>
                           </div>
                         );
                       }
@@ -675,60 +627,47 @@ function NewAsset({
                     schemaAttributes.format.map((item, index) => {
                       if (mutableDataList.includes(item)) {
                         return (
-                          <div key={index}>
-                            {item.type === 'image' || item.type === 'bool' ? (
-                              <>
-                                {item.type === 'image' && (
-                                  <div className="flex md:flex-row flex-col gap-4">
-                                    <div className="p-4 flex items-center justify-center border border-neutral-700 rounded">
-                                      <span className="md:w-56 w-full text-center body-2 uppercase whitespace-nowrap">
-                                        {item.name}
-                                      </span>
-                                    </div>
-                                    <label
-                                      htmlFor="file"
-                                      className="flex w-full p-4 items-start rounded bg-neutral-800 border focus-within:border-white focus-within:bg-neutral-700 border-neutral-700"
-                                    >
-                                      <input
-                                        id="file"
-                                        {...register(item.name)}
-                                        type="file"
-                                        accept="image/*"
-                                      />
-                                    </label>
-                                  </div>
-                                )}
-                                {item.type === 'bool' && (
-                                  <div className="flex md:flex-row flex-col items-center gap-4">
-                                    <div className="p-4 border flex items-center justify-center border-neutral-700 rounded">
-                                      <span className="w-full md:w-56 text-center body-2 uppercase whitespace-nowrap">
-                                        {item.name}
-                                      </span>
-                                    </div>
-
-                                    <Controller
-                                      control={control}
-                                      name={item.name}
-                                      render={({ field }) => (
-                                        <Switch
-                                          onChange={field.onChange}
-                                          checked={field.value}
-                                          label={
-                                            field.value ? 'Enabled' : 'Disabled'
-                                          }
-                                        />
-                                      )}
+                          <div
+                            key={index}
+                            className="grid grid-cols-12 gap-4 mt-8 pb-8 lg:pb-0 lg:mt-4 border-b border-neutral-700 lg:border-none"
+                          >
+                            <div className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-4 p-3 flex items-center justify-center border border-neutral-700 rounded">
+                              <span className="title-1 text-white whitespace-nowrap">
+                                {item.name}
+                              </span>
+                            </div>
+                            <div className="col-span-12 flex sm:col-span-6 lg:col-span-8 xl:col-span-8">
+                              {item.type === 'image' ? (
+                                <InputPreview
+                                  {...register(item.name)}
+                                  setValue={setValue}
+                                  title="Add Image"
+                                  description="Upload or drag and drop an image"
+                                  accept="image/*"
+                                />
+                              ) : item.type === 'video' ? (
+                                <InputPreview
+                                  {...register(item.name)}
+                                  setValue={setValue}
+                                  title="Add Video"
+                                  description="Upload or drag and drop a video"
+                                  accept="video/*"
+                                />
+                              ) : item.type === 'bool' ? (
+                                <Controller
+                                  control={control}
+                                  name={item.name}
+                                  render={({ field }) => (
+                                    <Switch
+                                      onChange={field.onChange}
+                                      checked={field.value}
+                                      label={
+                                        field.value ? 'Enabled' : 'Disabled'
+                                      }
                                     />
-                                  </div>
-                                )}
-                              </>
-                            ) : (
-                              <div className="flex md:flex-row flex-col gap-4">
-                                <div className="p-4 border flex items-center justify-center border-neutral-700 rounded">
-                                  <span className="w-full md:w-56 text-center body-2 uppercase whitespace-nowrap">
-                                    {item.name}
-                                  </span>
-                                </div>
+                                  )}
+                                />
+                              ) : (
                                 <Input
                                   {...register(item.name)}
                                   error={errors[item.name]?.message}
@@ -737,8 +676,8 @@ function NewAsset({
                                     item.type === 'string' ? 'text' : item.type
                                   }
                                 />
-                              </div>
-                            )}
+                              )}
+                            </div>
                           </div>
                         );
                       }

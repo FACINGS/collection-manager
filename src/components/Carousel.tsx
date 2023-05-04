@@ -120,7 +120,7 @@ export function Carousel({ images, unique }: CarouselProps) {
                               alt="small images on the bottom"
                               sizes="max-w-xs"
                             />
-                          ) : (
+                          ) : item.type === 'video' ? (
                             <video
                               muted
                               autoPlay
@@ -133,6 +133,10 @@ export function Carousel({ images, unique }: CarouselProps) {
                                 type="video/mp4"
                               />
                             </video>
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-neutral-800 text-white rounded-xl">
+                              <ImageSquare size={96} />
+                            </div>
                           )}
                         </motion.button>
                       ))}

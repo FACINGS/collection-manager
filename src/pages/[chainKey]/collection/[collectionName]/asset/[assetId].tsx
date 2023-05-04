@@ -100,7 +100,9 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
                     <span>Mint Number</span>
                     <div>
                       <span className="font-bold pr-2">
-                        {asset.template_mint}
+                        {Number(asset.template_mint) > 0
+                          ? asset.template_mint
+                          : 'Minting...'}
                       </span>
                       {asset.template && (
                         <span className="">

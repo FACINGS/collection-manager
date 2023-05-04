@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { ImageSquare } from 'phosphor-react';
+import Link from 'next/link';
 
 interface CardContentProps {
   id: string;
@@ -7,6 +8,7 @@ interface CardContentProps {
   video: string;
   title: string;
   subtitle: string;
+  viewLink?: string;
   withThumbnail: boolean;
 }
 
@@ -16,6 +18,7 @@ export function CardContent({
   video,
   title,
   subtitle,
+  viewLink,
   withThumbnail,
 }: CardContentProps) {
   return (
@@ -60,6 +63,16 @@ export function CardContent({
         <h4 className="title-1 truncate">{title ?? 'No name'}</h4>
         {subtitle && (
           <p className="body-2 text-neutral-200 truncate">{subtitle}</p>
+        )}
+        {viewLink && (
+          <Link
+            href={viewLink}
+            className="btn btn-small mt-4 whitespace-nowrap w-full text-center truncate"
+            target="_blank"
+            onClick={(event) => event.stopPropagation()}
+          >
+            View NFT
+          </Link>
         )}
       </div>
     </>

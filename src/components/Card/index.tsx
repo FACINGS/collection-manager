@@ -9,6 +9,7 @@ interface CardProps extends HTMLAttributes<HTMLElement> {
   video?: string;
   title?: string;
   subtitle?: string;
+  viewLink?: string;
   withThumbnail?: boolean;
 }
 
@@ -19,6 +20,7 @@ export function Card({
   video,
   title,
   subtitle,
+  viewLink,
   withThumbnail = true,
   ...props
 }: CardProps) {
@@ -51,6 +53,7 @@ export function Card({
         video={video}
         title={title}
         subtitle={subtitle}
+        viewLink={viewLink}
         withThumbnail={withThumbnail}
       />
     </div>

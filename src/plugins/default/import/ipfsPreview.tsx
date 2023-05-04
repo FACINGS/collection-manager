@@ -20,22 +20,6 @@ interface ImagesProps {
 export function IpfsPreview({ immutableData }: ImmutableDataProps) {
   const [images, setImages] = useState<ImagesProps[]>([]);
 
-  const handlePreview = async () => {
-    const data = await Promise.all(
-      immutableData.map(async (item) => {
-        if (isIPFS.cid(item.value[1]) || isIPFS.cidPath(item.value[1])) {
-          const type = await handleIpfs(item.value[1]);
-          return {
-            ipfs: item.value[1],
-            type: type,
-          };
-        }
-      })
-    );
-
-    setImages(data.filter((item) => item !== undefined));
-  };
-
   async function handleIpfs(ipfs: string) {
     try {
       const result = await fetch(`${ipfsEndpoint}/${ipfs}`);
@@ -50,13 +34,36 @@ export function IpfsPreview({ immutableData }: ImmutableDataProps) {
   }
 
   useEffect(() => {
-    handlePreview();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const handlePreview = async (immutable) => {
+      const data = await Promise.all(
+        immutable.map(async (item) => {
+          if (isIPFS.cid(item.value[1]) || isIPFS.cidPath(item.value[1])) {
+            const type = await handleIpfs(item.value[1]);
+            return {
+              ipfs: item.value[1],
+              type: type,
+            };
+          }
+        })
+      );
 
-  return (
-    <div className="flex flex-col w-full max-w-xs">
-      <Carousel images={images} />
-    </div>
-  );
+      const filteredIpfs = data.filter((item) => item !== undefined);
+
+      if (filteredIpfs.length > 0) {
+        setImages(filteredIpfs);
+      } else {
+        setImages([{ ipfs: '', type: '' }]);
+      }
+    };
+
+    handlePreview(immutableData);
+  }, [immutableData]);
+
+  if (images.length > 0) {
+    return (
+      <div className="flex flex-col w-full max-w-xs">
+        <Carousel images={images} />
+      </div>
+    );
+  }
 }

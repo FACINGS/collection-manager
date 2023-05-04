@@ -84,7 +84,7 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
     <section className="container">
       <div className="flex flex-col py-8 gap-12">
         <h2 className="headline-2">{collectionTabs[0].name}</h2>
-        <div className="flex flex-col md:flex-row gap-24">
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-12">
           <div className="flex-1">
             <h3 className="headline-3 mb-4">Description</h3>
             <p className="body-1">{collection.data.description}</p>
@@ -101,8 +101,6 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
               </div>
             ))}
           </div>
-        </div>
-        <div className="flex flex-col md:flex-row gap-24">
           {hasCreatorInfo && (
             <div className="flex-1">
               <h3 className="headline-3 mb-4">Company details</h3>
@@ -142,6 +140,34 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
                   );
                 }
               })}
+            </div>
+          )}
+          <div className="flex-1">
+            <h3 className="headline-3 mb-4">Authorized accounts</h3>
+            <div className="flex flex-row gap-2 flex-wrap">
+              {collection.authorized_accounts.map((item, index) => (
+                <span key={item} className="body-1">
+                  {item}
+                  {index !== collection.authorized_accounts.length - 1
+                    ? ','
+                    : '.'}
+                </span>
+              ))}
+            </div>
+          </div>
+          {collection.notify_accounts.length > 0 && (
+            <div className="flex-1">
+              <h3 className="headline-3 mb-4">Notified accounts</h3>
+              <div className="flex flex-row gap-2 flex-wrap">
+                {collection.notify_accounts.map((item, index) => (
+                  <span key={item} className="body-1">
+                    {item}
+                    {index !== collection.notify_accounts.length - 1
+                      ? ','
+                      : '.'}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>

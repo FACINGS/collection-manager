@@ -28,6 +28,8 @@ import { InputPreview } from '@components/InputPreview';
 import { Header } from '@components/Header';
 
 import { collectionTabs } from '@utils/collectionTabs';
+import { handleAttributesData } from '@utils/handleAttributesData';
+
 import { usePermission } from '@hooks/usePermission';
 
 import { appName } from '@configs/globalsConfig';
@@ -144,97 +146,10 @@ function NewTemplate({
     setIsLoading(true);
 
     try {
-      const filesAttributes = Object.keys(attributes).reduce(
-        (accumulatorAttributes, keyAttribute) => {
-          const attributeValue = attributes[`${keyAttribute}`];
-          const shouldMakeUpload =
-            typeof attributeValue === 'object' && attributeValue.length > 0;
-
-          if (shouldMakeUpload) {
-            return [
-              ...accumulatorAttributes,
-              {
-                name: keyAttribute,
-                value: attributeValue[0],
-              },
-            ];
-          }
-          return accumulatorAttributes;
-        },
-        []
-      );
-
-      const pinataFiles = await Promise.all(
-        filesAttributes.map((fileAttribute) =>
-          uploadImageToIpfsService(fileAttribute.value)
-        )
-      );
-
-      filesAttributes.forEach((fileAttribute, fileAttributeIndex) => {
-        attributes[fileAttribute.name] =
-          pinataFiles[fileAttributeIndex]['IpfsHash'];
+      const immutableData = await handleAttributesData({
+        attributes: attributes,
+        dataList: schemasAttributes,
       });
-
-      const immutableData = [];
-      let floatError = {};
-
-      schemasAttributes.forEach(({ name, type, isImmutable }) => {
-        if (!isImmutable) {
-          return;
-        }
-
-        const attributeValue = attributes[`${name}`];
-
-        if (type === 'image' || type === 'ipfs' || name === 'video') {
-          immutableData.push({
-            key: name,
-            value: ['string', attributeValue],
-          });
-        } else if (type === 'bool') {
-          immutableData.push({
-            key: name,
-            value: ['uint8', Number(attributeValue)],
-          });
-        } else if (type === 'double') {
-          const floatValue = parseFloat(attributeValue);
-
-          if (!isNaN(floatValue)) {
-            immutableData.push({
-              key: name,
-              value: ['float64', floatValue],
-            });
-          } else {
-            floatError = {
-              ...floatError,
-              ...{ error: true, attribute: name, type: type },
-            };
-          }
-        } else if (type === 'uint64') {
-          immutableData.push({
-            key: name,
-            value: ['uint64', Number(attributeValue)],
-          });
-        } else {
-          immutableData.push({
-            key: name,
-            value: [type, attributeValue],
-          });
-        }
-      });
-
-      if (floatError['error']) {
-        modalRef.current?.openModal();
-        const message = `Attribute "${floatError['attribute']}" with type "${floatError['type']}" has an invalid value.`;
-
-        setModal({
-          title: 'Error',
-          message,
-          isError: true,
-        });
-
-        setIsLoading(false);
-        return;
-      }
 
       await createTemplateService({
         activeUser: ual.activeUser,
@@ -457,7 +372,7 @@ function NewTemplate({
                         schemaAttribute.isImmutable ? '' : 'opacity-50'
                       }`}
                     >
-                      <span className="body-2 font-bold text-white whitespace-nowrap">
+                      <span className="title-1 text-white whitespace-nowrap">
                         {schemaAttribute.name}
                       </span>
                     </div>

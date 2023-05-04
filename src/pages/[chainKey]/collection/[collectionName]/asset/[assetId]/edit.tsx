@@ -10,7 +10,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { getAssetService, AssetProps } from '@services/asset/getAssetService';
 import { burnAssetService } from '@services/asset/burnAssetService';
 import { updateMutableDataService } from '@services/asset/updateMutableDataService';
-import { uploadImageToIpfsService } from '@services/collection/uploadImageToIpfsService';
 import {
   getCollectionService,
   CollectionProps,
@@ -27,6 +26,7 @@ import { InputPreview } from '@components/InputPreview';
 import { appName } from '@configs/globalsConfig';
 import { usePermission } from '@hooks/usePermission';
 import { handlePreview } from '@utils/handlePreview';
+import { handleAttributesData } from '@utils/handleAttributesData';
 
 interface ModalProps {
   title: string;
@@ -40,11 +40,6 @@ interface EditAssetProps {
   collection: CollectionProps;
   asset: AssetProps;
   chainKey: string;
-}
-
-interface MutableDataProps {
-  key: string;
-  value: any[];
 }
 
 interface AttributesProps {
@@ -101,62 +96,10 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
     const attributes: AttributesProps[] = data;
 
     try {
-      const mutableData: MutableDataProps[] = [];
-
-      for (const key in attributes) {
-        const attribute = attributes[key];
-
-        const item = mutableDataList.find((item) => item.name === key);
-
-        if (item && attribute) {
-          if (
-            item.type === 'image' ||
-            (item.type === 'ipfs' && attribute.length > 0)
-          ) {
-            if (typeof attribute === 'string') {
-              mutableData.push({
-                key: key,
-                value: ['string', attribute],
-              });
-            } else {
-              const pinataImage = await uploadImageToIpfsService(attribute[0]);
-
-              mutableData.push({
-                key: key,
-                value: ['string', pinataImage ? pinataImage['IpfsHash'] : ''],
-              });
-            }
-          }
-
-          if (item.type === 'bool') {
-            mutableData.push({
-              key: key,
-              value: ['uint8', attribute ? 1 : 0],
-            });
-          }
-
-          if (item.type === 'double') {
-            mutableData.push({
-              key: key,
-              value: ['float64', attribute],
-            });
-          }
-
-          if (item.type === 'uint64') {
-            mutableData.push({
-              key: key,
-              value: [item.type, attribute],
-            });
-          }
-
-          if (item.type === 'string') {
-            mutableData.push({
-              key: key,
-              value: [item.type, attribute],
-            });
-          }
-        }
-      }
+      const mutableData = await handleAttributesData({
+        attributes: attributes,
+        dataList: mutableDataList,
+      });
 
       await updateMutableDataService({
         activeUser: ual.activeUser,
@@ -308,7 +251,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
                           {item.type === 'image' && (
                             <div className="flex md:flex-row flex-col gap-4">
                               <div className="p-4 flex items-center justify-center border border-neutral-700 rounded">
-                                <span className="md:w-56 w-full text-center body-2 uppercase whitespace-nowrap">
+                                <span className="md:w-56 w-full text-center title-1 whitespace-nowrap">
                                   {item.name}
                                 </span>
                               </div>
@@ -323,7 +266,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
                           {item.type === 'ipfs' && (
                             <div className="flex md:flex-row flex-col gap-4">
                               <div className="p-4 flex items-center justify-center border border-neutral-700 rounded">
-                                <span className="md:w-56 w-full text-center body-2 uppercase whitespace-nowrap">
+                                <span className="md:w-56 w-full text-center title-1 whitespace-nowrap">
                                   {item.name}
                                 </span>
                               </div>
@@ -337,7 +280,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
                           {item.type === 'bool' && (
                             <div className="flex md:flex-row flex-col items-center gap-4">
                               <div className="p-4 border flex items-center justify-center border-neutral-700 rounded">
-                                <span className="w-full md:w-56 text-center body-2 uppercase whitespace-nowrap">
+                                <span className="w-full md:w-56 text-center title-1 whitespace-nowrap">
                                   {item.name}
                                 </span>
                               </div>
@@ -361,7 +304,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
                       ) : (
                         <div className="flex md:flex-row flex-col gap-4">
                           <div className="p-4 border flex items-center justify-center border-neutral-700 rounded">
-                            <span className="w-full md:w-56 text-center body-2 uppercase whitespace-nowrap">
+                            <span className="w-full md:w-56 text-center title-1 whitespace-nowrap">
                               {item.name}
                             </span>
                           </div>

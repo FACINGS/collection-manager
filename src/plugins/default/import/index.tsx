@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { useRouter } from 'next/router';
+import Papa from 'papaparse';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,6 +12,8 @@ import { pluginInfo } from './config';
 import { Review } from './review';
 
 import { Modal } from '@components/Modal';
+
+import { handleAttributesData } from '@utils/handleAttributesData';
 
 const csv = yup.object().shape({
   csvFile: yup.mixed().required(),
@@ -56,25 +59,17 @@ interface SchemaAttributesProps {
   type: string;
 }
 
-interface InvalidTypeProps {
-  property: string;
-  type: string;
+interface ImportErrorsProps {
+  index: number;
+  message: string;
 }
 
-interface RequiredPropertiesProps {
-  property: string;
-  templateIndex: number;
+interface RowsProps {
+  [key: string]: any;
 }
 
-interface UniquePropertiesProps {
-  property: string;
-  data: any[];
-}
-
-interface InvalidUniqueProperties {
-  property: string;
-  repeated: string;
-  rows: any[];
+interface TemplateProps {
+  [key: string]: any;
 }
 
 function Import({ ual }: ImportProps) {
@@ -84,35 +79,19 @@ function Import({ ual }: ImportProps) {
   const { chainKey, collectionName } = router.query;
 
   const [fileName, setFileName] = useState<string>('');
+  const [rows, setRows] = useState<RowsProps[]>([]);
+  const [attributes, setAttributes] = useState<String[]>([]);
   const [actions, setActions] = useState<ActionsProps[]>([]);
+  const [templates, setTemplates] = useState<TemplateProps[]>([]);
+  const [importErrors, setImportErrors] = useState<ImportErrorsProps[]>([]);
   const [schemaAttributes, setSchemaAttributes] = useState<
     SchemaAttributesProps[]
-  >([]);
-  const [templates, setTemplates] = useState([]);
-  const [invalidType, setInvalidType] = useState<InvalidTypeProps[]>([]);
-  const [requiredProperties, setRequiredProperties] = useState<
-    RequiredPropertiesProps[]
-  >([]);
-  const [uniqueProperties, setUniqueProperties] = useState<
-    UniquePropertiesProps[]
-  >([]);
-  const [invalidUniqueProperties, setInvalidUniqueProperties] = useState<
-    InvalidUniqueProperties[]
   >([]);
   const [modal, setModal] = useState<ModalProps>({
     title: '',
     message: '',
     details: '',
   });
-
-  const attributeTypeOptions = [
-    'string',
-    'uint64',
-    'double',
-    'image',
-    'ipfs',
-    'bool',
-  ];
 
   const {
     reset,
@@ -123,411 +102,7 @@ function Import({ ual }: ImportProps) {
     resolver: yupResolver(csv),
   });
 
-  useEffect(() => {
-    setActions([]);
-    setTemplates([]);
-    setSchemaAttributes([]);
-  }, [fileName]);
-
-  useEffect(() => {
-    function resetAllValues() {
-      reset();
-      setActions([]);
-      setFileName('');
-      setTemplates([]);
-      setInvalidType([]);
-      setUniqueProperties([]);
-      setSchemaAttributes([]);
-      setRequiredProperties([]);
-      setInvalidUniqueProperties([]);
-    }
-
-    if (
-      fileName &&
-      !fileName.match(/(^[a-z1-5.]{1,11}[a-z1-5]$)|(^[a-z1-5.]{12}[a-j1-5]$)/)
-    ) {
-      modalRef.current?.openModal();
-      const title = 'Invalid File Name';
-      const message =
-        'The file name is used to define the name of the schema and it must be up to 12 characters (a-z, 1-5, .) and cannot end with a "."';
-
-      setModal({
-        title,
-        message,
-      });
-
-      resetAllValues();
-    }
-
-    if (invalidType.length > 0) {
-      modalRef.current?.openModal();
-      const title = 'Invalid Type';
-      const message =
-        'A schema property has an invalid type please check the valid datatypes list.';
-      const details = `${invalidType
-        .map((item) => {
-          const { property, type } = item;
-          return `<p>Property: <b>"${property}"</b> has an invalid datatype <b>"${type}"</b>.</p><br>`;
-        })
-        .toString()
-        .replace(/,/, '')}`;
-
-      setModal({
-        title,
-        message,
-        details,
-      });
-
-      resetAllValues();
-    }
-
-    if (requiredProperties.length > 0) {
-      modalRef.current?.openModal();
-      const title = 'Required Attribute';
-      const message =
-        'A required attribute is empty please check the details for more information.';
-      const details = `${requiredProperties
-        .map((item) => {
-          return `<p>Property <b>"${item.property}"</b> is empty at row <b>"${
-            item.templateIndex + 6
-          }".</p></br>`;
-        })
-        .toString()
-        .replace(/,/g, '')}`;
-
-      setModal({
-        title,
-        message,
-        details,
-      });
-
-      resetAllValues();
-    }
-
-    if (invalidUniqueProperties.length > 0) {
-      modalRef.current?.openModal();
-      const title = 'Unique Attribute';
-      const message =
-        'An attribute that should be unique has been repeated, please check the details for more information.';
-      const details = `${invalidUniqueProperties
-        .map((item) => {
-          return `<p>Property <b>"${item.property}"</b> has the value <b>"${
-            item.repeated
-          }"</b> repeated at rows ${item.rows.map(
-            (row) => `<b>"${row}";</b>`
-          )}.</p></br>`;
-        })
-        .toString()
-        .replace(/,/g, '')}`;
-
-      setModal({
-        title,
-        message,
-        details,
-      });
-
-      resetAllValues();
-    }
-  }, [
-    invalidType,
-    requiredProperties,
-    invalidUniqueProperties,
-    fileName,
-    reset,
-  ]);
-
-  useEffect(() => {
-    if (uniqueProperties.length > 0) {
-      uniqueProperties.map((item) => {
-        const rows = [];
-        const repeatedProperty = item.data.filter(
-          (currentValue, currentIndex) =>
-            item.data.indexOf(currentValue) !== currentIndex
-        )[0];
-
-        if (repeatedProperty) {
-          item.data.map((item, index) => {
-            item === repeatedProperty && rows.push(index);
-          });
-
-          setInvalidUniqueProperties((state) => [
-            ...state,
-            ...[
-              {
-                property: item.property,
-                repeated: repeatedProperty,
-                rows: rows,
-              },
-            ],
-          ]);
-        }
-      });
-    }
-  }, [uniqueProperties]);
-
-  const handleCSVFile = (string) => {
-    const filteredHeaders = string
-      .slice(0, string.indexOf('\n'))
-      .replace(/(\r)/g, '')
-      .split(',')
-      .filter((header) => header !== '') as string[];
-
-    const sysflagIndex = filteredHeaders.indexOf('sysflag') as number;
-
-    const rows = string
-      .slice(string.indexOf('\n') + 1)
-      .replace(/(\r)/g, '')
-      .split('\n')
-      .slice(0, sysflagIndex) as string[];
-
-    let headersInfo = [];
-    const templatesInfo = [];
-
-    const headers = filteredHeaders.slice(0, sysflagIndex + 1);
-
-    const sysflags = ['datatype', 'unique', 'required', 'mutable'];
-
-    rows.map((item) => {
-      const rowItem = item.split(',');
-
-      const isHeader =
-        rowItem.filter((item) => sysflags.includes(item)).length > 0;
-
-      if (isHeader) {
-        const header = rowItem
-          .filter((item) => item !== '')
-          .slice(0, headers.length - 3);
-
-        const sysflag = header.pop();
-
-        headersInfo = {
-          ...headersInfo,
-          ...{ [sysflag]: header },
-        };
-      } else {
-        const templateRow = rowItem
-          ?.slice(0, headers.length - 1)
-          ?.filter((item) => item !== '');
-
-        if (templateRow?.length) {
-          templatesInfo.push([...templateRow]);
-        }
-      }
-    });
-
-    const excludeHeaders = [
-      'sysflag',
-      'max_supply',
-      'burnable',
-      'transferable',
-    ];
-
-    if (!headers.includes('img' || 'video')) {
-      modalRef.current?.openModal();
-      const title = 'Add img or video attribute';
-      const message =
-        'Your schema must contain at least one img or video attribute.';
-
-      setModal({
-        title,
-        message,
-      });
-
-      reset();
-      return;
-    }
-
-    templatesInfo.map((property, key) => {
-      property.map((item, index) => {
-        const required =
-          headersInfo['required'][index] === 'TRUE' ? true : false;
-
-        if (required && item === '') {
-          setRequiredProperties((state) => [
-            ...state,
-            ...[{ property: headers[index], templateIndex: key }],
-          ]);
-        }
-      });
-    });
-
-    headersInfo['unique'].map((element, index) => {
-      const isUnique = element === 'TRUE' ? true : false;
-      const values = [];
-
-      templatesInfo.map((item) => {
-        values.push(item[index]);
-      });
-
-      if (isUnique) {
-        setUniqueProperties((state) => [
-          ...state,
-          ...[
-            {
-              property: headers[index],
-              data: values,
-            },
-          ],
-        ]);
-      }
-    });
-
-    headersInfo['datatype'].map((type, index) => {
-      if (!attributeTypeOptions.includes(type)) {
-        const invalid = { property: headers[index], type: type };
-        setInvalidType((state) => [...state, ...[invalid]]);
-      }
-    });
-
-    const attributes = [];
-    headers
-      .filter((attribute) => !excludeHeaders.includes(attribute))
-      .map((attribute, index) => {
-        attributes.push({
-          name: attribute,
-          type: headersInfo['datatype'] && headersInfo['datatype'][index],
-        });
-      });
-
-    setSchemaAttributes(attributes);
-
-    templatesInfo.map((template) => {
-      let newTemplate = {};
-      headers
-        .filter((header) => header !== 'sysflag')
-        .map((item, index) => {
-          if (!excludeHeaders.includes(item)) {
-            const { type } = attributes.find(
-              (element) => element.name === item
-            );
-
-            newTemplate = {
-              ...newTemplate,
-              ...{
-                [item]: {
-                  value: template[index],
-                  type: type,
-                  mutable:
-                    headersInfo['mutable'] &&
-                    headersInfo['mutable'][index] === 'TRUE'
-                      ? true
-                      : false,
-                },
-              },
-            };
-          } else {
-            newTemplate = { ...newTemplate, ...{ [item]: template[index] } };
-          }
-        });
-
-      setTemplates((state) => [...state, ...[newTemplate]]);
-    });
-  };
-
-  useEffect(() => {
-    if (
-      fileName &&
-      collectionName &&
-      ual &&
-      templates.length > 0 &&
-      schemaAttributes.length > 0
-    ) {
-      const newActions = [];
-
-      const createSchema = {
-        account: 'atomicassets',
-        name: 'createschema',
-        authorization: [
-          {
-            actor: ual.activeUser.accountName,
-            permission: ual.activeUser.requestPermission,
-          },
-        ],
-        data: {
-          authorized_creator: ual.activeUser.accountName,
-          collection_name: collectionName,
-          schema_name: fileName,
-          schema_format: schemaAttributes,
-        },
-      };
-
-      newActions.push(createSchema);
-
-      templates.map((template) => {
-        const immutableData = [];
-
-        for (const key in template) {
-          if (
-            key !== 'burnable' &&
-            key !== 'max_supply' &&
-            key !== 'transferable' &&
-            !template[key].mutable
-          ) {
-            if (
-              template[key].type === 'image' ||
-              template[key].type === 'ipfs' ||
-              template[key].name === 'video'
-            ) {
-              immutableData.push({
-                key: key,
-                value: ['string', template[key].value],
-              });
-            } else if (template[key].type === 'bool') {
-              immutableData.push({
-                key: key,
-                value: ['uint8', parseInt(template[key].value)],
-              });
-            } else if (template[key].type === 'double') {
-              immutableData.push({
-                key: key,
-                value: ['float64', parseInt(template[key].value)],
-              });
-            } else if (template[key].type === 'uint64') {
-              immutableData.push({
-                key: key,
-                value: ['uint64', parseInt(template[key].value)],
-              });
-            } else {
-              immutableData.push({
-                key: key,
-                value: [template[key].type, template[key].value],
-              });
-            }
-          }
-        }
-
-        const createTemplate = {
-          account: 'atomicassets',
-          name: 'createtempl',
-          authorization: [
-            {
-              actor: ual.activeUser.accountName,
-              permission: ual.activeUser.requestPermission,
-            },
-          ],
-          data: {
-            authorized_creator: ual.activeUser.accountName,
-            collection_name: collectionName,
-            schema_name: fileName,
-            transferable: template.transferable === 'TRUE' ? true : false,
-            burnable: template.burnable === 'TRUE' ? true : false,
-            max_supply: template.max_supply,
-            immutable_data: immutableData,
-          },
-        };
-
-        newActions.push(createTemplate);
-      });
-
-      setActions(newActions);
-    }
-  }, [ual, collectionName, fileName, schemaAttributes, templates]);
-
   async function onSubmit() {
-    if (invalidType.length > 0) {
-      return;
-    }
-
     try {
       if (actions.length > 0) {
         await ual.activeUser.signTransaction(
@@ -565,22 +140,352 @@ function Import({ ual }: ImportProps) {
     }
   }
 
+  useEffect(() => {
+    if (
+      fileName &&
+      !fileName.match(/(^[a-z1-5.]{1,11}[a-z1-5]$)|(^[a-z1-5.]{12}[a-j1-5]$)/)
+    ) {
+      setImportErrors((state) => [
+        ...state,
+        ...[
+          {
+            index: 0,
+            title: 'Invalid schema',
+            message:
+              'The file name is used to define the name of the schema and it must be up to 12 characters (a-z, 1-5, .) and cannot end with a "."',
+          },
+        ],
+      ]);
+    }
+  }, [fileName]);
+
+  useEffect(() => {
+    // Checks if schema has at least one attribute img or video.
+    if (attributes.length > 0 && !attributes.includes('img' || 'video')) {
+      setImportErrors((state) => [
+        ...state,
+        ...[
+          {
+            index: 0,
+            title: 'Invalid schema',
+            message:
+              'Your schema must contain at least one "img" or "video" attribute.',
+          },
+        ],
+      ]);
+    }
+
+    const attributesData = [];
+    const dataTypes = rows[0];
+    const required = rows[1];
+    const uniques = rows[2];
+    const defaultHeaders = [
+      'max_supply',
+      'burnable',
+      'transferable',
+      'sysflag',
+    ];
+    const attributeTypeOptions = [
+      'string',
+      'uint64',
+      'double',
+      'image',
+      'ipfs',
+      'bool',
+    ];
+
+    // Checks if any of the schema attributes are invalid.
+    if (dataTypes) {
+      for (const element in dataTypes) {
+        if (!attributeTypeOptions.includes(dataTypes[element])) {
+          if (dataTypes[element] && element !== 'sysflag') {
+            setImportErrors((state) => [
+              ...state,
+              ...[
+                {
+                  index: 0,
+                  title: 'Invalid datatype',
+                  message: `Property "${element}" has an invalid datatype "${dataTypes[element]}"`,
+                },
+              ],
+            ]);
+          }
+        }
+      }
+    }
+
+    attributes.map((attribute) => {
+      attributesData.push({
+        name: attribute,
+        type: dataTypes[`${attribute}`],
+      });
+    });
+
+    setSchemaAttributes(attributesData);
+
+    const templateRows = rows
+      .filter((row, index) => {
+        const keys = Object.keys(rows[0]);
+
+        if (index > 0 && !keys.every((key) => key in row)) {
+          return false;
+        }
+
+        for (const key in row) {
+          if (
+            key === null ||
+            (!attributes.includes(key) && !defaultHeaders.includes(key)) ||
+            key === 'sysflag'
+          ) {
+            delete row[key];
+          }
+        }
+
+        const values = Object.values(row).filter((val) => val !== null);
+        if (values.length === 0) {
+          return false;
+        }
+
+        return true;
+      })
+      .slice(3);
+
+    const headersLength = templateRows.length;
+
+    // Checks if a unique attribute is duplicated.
+    if (uniques) {
+      Object.keys(uniques).filter((item) => {
+        if (uniques[item] && item !== 'sysflag') {
+          const duplicates = [];
+          const seenValues = {};
+          const rowsWithDuplicates = [];
+
+          templateRows.forEach((element) => {
+            const value = element[item];
+            if (seenValues[value]) {
+              if (duplicates.indexOf(value) === -1) {
+                duplicates.push(value);
+              }
+            } else {
+              seenValues[value] = true;
+            }
+          });
+
+          templateRows.filter((element, index) => {
+            const value = element[item];
+            if (duplicates.indexOf(value) !== -1) {
+              rowsWithDuplicates.push(index + headersLength + 1);
+            }
+          });
+
+          if (duplicates.length > 0 && rowsWithDuplicates.length > 0) {
+            function formatRowsWithDuplicates(numbers) {
+              if (numbers.length === 1) return numbers[0].toString();
+              return (
+                numbers.slice(0, -1).join(', ') +
+                (numbers.length > 2 ? ',' : '') +
+                ' and ' +
+                numbers[numbers.length - 1]
+              );
+            }
+
+            setImportErrors((state) => [
+              ...state,
+              ...[
+                {
+                  index: rowsWithDuplicates[0] - headersLength,
+                  title: 'Unique property',
+                  message: `Property "${item}" has the value "${
+                    duplicates[0]
+                  }" repeated at rows "${formatRowsWithDuplicates(
+                    rowsWithDuplicates
+                  )}" of the CSV.`,
+                },
+              ],
+            ]);
+          }
+        }
+      });
+    }
+
+    templateRows.map((template, index) => {
+      let newTemplate = {};
+
+      // Checks if a required attribute is empty.
+      Object.keys(template).map((item) => {
+        if (required[item] && !template[item]) {
+          setImportErrors((state) => [
+            ...state,
+            ...[
+              {
+                index: index + 1,
+                title: 'Required property',
+                message: `Missing required attribute "${item}" at row "${
+                  index + 1 + headersLength
+                }" of the CSV.`,
+              },
+            ],
+          ]);
+        }
+
+        if (!defaultHeaders.includes(item) && attributesData.length > 0) {
+          const { type } = attributesData.filter(
+            (element) => element.name === item
+          )[0];
+
+          newTemplate = {
+            ...newTemplate,
+            ...{
+              [item]: {
+                value: template[item],
+                type: type,
+              },
+            },
+          };
+        } else {
+          newTemplate = { ...newTemplate, ...{ [item]: template[item] } };
+        }
+      });
+
+      setTemplates((state) => [...state, ...[newTemplate]]);
+    });
+  }, [rows, attributes, reset]);
+
+  useEffect(() => {
+    async function handleActions() {
+      if (
+        fileName &&
+        collectionName &&
+        ual &&
+        templates.length > 0 &&
+        schemaAttributes.length > 0
+      ) {
+        const newActions = [];
+
+        const createSchema = {
+          account: 'atomicassets',
+          name: 'createschema',
+          authorization: [
+            {
+              actor: ual.activeUser.accountName,
+              permission: ual.activeUser.requestPermission,
+            },
+          ],
+          data: {
+            authorized_creator: ual.activeUser.accountName,
+            collection_name: collectionName,
+            schema_name: fileName,
+            schema_format: schemaAttributes,
+          },
+        };
+
+        newActions.push(createSchema);
+
+        await templates.map(async (template) => {
+          const immutableDataList = [];
+          const immutableAttributes = {};
+
+          for (const key in template) {
+            if (
+              key !== 'burnable' &&
+              key !== 'max_supply' &&
+              key !== 'transferable'
+            ) {
+              immutableDataList.push({ name: key, type: template[key].type });
+              immutableAttributes[key] = template[key].value;
+            }
+          }
+
+          const immutableData = await handleAttributesData({
+            attributes: immutableAttributes,
+            dataList: immutableDataList,
+          });
+
+          if (immutableData.length > 0) {
+            const createTemplate = {
+              account: 'atomicassets',
+              name: 'createtempl',
+              authorization: [
+                {
+                  actor: ual.activeUser.accountName,
+                  permission: ual.activeUser.requestPermission,
+                },
+              ],
+              data: {
+                authorized_creator: ual.activeUser.accountName,
+                collection_name: collectionName,
+                schema_name: fileName,
+                transferable: template.transferable,
+                burnable: template.burnable,
+                max_supply: template.max_supply,
+                immutable_data: immutableData,
+              },
+            };
+
+            newActions.push(createTemplate);
+          }
+        });
+
+        setActions(newActions);
+      }
+    }
+    handleActions();
+  }, [schemaAttributes, collectionName, fileName, templates, attributes, ual]);
+
   const handleOnChange = (event) => {
     event.preventDefault();
 
+    setRows([]);
+    setActions([]);
+    setFileName('');
+    setTemplates([]);
+    setAttributes([]);
+    setImportErrors([]);
+    setSchemaAttributes([]);
+
     const file = event.target.files[0];
 
-    if (file) {
-      const fileReader = new FileReader();
+    if (!file) return;
 
-      setFileName(file.name.split('.')[0]);
+    const reader = new FileReader();
 
-      fileReader.onload = () => {
-        handleCSVFile(fileReader.result);
-      };
+    setFileName(file.name.split('.')[0]);
 
-      fileReader.readAsText(file);
-    }
+    reader.onload = () => {
+      try {
+        const parsed = Papa.parse(reader.result, {
+          header: true,
+          dynamicTyping: true,
+        });
+
+        const defaultHeaders = [
+          'max_supply',
+          'burnable',
+          'transferable',
+          'sysflag',
+        ];
+
+        const fields = parsed.meta.fields;
+        const sysflag = fields.indexOf('sysflag');
+        const newFields = fields.slice(0, sysflag + 1);
+
+        newFields.forEach((field) => {
+          if (!defaultHeaders.includes(field)) {
+            setAttributes((state) => [...state, field]);
+          }
+        });
+
+        setRows(parsed.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    reader.onerror = (error) => {
+      console.error(error);
+    };
+
+    reader.readAsText(file);
   };
 
   return (
@@ -608,9 +513,14 @@ function Import({ ual }: ImportProps) {
               </label>
             </div>
 
-            {actions.length > 0 && <Review actions={actions} />}
+            {actions.length > 0 && (
+              <Review actions={actions} errors={importErrors} />
+            )}
 
-            <button className="btn w-fit" disabled={!fileName}>
+            <button
+              className="btn w-fit"
+              disabled={!fileName || importErrors.length > 0}
+            >
               {pluginInfo.name}
             </button>
           </form>

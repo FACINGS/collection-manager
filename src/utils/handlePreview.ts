@@ -23,7 +23,14 @@ export async function handlePreview(element, setImages) {
       }
     })
   );
-  setImages(data.filter((item) => item !== undefined));
+
+  const filteredIpfs = data.filter((item) => item !== undefined);
+
+  if (filteredIpfs.length > 0) {
+    setImages(filteredIpfs);
+  } else {
+    setImages([{ type: '' }]);
+  }
 }
 
 async function handleIpfs(ipfs) {
