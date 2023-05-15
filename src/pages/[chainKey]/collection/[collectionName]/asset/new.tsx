@@ -205,9 +205,18 @@ function NewAsset({
   async function onSubmit({ recipients, ...attributes }: FormDataProps) {
     setIsLoading(true);
 
+    // collect non-blank keys
+    const usedKeys = Object.keys(attributes).filter((k) => attributes[k] != '');
+
+    // filter `attributes` to non-blank values
+    const filteredAttributes = usedKeys.reduce((out, k) => {
+      out[k] = attributes[k];
+      return out;
+    }, {});
+
     try {
       const mutableData = await handleAttributesData({
-        attributes: attributes,
+        attributes: filteredAttributes,
         dataList: mutableDataList,
       });
 

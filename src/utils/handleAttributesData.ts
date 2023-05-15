@@ -58,7 +58,12 @@ export async function handleAttributesData({
   dataList.map(({ name, type, isImmutable }) => {
     const attributeValue = attributes[`${name}`];
 
-    if (isImmutable !== undefined && !isImmutable) {
+    if (attributeValue === undefined) {
+      return;
+    }
+
+    const isMutable = isImmutable !== undefined && !isImmutable;
+    if (isMutable) {
       return;
     }
 
