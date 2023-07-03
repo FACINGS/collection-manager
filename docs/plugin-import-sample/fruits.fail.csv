@@ -1,0 +1,8 @@
+name,img,points,description,max_supply,burnable,transferable,sysflag
+string,image,uint64,string,,,,datatype
+TRUE,TRUE,TRUE,TRUE,,,,required
+TRUE,TRUE,FALSE,TRUE,,,,unique
+Apple,123,5,Crunchy round fruit,100,TRUE,TRUE,
+Banana,bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce,abc,Mushy yellow fruit,100,TRUE,TRUE,
+Kiwi,bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu,3,Hairy green fruit,100,TRUE,TRUE,
+Cherry,QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW,8,Red stone fruit,100,TRUE,TRUE,

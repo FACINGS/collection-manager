@@ -3,15 +3,25 @@ import { Disclosure } from '@headlessui/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { useRouter } from 'next/router';
 import Papa from 'papaparse';
+import { WarningCircle } from 'phosphor-react';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { pluginInfo } from './config';
+import {
+  pluginInfo,
+  breakArray,
+  clearBatch,
+  batchOptions,
+  validateDataType,
+  suggestionDataTypes,
+  continueImportBatchTransactions,
+} from './config';
 import { Review } from './review';
 
 import { Modal } from '@components/Modal';
+import { Select } from '@components/Select';
 
 import { handleAttributesData } from '@utils/handleAttributesData';
 
@@ -72,18 +82,32 @@ interface TemplateProps {
   [key: string]: any;
 }
 
+interface ValidationProps {
+  [key: string]: any;
+}
+
+interface HintsProps {
+  title: string;
+  message: string;
+}
+
 function Import({ ual }: ImportProps) {
   const modalRef = useRef(null);
   const router = useRouter();
 
   const { chainKey, collectionName } = router.query;
 
-  const [fileName, setFileName] = useState<string>('');
   const [rows, setRows] = useState<RowsProps[]>([]);
+  const [fileName, setFileName] = useState<string>('');
   const [attributes, setAttributes] = useState<String[]>([]);
   const [actions, setActions] = useState<ActionsProps[]>([]);
   const [templates, setTemplates] = useState<TemplateProps[]>([]);
   const [importErrors, setImportErrors] = useState<ImportErrorsProps[]>([]);
+  const [dataTypes, setDataTypes] = useState<ValidationProps>({});
+  const [required, setRequired] = useState<ValidationProps>({});
+  const [uniques, setUniques] = useState<ValidationProps>({});
+  const [hints, setHints] = useState<HintsProps[]>([]);
+  const [headersLength, setHeadersLength] = useState(0);
   const [schemaAttributes, setSchemaAttributes] = useState<
     SchemaAttributesProps[]
   >([]);
@@ -92,6 +116,13 @@ function Import({ ual }: ImportProps) {
     message: '',
     details: '',
   });
+  const [transactions, setTransactions] = useState([]);
+  const [transactionBatch, setTransactionBatch] = useState(
+    JSON.parse(localStorage.getItem('transactionBatch')) || []
+  );
+  const [hasRemainingTransactions, setHasRemainingTransactions] =
+    useState(false);
+  const [selectedBatchSizeOption, setSelectedBatchSizeOption] = useState('25');
 
   const {
     reset,
@@ -102,16 +133,45 @@ function Import({ ual }: ImportProps) {
     resolver: yupResolver(csv),
   });
 
+  useEffect(() => {
+    if (actions.length > 0) {
+      setTransactions(breakArray(actions, selectedBatchSizeOption));
+    }
+  }, [actions, selectedBatchSizeOption]);
+
+  useEffect(() => {
+    if (transactions.length > 0) {
+      localStorage.setItem('transactionBatch', JSON.stringify(transactions));
+    }
+  }, [transactions]);
+
+  useEffect(() => {
+    if (transactionBatch.length > 0) {
+      setHasRemainingTransactions(true);
+    }
+    localStorage.setItem('transactionBatch', JSON.stringify(transactionBatch));
+  }, [transactionBatch]);
+
   async function onSubmit() {
     try {
-      if (actions.length > 0) {
-        await ual.activeUser.signTransaction(
-          { actions },
-          {
-            blocksBehind: 3,
-            expireSeconds: 30,
+      if (transactions.length > 0) {
+        let updatedBatch = [...transactions];
+
+        for (const actions of transactions) {
+          const result = await ual.activeUser.signTransaction(
+            { actions },
+            {
+              blocksBehind: 3,
+              expireSeconds: 60,
+            }
+          );
+
+          if (result.status === 'executed') {
+            updatedBatch = updatedBatch.filter((item) => item !== actions);
+            setTransactionBatch(updatedBatch);
           }
-        );
+        }
+
         modalRef.current?.openModal();
         const title = 'Import was successful';
         const message = 'Please await while we redirect you.';
@@ -119,6 +179,9 @@ function Import({ ual }: ImportProps) {
           title,
           message,
         });
+
+        localStorage.removeItem('transactionBatch');
+
         async function redirect() {
           router.push(`/${chainKey}/collection/${collectionName}`);
         }
@@ -176,9 +239,6 @@ function Import({ ual }: ImportProps) {
     }
 
     const attributesData = [];
-    const dataTypes = rows[0];
-    const required = rows[1];
-    const uniques = rows[2];
     const defaultHeaders = [
       'max_supply',
       'burnable',
@@ -186,12 +246,20 @@ function Import({ ual }: ImportProps) {
       'sysflag',
     ];
     const attributeTypeOptions = [
-      'string',
-      'uint64',
-      'double',
-      'image',
-      'ipfs',
       'bool',
+      'ipfs',
+      'float',
+      'image',
+      'string',
+      'double',
+      'int8',
+      'int16',
+      'int32',
+      'int64',
+      'uint8',
+      'uint16',
+      'uint32',
+      'uint64',
     ];
 
     // Checks if any of the schema attributes are invalid.
@@ -224,10 +292,10 @@ function Import({ ual }: ImportProps) {
     setSchemaAttributes(attributesData);
 
     const templateRows = rows
-      .filter((row, index) => {
+      .filter((row) => {
         const keys = Object.keys(rows[0]);
 
-        if (index > 0 && !keys.every((key) => key in row)) {
+        if (keys.every((key) => row[key] === null)) {
           return false;
         }
 
@@ -242,15 +310,44 @@ function Import({ ual }: ImportProps) {
         }
 
         const values = Object.values(row).filter((val) => val !== null);
+
         if (values.length === 0) {
           return false;
         }
 
         return true;
       })
-      .slice(3);
+      .splice(headersLength);
 
-    const headersLength = templateRows.length;
+    const suggestions = suggestionDataTypes({
+      dataTypes: dataTypes,
+      templates: templateRows,
+    });
+
+    if (suggestions) {
+      setHints(suggestions);
+    }
+
+    // Checks if there is a missing property at the CSV.
+    templateRows.map((row, index) => {
+      for (const key in row) {
+        if (key === '' && row[key]) {
+          console.log(row[key]);
+          setImportErrors((state) => [
+            ...state,
+            ...[
+              {
+                index: index,
+                title: 'Missing property',
+                message: `There is an empty property with a value at row "${
+                  index + headersLength + 1
+                }" of the CSV.`,
+              },
+            ],
+          ]);
+        }
+      }
+    });
 
     // Checks if a unique attribute is duplicated.
     if (uniques) {
@@ -274,7 +371,7 @@ function Import({ ual }: ImportProps) {
           templateRows.filter((element, index) => {
             const value = element[item];
             if (duplicates.indexOf(value) !== -1) {
-              rowsWithDuplicates.push(index + headersLength + 1);
+              rowsWithDuplicates.push(index + headersLength + 2);
             }
           });
 
@@ -289,20 +386,22 @@ function Import({ ual }: ImportProps) {
               );
             }
 
-            setImportErrors((state) => [
-              ...state,
-              ...[
-                {
-                  index: rowsWithDuplicates[0] - headersLength,
-                  title: 'Unique property',
-                  message: `Property "${item}" has the value "${
-                    duplicates[0]
-                  }" repeated at rows "${formatRowsWithDuplicates(
-                    rowsWithDuplicates
-                  )}" of the CSV.`,
-                },
-              ],
-            ]);
+            rowsWithDuplicates.forEach((rowIndex) => {
+              setImportErrors((state) => [
+                ...state,
+                ...[
+                  {
+                    index: rowIndex - headersLength - 1,
+                    title: 'Unique property',
+                    message: `Property "${item}" has the value "${
+                      duplicates[0]
+                    }" repeated at rows "${formatRowsWithDuplicates(
+                      rowsWithDuplicates
+                    )}" of the CSV.`,
+                  },
+                ],
+              ]);
+            });
           }
         }
       });
@@ -349,7 +448,7 @@ function Import({ ual }: ImportProps) {
 
       setTemplates((state) => [...state, ...[newTemplate]]);
     });
-  }, [rows, attributes, reset]);
+  }, [rows, attributes, dataTypes, required, uniques, headersLength, reset]);
 
   useEffect(() => {
     async function handleActions() {
@@ -381,7 +480,7 @@ function Import({ ual }: ImportProps) {
 
         newActions.push(createSchema);
 
-        await templates.map(async (template) => {
+        await templates.map(async (template, index) => {
           const immutableDataList = [];
           const immutableAttributes = {};
 
@@ -391,6 +490,17 @@ function Import({ ual }: ImportProps) {
               key !== 'max_supply' &&
               key !== 'transferable'
             ) {
+              const attributeError = validateDataType({
+                data: template[key],
+                attribute: key,
+                index: index,
+                headersLength: headersLength + 1,
+              });
+
+              if (attributeError) {
+                setImportErrors((state) => [...state, ...[attributeError]]);
+              }
+
               immutableDataList.push({ name: key, type: template[key].type });
               immutableAttributes[key] = template[key].value;
             }
@@ -430,17 +540,27 @@ function Import({ ual }: ImportProps) {
       }
     }
     handleActions();
-  }, [schemaAttributes, collectionName, fileName, templates, attributes, ual]);
+  }, [
+    schemaAttributes,
+    collectionName,
+    fileName,
+    templates,
+    attributes,
+    headersLength,
+    ual,
+  ]);
 
   const handleOnChange = (event) => {
     event.preventDefault();
 
     setRows([]);
+    setHints([]);
     setActions([]);
     setFileName('');
     setTemplates([]);
     setAttributes([]);
     setImportErrors([]);
+    setHeadersLength(0);
     setSchemaAttributes([]);
 
     const file = event.target.files[0];
@@ -449,13 +569,15 @@ function Import({ ual }: ImportProps) {
 
     const reader = new FileReader();
 
-    setFileName(file.name.split('.')[0]);
+    const index = file.name.lastIndexOf('.csv');
+    setFileName(file.name.substring(0, index));
 
     reader.onload = () => {
       try {
         const parsed = Papa.parse(reader.result, {
           header: true,
           dynamicTyping: true,
+          skipEmptyLines: true,
         });
 
         const defaultHeaders = [
@@ -466,8 +588,8 @@ function Import({ ual }: ImportProps) {
         ];
 
         const fields = parsed.meta.fields;
-        const sysflag = fields.indexOf('sysflag');
-        const newFields = fields.slice(0, sysflag + 1);
+        const sysflagIndex = fields.indexOf('sysflag');
+        const newFields = fields.slice(0, sysflagIndex + 1);
 
         newFields.forEach((field) => {
           if (!defaultHeaders.includes(field)) {
@@ -475,7 +597,38 @@ function Import({ ual }: ImportProps) {
           }
         });
 
-        setRows(parsed.data);
+        const rows = parsed.data
+          .filter((row) => {
+            const isRowNull = Object.values(row).every(
+              (value) => value === null
+            );
+            return !isRowNull;
+          })
+          .map((row) => {
+            const newRow = {};
+            fields.forEach((field) => {
+              newRow[field] = row[field];
+            });
+
+            if (row['sysflag'] === 'datatype') {
+              setDataTypes(row);
+              setHeadersLength((prevLength) => prevLength + 1);
+            }
+
+            if (row['sysflag'] === 'required') {
+              setRequired(row);
+              setHeadersLength((prevLength) => prevLength + 1);
+            }
+
+            if (row['sysflag'] === 'unique') {
+              setUniques(row);
+              setHeadersLength((prevLength) => prevLength + 1);
+            }
+
+            return newRow;
+          });
+
+        setRows(rows);
       } catch (error) {
         console.error(error);
       }
@@ -496,34 +649,129 @@ function Import({ ual }: ImportProps) {
             <h1 className="headline-1">{pluginInfo.name}</h1>
             <span className="body-1">{pluginInfo.description}</span>
           </div>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-16"
-          >
-            <div className="flex gap-4 border-b pb-4 my-4 border-neutral-700 w-fit max-w-sm">
-              <label className="flex flex-row items-center">
-                <input
-                  {...register('csvFile')}
-                  type="file"
-                  accept=".csv"
-                  onChange={handleOnChange}
-                  className="w-full file:hidden"
-                />
-                <div className="btn btn-small">Upload</div>
-              </label>
-            </div>
-
-            {actions.length > 0 && (
-              <Review actions={actions} errors={importErrors} />
-            )}
-
-            <button
-              className="btn w-fit"
-              disabled={!fileName || importErrors.length > 0}
+          {hasRemainingTransactions ? (
+            <>
+              {transactionBatch?.length > 0 && actions.length === 0 ? (
+                <div className="flex flex-col gap-8">
+                  <div className="flex flex-row items-center p-8 gap-4 bg-yellow-50 text-neutral-900 rounded-md w-full">
+                    <div className="text-yellow-600 p-3.5 rounded-full bg-yellow-400/10">
+                      <WarningCircle size={28} />
+                    </div>
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-col">
+                        <span className="title-1">Transaction Batch</span>
+                        <span className="body-2">{`It appears that you have a batch of transactions that weren't replicated to the chain. Select continue to review imported data or clear to start a new import.`}</span>
+                      </div>
+                      <div className="flex flex-row gap-4">
+                        <button
+                          className="btn btn-solid w-fit bg-neutral-900 text-white border-neutral-900 hover:text-white"
+                          onClick={() =>
+                            continueImportBatchTransactions({
+                              transactionBatch,
+                              setActions,
+                            })
+                          }
+                        >
+                          Continue
+                        </button>
+                        <button
+                          className="btn btn-outline w-fit hover:text-white"
+                          onClick={() =>
+                            clearBatch(setHasRemainingTransactions)
+                          }
+                        >
+                          Clear batch
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {actions.length > 0 && (
+                    <Review actions={actions} errors={importErrors} />
+                  )}
+                  <button onClick={() => onSubmit()} className="btn w-fit">
+                    {pluginInfo.name}
+                  </button>
+                </>
+              )}
+            </>
+          ) : (
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-16"
             >
-              {pluginInfo.name}
-            </button>
-          </form>
+              <div className="flex gap-4 border-b pb-4 my-4 border-neutral-700 w-fit max-w-sm">
+                <label className="flex flex-row items-center">
+                  <input
+                    {...register('csvFile')}
+                    type="file"
+                    accept=".csv"
+                    onChange={handleOnChange}
+                    className="w-full file:hidden"
+                  />
+                  <div className="btn btn-small">Upload</div>
+                </label>
+              </div>
+
+              {hints.length > 0 && (
+                <div className="flex flex-col gap-4">
+                  {hints.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="flex flex-row items-center p-8 gap-4 bg-yellow-50 text-neutral-900 rounded-md w-full"
+                      >
+                        <div className="text-yellow-600 p-3.5 rounded-full bg-yellow-400/10">
+                          <WarningCircle size={28} />
+                        </div>
+                        <div className="flex flex-col">
+                          <>
+                            <span className="title-1">{item?.title}</span>
+                            <span className="body-2">{item?.message}</span>
+                          </>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {actions.length > 25 && (
+                <div className="flex flex-col gap-8">
+                  <div className="flex flex-row items-center p-8 gap-4 bg-yellow-50 text-neutral-900 rounded-md w-full">
+                    <div className="text-yellow-600 p-3.5 rounded-full bg-yellow-400/10">
+                      <WarningCircle size={28} />
+                    </div>
+                    <div className="flex flex-col">
+                      <>
+                        <span className="title-1">Transaction Batch</span>
+                        <span className="body-2">{`This process was batched into ${transactions.length} transactions because of the amount of actions, this means that you will have to sign each transaction. You can also change the amount of actions per batch using the batch size selection.`}</span>
+                      </>
+                    </div>
+                  </div>
+                  <Select
+                    onChange={(option) => setSelectedBatchSizeOption(option)}
+                    label="Batch size"
+                    selectedValue={batchOptions[0].value}
+                    options={batchOptions}
+                  />
+                </div>
+              )}
+
+              {actions.length > 0 && (
+                <Review actions={actions} errors={importErrors} />
+              )}
+
+              <button
+                className="btn w-fit"
+                disabled={!fileName || importErrors.length > 0}
+              >
+                {pluginInfo.name}
+              </button>
+            </form>
+          )}
         </div>
       </div>
       <Modal ref={modalRef} title={modal.title}>

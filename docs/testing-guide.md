@@ -128,3 +128,57 @@ Two ways of verifying TypeScript migration:
 Documentation of the plugin system and instructions on how to install a sample plugin from GitHub or create a plugin from scratch are found here:
 
 https://github.com/FACINGS/collection-manager/blob/main/docs/plugins.md
+
+
+
+## 4. Testing Stage 2, Milestone 2 deliverables
+
+### Deliverable 1: Import Function
+
+> Development of an AtomicAssets CSV standard
+
+You may view the documentation of the standard here: [Data Import Plugin](plugin-import.md).
+
+> Ability to import a CSV to create a schema and templates
+
+1. Download sample file: [fruits.csv](plugin-import-sample/fruits.csv)
+2. Browse to a collection you have created
+3. Click "Add-ons" in the navigation bar, then "Import"
+4. Select the `fruits.csv` file from step 1
+5. You will see a data review showing 1 schema and 4 templates to be created with no errors detected.
+
+> Minimal data validation to help detect user errors
+
+1. Download sample file: [fruits.fail.csv](plugin-import-sample/fruits.fail.csv)
+2. Start on the "Import" page (Collection > Add-ons > Import)
+3. Select the `fruits.fail.csv` file you downloaded in step 1
+4. You will see two errors detected:
+   1. The `img` field for "Apple" is invalid (value is `123` when an IPFS address was expected)
+   2. The `points` field for "Banana" is invalid (value is `abc` when a integer was expected)
+
+> Ability to submit transactions in batches
+
+
+1. Download sample file: [batch.test.csv](plugin-import-sample/batch.test.csv)
+2. Start on the "Import" page (Collection > Add-ons > Import)
+3. Select the `batch.test.csv` file you downloaded in step 1
+4. You will see a notice notifying you that the process will be split into multiple transactions,
+   and you will be able to adjust the batch size from the default of 25, if desired.
+5. Submitting the form will result in the user being prompted to sign a series of transactions.
+
+
+### Deliverable 2: Advanced Validation
+
+> Data validation heuristics upon import:
+>  (a) Uniqueness;
+>  (b) Completeness;
+>  (c) Datatype optimization
+
+1. Download sample file: [validationtest.csv](plugin-import-sample/validationtest.csv)
+2. Start on the "Import" page (Collection > Add-ons > Import)
+3. Select the `validationtest.csv` file you downloaded in step 1
+4. You will see the following notices and errors:
+   1. Datatype optimization notice: the attribute `rating` is a `uint64` but since all values are in a smaller range we suggest you use `uint8` instead
+   2. Uniqueness error: "Apple" and "Banana" have a repeated value for the `img` field
+   3. Required field error: "Kiwi" is missing a value for the `points` field, which was marked as 'required'
+   4. IPFS field validation error: "Orange" has an invalid entry for the `img` field, which expects an IPFS address

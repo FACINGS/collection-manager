@@ -94,8 +94,9 @@ function NewTemplate({
     }));
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [clearElement, setClearElement] = useState('');
   const [modal, setModal] = useState<ModalProps>({
     title: '',
     message: '',
@@ -130,6 +131,16 @@ function NewTemplate({
   }
 
   function handleSetImmutableAttributes({ schemaAttributeIndex, isImmutable }) {
+    if (!isImmutable) {
+      const input = schemasAttributes[schemaAttributeIndex].name;
+      const targetElement = document.getElementsByName(
+        input
+      )[0] as HTMLInputElement;
+      targetElement.value = '';
+
+      setClearElement(input);
+    }
+
     setSchemasAttributes((state) => {
       state[schemaAttributeIndex].isImmutable = isImmutable;
       return [...state];
@@ -390,6 +401,7 @@ function NewTemplate({
                           title="Add Image"
                           description="Upload or drag and drop an image"
                           accept="image/*"
+                          clear={clearElement === schemaAttribute.name}
                         />
                       ) : schemaAttribute.name === 'video' ? (
                         <InputPreview
@@ -404,6 +416,7 @@ function NewTemplate({
                           title="Add Video"
                           description="Upload or drag and drop a video"
                           accept="video/*"
+                          clear={clearElement === schemaAttribute.name}
                         />
                       ) : schemaAttribute.type === 'bool' ? (
                         <div className="p-3 bg-neutral-800 border border-neutral-700 rounded">
@@ -466,6 +479,7 @@ function NewTemplate({
                             },
                           })}
                           title="Add Image"
+                          clear={clearElement === schemaAttribute.name}
                         />
                       ) : schemaAttribute.type === 'string' ? (
                         <Input

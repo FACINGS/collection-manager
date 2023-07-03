@@ -87,13 +87,13 @@ For a full list of allowed types, see [Data Types](data-types.md).
 
 Note: ❌ indicates cells which are to be left blank.
 
-| name       | img                                                         | points     | description         | max_supply | burnable | transferable | sysflag      |
-|------------|-------------------------------------------------------------|------------|---------------------|:----------:|:--------:|:------------:|:------------:|
-| **string** | **image**                                                   | **uint64** | **string**          | ❌         | ❌       | ❌           | **datatype** |
-| Apple      | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5          | Crunchy round fruit | 100        | TRUE     | TRUE         |        ❌    |
-| Banana     | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2          | Mushy yellow fruit  | 100        | TRUE     | TRUE         |        ❌    |
-| Kiwi       | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3          | Hairy green fruit   | 100        | TRUE     | TRUE         |        ❌    |
-| Cherry     | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8          | Red stone fruit     | 100        | TRUE     | TRUE         |        ❌    |
+| name       | img                                                         | points    | description         | max_supply | burnable | transferable | sysflag      |
+|------------|-------------------------------------------------------------|-----------|---------------------|:----------:|:--------:|:------------:|:------------:|
+| **string** | **image**                                                   | **uint8** | **string**          | ❌         | ❌       | ❌           | **datatype** |
+| Apple      | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5         | Crunchy round fruit | 100        | TRUE     | TRUE         |        ❌    |
+| Banana     | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2         | Mushy yellow fruit  | 100        | TRUE     | TRUE         |        ❌    |
+| Kiwi       | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3         | Hairy green fruit   | 100        | TRUE     | TRUE         |        ❌    |
+| Cherry     | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8         | Red stone fruit     | 100        | TRUE     | TRUE         |        ❌    |
 
 
 ## Step 4: (Optional) Additional properties and validators
@@ -134,7 +134,7 @@ Note: ❌ indicates cells which are to be left blank.
 
 | name     | img                                                         | points    | description         | max_supply | burnable | transferable | sysflag      |
 |----------|-------------------------------------------------------------|-----------|---------------------|:----------:|:--------:|:------------:|:------------:|
-| string   | image                                                       | uint64    | string              | ❌         | ❌       | ❌           | datatype     |
+| string   | image                                                       | uint8     | string              | ❌         | ❌       | ❌           | datatype     |
 | **TRUE** | **TRUE**                                                    | **TRUE**  | **TRUE**            | ❌         | ❌       | ❌           | **required** |
 | **TRUE** | **TRUE**                                                    | **FALSE** | **TRUE**            | ❌         | ❌       | ❌           | **unique**   |
 | Apple    | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5         | Crunchy round fruit | 100        | TRUE     | TRUE         | ❌           |
@@ -150,11 +150,11 @@ create a schema named `fruits`.
 
 ##### Example
 
-Exported to **[fruits.csv](plugin-import-sample/fruit.csv)**:
+Exported to **[fruits.csv](plugin-import-sample/fruits.csv)**:
 
 ```
 name,img,points,description,max_supply,burnable,transferable,sysflag
-string,image,uint64,string,,,,datatype
+string,image,uint8,string,,,,datatype
 TRUE,TRUE,TRUE,TRUE,,,,required
 TRUE,TRUE,FALSE,TRUE,,,,unique
 Apple,QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT,5,Crunchy round fruit,100,TRUE,TRUE,

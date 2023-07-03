@@ -55,6 +55,17 @@ export async function handleAttributesData({
 
   const data: DataProps[] = [];
 
+  const numericDataAttributes = [
+    'int8',
+    'int16',
+    'int32',
+    'int64',
+    'uint8',
+    'uint16',
+    'uint32',
+    'uint64',
+  ];
+
   dataList.map(({ name, type, isImmutable }) => {
     const attributeValue = attributes[`${name}`];
 
@@ -80,14 +91,19 @@ export async function handleAttributesData({
     } else if (type === 'double') {
       data.push({
         key: name,
-        value: ['float64', parseInt(attributeValue)],
-      });
-    } else if (type === 'uint64') {
-      data.push({
-        key: name,
-        value: [type, parseInt(attributeValue)],
+        value: ['float64', parseFloat(attributeValue)],
       });
     } else if (type === 'string') {
+      data.push({
+        key: name,
+        value: [type, attributeValue || ''],
+      });
+    } else if (type === 'float') {
+      data.push({
+        key: name,
+        value: ['float32', parseFloat(attributeValue)],
+      });
+    } else if (numericDataAttributes.includes(type)) {
       data.push({
         key: name,
         value: [type, attributeValue],

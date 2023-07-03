@@ -1,5 +1,5 @@
 name,img,points,description,max_supply,burnable,transferable,sysflag
-string,image,uint64,string,,,,datatype
+string,image,uint8,string,,,,datatype
 TRUE,TRUE,TRUE,TRUE,,,,required
 TRUE,TRUE,FALSE,TRUE,,,,unique
 Apple,QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT,5,Crunchy round fruit,100,TRUE,TRUE,

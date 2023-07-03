@@ -337,7 +337,7 @@ function Transfer({ ual }) {
                 error={errors.recipient?.message}
                 type="text"
                 label="Recipient account"
-                maxLength={13}
+                maxLength={12}
               />
               <Input
                 {...register('memo')}

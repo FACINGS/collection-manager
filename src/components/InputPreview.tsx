@@ -16,11 +16,12 @@ import { Loading } from '@components/Loading';
 interface InputPreviewComponentProps
   extends InputHTMLAttributes<HTMLInputElement> {
   title?: string;
-  description?: string;
-  ipfsHash?: string;
   error?: string;
-  onChange: (prop: any) => void;
   accept?: string;
+  clear?: boolean;
+  ipfsHash?: string;
+  description?: string;
+  onChange: (prop: any) => void;
   setValue?: (name: any, value: any) => void;
 }
 
@@ -33,14 +34,23 @@ function InputPreviewComponent(
     ipfsHash,
     error,
     accept,
+    clear,
     ...props
   }: InputPreviewComponentProps,
   ref: Ref<HTMLInputElement | any>
 ) {
-  const [previewSrc, setPreviewSrc] = useState(null);
   const [isIpfs, setIsIpfs] = useState(true);
+  const [previewSrc, setPreviewSrc] = useState(null);
   const [waitToSearch, setWaitToSearch] = useState(null);
   const [messageError, setMessageError] = useState(error);
+  const [previewFileName, setPreviewFileName] = useState(null);
+
+  useEffect(() => {
+    if (clear) {
+      setPreviewSrc(null);
+      setMessageError('');
+    }
+  }, [clear]);
 
   async function handleOnChangeFile(event) {
     event.stopPropagation();
@@ -61,6 +71,10 @@ function InputPreviewComponent(
         setValue(props.name, files);
         document.getElementById(props.name)['value'] = files[0].name;
       }
+
+      if (event.target.files) {
+        setPreviewFileName(files[0].name);
+      }
     } else {
       setPreviewSrc(null);
     }
@@ -77,8 +91,12 @@ function InputPreviewComponent(
   }
 
   function handleOnChangeIpfs(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
     onChange(event);
     setPreviewSrc('');
+    setMessageError('');
 
     const { value } = event.target;
     if (!value) {
@@ -208,14 +226,20 @@ function InputPreviewComponent(
                 className="w-full body-1 text-white bg-transparent focus:outline-none placeholder:text-neutral-500"
               />
             ) : (
-              <input
-                {...props}
-                ref={ref}
-                type="file"
-                accept={accept}
-                onChange={handleOnChangeFile}
-                className="w-full file:hidden"
-              />
+              <>
+                <input
+                  {...props}
+                  ref={ref}
+                  type="file"
+                  accept={accept}
+                  id={props.name}
+                  onChange={handleOnChangeFile}
+                  className="w-full hidden"
+                />
+                <label>
+                  {previewFileName ? previewFileName : 'No file chosen'}
+                </label>
+              </>
             )}
           </div>
           <div className="flex-none">
