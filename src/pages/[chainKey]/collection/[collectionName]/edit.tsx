@@ -467,7 +467,7 @@ function EditCollection({
 
       modalRef.current?.openModal();
       const title = 'Notifications were forbidden';
-      const message = 'Please await while we reload the page.';
+      const message = 'Please wait while we reload the page.';
 
       setModal({
         title,

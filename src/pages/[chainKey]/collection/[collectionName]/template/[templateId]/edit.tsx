@@ -96,7 +96,7 @@ function EditTemplate({
 
       modalRef.current?.openModal();
       const title = 'Template was successfully locked';
-      const message = 'Please await while we redirect you.';
+      const message = 'Please wait while we redirect you.';
 
       setModal({
         title,

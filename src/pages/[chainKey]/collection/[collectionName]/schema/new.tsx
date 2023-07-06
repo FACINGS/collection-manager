@@ -131,7 +131,7 @@ function NewSchema({ ual, collection, chainKey }: NewSchemaProps) {
 
       modalRef.current?.openModal();
       const title = 'Schema was successfully created';
-      const message = 'Please await while we redirect you.';
+      const message = 'Please wait while we redirect you.';
 
       setModal({
         title,

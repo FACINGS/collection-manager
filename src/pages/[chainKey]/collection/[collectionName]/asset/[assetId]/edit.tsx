@@ -113,7 +113,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
 
       modalRef.current?.openModal();
       const title = 'NFT was successfully updated';
-      const message = 'Please await while we redirect you.';
+      const message = 'Please wait while we redirect you.';
 
       setModal({
         title,

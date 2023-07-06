@@ -260,7 +260,7 @@ function NewAsset({
 
       modalRef.current?.openModal();
       const title = 'NFT was successfully created';
-      const message = 'Please await while we redirect you.';
+      const message = 'Please wait while we redirect you.';
 
       setModal({
         title,

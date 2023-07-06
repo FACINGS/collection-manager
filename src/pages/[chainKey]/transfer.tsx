@@ -220,7 +220,7 @@ function Transfer({ ual }) {
 
       modalRef.current?.openModal();
       const title = 'NFT was successfully transferred';
-      const message = 'Please await while we refresh the page.';
+      const message = 'Please wait while we refresh the page.';
 
       setModal({
         title,

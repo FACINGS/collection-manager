@@ -125,7 +125,6 @@ function Import({ ual }: ImportProps) {
   const [selectedBatchSizeOption, setSelectedBatchSizeOption] = useState('25');
 
   const {
-    reset,
     register,
     handleSubmit,
     formState: { errors },
@@ -174,7 +173,7 @@ function Import({ ual }: ImportProps) {
 
         modalRef.current?.openModal();
         const title = 'Import was successful';
-        const message = 'Please await while we redirect you.';
+        const message = 'Please wait while we redirect you.';
         setModal({
           title,
           message,
@@ -448,7 +447,7 @@ function Import({ ual }: ImportProps) {
 
       setTemplates((state) => [...state, ...[newTemplate]]);
     });
-  }, [rows, attributes, dataTypes, required, uniques, headersLength, reset]);
+  }, [rows, attributes, dataTypes, required, uniques, headersLength]);
 
   useEffect(() => {
     async function handleActions() {
@@ -556,7 +555,10 @@ function Import({ ual }: ImportProps) {
     setRows([]);
     setHints([]);
     setActions([]);
+    setUniques({});
+    setRequired({});
     setFileName('');
+    setDataTypes({});
     setTemplates([]);
     setAttributes([]);
     setImportErrors([]);
@@ -648,6 +650,18 @@ function Import({ ual }: ImportProps) {
           <div className="flex flex-col gap-4">
             <h1 className="headline-1">{pluginInfo.name}</h1>
             <span className="body-1">{pluginInfo.description}</span>
+            <span className="body-1">
+              For file specification, see{' '}
+              <a
+                href="https://github.com/FACINGS/collection-manager/blob/main/docs/plugin-import.md"
+                target="_blank"
+                rel="noreferrer"
+                className="font-bold"
+              >
+                Import Plugin Documentation
+              </a>
+              {'.'}
+            </span>
           </div>
           {hasRemainingTransactions ? (
             <>
@@ -711,7 +725,7 @@ function Import({ ual }: ImportProps) {
                     onChange={handleOnChange}
                     className="w-full file:hidden"
                   />
-                  <div className="btn btn-small">Upload</div>
+                  <div className="btn btn-small">Select&nbsp;File</div>
                 </label>
               </div>
 
