@@ -46,8 +46,9 @@ interface NewAssetProps {
   ual: any;
   collection: CollectionProps;
   schemas: SchemaProps[];
-  templates: TemplateProps[];
+  templates?: TemplateProps[];
   chainKey: string;
+  collectionName: string;
 }
 
 interface ModalProps {
@@ -69,8 +70,8 @@ function NewAsset({
   ual,
   collection,
   schemas,
-  templates,
   chainKey,
+  collectionName,
 }: NewAssetProps) {
   const router = useRouter();
   const modalRef = useRef(null);
@@ -84,6 +85,7 @@ function NewAsset({
   const [images, setImages] = useState([]);
   const [isSaved, setIsSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [templates, setTemplates] = useState([]);
   const [selectedSchema, setSelectedSchema] = useState<SchemaProps>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateProps>(null);
   const [modal, setModal] = useState<ModalProps>({
@@ -146,11 +148,43 @@ function NewAsset({
   }, [schemas]);
 
   useEffect(() => {
-    const templatesBySchema = templates.filter(
-      (template) => template.schema.schema_name === selectedSchema?.schema_name
-    );
-    setSelectedTemplate(templatesBySchema[0]);
-  }, [selectedSchema, templates]);
+    const getAllTemplates = async () => {
+      try {
+        const allData = [];
+        let currentPage = 1;
+
+        while (true) {
+          const response = await collectionTemplatesService(chainKey, {
+            collectionName,
+            schemaName: selectedSchema?.schema_name,
+            page: currentPage,
+            limit: 1000,
+          });
+
+          const responseData = response.data.data;
+
+          if (responseData.length === 0) {
+            break;
+          }
+
+          allData.push(...responseData);
+          currentPage++;
+        }
+
+        setTemplates(allData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (selectedSchema) {
+      getAllTemplates();
+    }
+  }, [selectedSchema, chainKey, collectionName]);
+
+  useEffect(() => {
+    setSelectedTemplate(templates[0]);
+  }, [templates]);
 
   useEffect(() => {
     if (selectedTemplate) {
@@ -298,10 +332,6 @@ function NewAsset({
     setIsLoading(false);
   }
 
-  const templateOptions = templates.filter(
-    (template) => template.schema.schema_name === selectedSchema?.schema_name
-  );
-
   if (PermissionDenied) {
     return <PermissionDenied />;
   }
@@ -411,7 +441,7 @@ function NewAsset({
               </div>
               <div className="flex flex-col w-full">
                 <h3 className="headline-2 block mb-4">Select template</h3>
-                {templateOptions.length > 0 && selectedTemplate ? (
+                {templates.length > 0 && selectedTemplate ? (
                   <Listbox
                     value={selectedTemplate}
                     onChange={setSelectedTemplate}
@@ -438,38 +468,41 @@ function NewAsset({
                         leaveTo="opacity-0"
                       >
                         <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-neutral-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none body-3 z-10">
-                          {templateOptions.map((template, index) => {
-                            return (
-                              <Listbox.Option
-                                key={index}
-                                className={({ active }) =>
-                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                    active
-                                      ? 'bg-neutral-700 text-white'
-                                      : 'text-white-900'
-                                  }`
-                                }
-                                value={template}
-                              >
-                                {({ selected }) => (
-                                  <>
-                                    <span
-                                      className={`block truncate ${
-                                        selected ? 'font-medium' : 'font-normal'
-                                      }`}
-                                    >
-                                      {template.name ?? '- No name -'}
-                                    </span>
-                                    {selected ? (
-                                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
-                                        <Check size={16} />
+                          {templates.length > 0 &&
+                            templates.map((template, index) => {
+                              return (
+                                <Listbox.Option
+                                  key={index}
+                                  className={({ active }) =>
+                                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                      active
+                                        ? 'bg-neutral-700 text-white'
+                                        : 'text-white-900'
+                                    }`
+                                  }
+                                  value={template}
+                                >
+                                  {({ selected }) => (
+                                    <>
+                                      <span
+                                        className={`block truncate ${
+                                          selected
+                                            ? 'font-medium'
+                                            : 'font-normal'
+                                        }`}
+                                      >
+                                        {template.name ?? '- No name -'}
                                       </span>
-                                    ) : null}
-                                  </>
-                                )}
-                              </Listbox.Option>
-                            );
-                          })}
+                                      {selected ? (
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
+                                          <Check size={16} />
+                                        </span>
+                                      ) : null}
+                                    </>
+                                  )}
+                                </Listbox.Option>
+                              );
+                            })}
                         </Listbox.Options>
                       </Transition>
                     </div>
@@ -766,19 +799,17 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const chainKey = params.chainKey as string;
   const collectionName = params.collectionName as string;
 
-  const [{ data: collection }, { data: schemas }, { data: templates }] =
-    await Promise.all([
-      getCollectionService(chainKey, { collectionName }),
-      collectionSchemasService(chainKey, { collectionName }),
-      collectionTemplatesService(chainKey, { collectionName }),
-    ]);
+  const [{ data: collection }, { data: schemas }] = await Promise.all([
+    getCollectionService(chainKey, { collectionName }),
+    collectionSchemasService(chainKey, { collectionName }),
+  ]);
 
   return {
     props: {
       chainKey,
       schemas: schemas.data,
-      templates: templates.data,
       collection: collection.data,
+      collectionName,
     },
   };
 };

@@ -1,6 +1,8 @@
 import * as isIPFS from 'is-ipfs';
 import * as yup from 'yup';
 
+import { getSchemaService } from '@services/schema/getSchemaService';
+
 export const pluginInfo = {
   name: 'Import',
   description: 'Import a CSV to create schema and templates.',
@@ -41,6 +43,8 @@ export function validateDataType({ data, attribute, index, headersLength }) {
   const invalidAttribute = {
     index: index + 1,
     title: 'Invalid attribute',
+    property: attribute,
+    type: 'attribute',
     message: '',
   };
 
@@ -255,3 +259,19 @@ export const batchOptions = [
   { label: '150 actions', value: '150' },
   { label: '200 actions', value: '200' },
 ];
+
+export async function checkIfSchemaExists({
+  chainKey,
+  collectionName,
+  schemaName,
+}) {
+  try {
+    const { data: schema } = await getSchemaService(chainKey, {
+      collectionName,
+      schemaName,
+    });
+    return { status: true, schema: schema.data };
+  } catch (error) {
+    return { status: false };
+  }
+}

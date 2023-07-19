@@ -15,6 +15,7 @@ import {
   clearBatch,
   batchOptions,
   validateDataType,
+  checkIfSchemaExists,
   suggestionDataTypes,
   continueImportBatchTransactions,
 } from './config';
@@ -71,6 +72,9 @@ interface SchemaAttributesProps {
 
 interface ImportErrorsProps {
   index: number;
+  type?: string;
+  property?: string;
+  title?: string;
   message: string;
 }
 
@@ -123,6 +127,7 @@ function Import({ ual }: ImportProps) {
   const [hasRemainingTransactions, setHasRemainingTransactions] =
     useState(false);
   const [selectedBatchSizeOption, setSelectedBatchSizeOption] = useState('25');
+  const [existentSchemaInfo, setExistentSchemaInfo] = useState({});
 
   const {
     register,
@@ -139,10 +144,10 @@ function Import({ ual }: ImportProps) {
   }, [actions, selectedBatchSizeOption]);
 
   useEffect(() => {
-    if (transactions.length > 0) {
+    if (transactions.length > 0 && importErrors.length === 0) {
       localStorage.setItem('transactionBatch', JSON.stringify(transactions));
     }
-  }, [transactions]);
+  }, [transactions, importErrors]);
 
   useEffect(() => {
     if (transactionBatch.length > 0) {
@@ -369,8 +374,9 @@ function Import({ ual }: ImportProps) {
 
           templateRows.filter((element, index) => {
             const value = element[item];
+            const templateRowIndex = index + 1;
             if (duplicates.indexOf(value) !== -1) {
-              rowsWithDuplicates.push(index + headersLength + 2);
+              rowsWithDuplicates.push(templateRowIndex + headersLength + 1);
             }
           });
 
@@ -408,6 +414,7 @@ function Import({ ual }: ImportProps) {
 
     templateRows.map((template, index) => {
       let newTemplate = {};
+      const templateRowIndex = index + 1;
 
       // Checks if a required attribute is empty.
       Object.keys(template).map((item) => {
@@ -416,10 +423,12 @@ function Import({ ual }: ImportProps) {
             ...state,
             ...[
               {
-                index: index + 1,
+                index: templateRowIndex,
+                type: 'required',
+                property: item,
                 title: 'Required property',
                 message: `Missing required attribute "${item}" at row "${
-                  index + 1 + headersLength
+                  templateRowIndex + headersLength + 1
                 }" of the CSV.`,
               },
             ],
@@ -459,25 +468,34 @@ function Import({ ual }: ImportProps) {
         schemaAttributes.length > 0
       ) {
         const newActions = [];
+        const schemaInfo = await checkIfSchemaExists({
+          chainKey,
+          collectionName,
+          schemaName: fileName,
+        });
 
-        const createSchema = {
-          account: 'atomicassets',
-          name: 'createschema',
-          authorization: [
-            {
-              actor: ual.activeUser.accountName,
-              permission: ual.activeUser.requestPermission,
+        if (!schemaInfo.status) {
+          const createSchema = {
+            account: 'atomicassets',
+            name: 'createschema',
+            authorization: [
+              {
+                actor: ual.activeUser.accountName,
+                permission: ual.activeUser.requestPermission,
+              },
+            ],
+            data: {
+              authorized_creator: ual.activeUser.accountName,
+              collection_name: collectionName,
+              schema_name: fileName,
+              schema_format: schemaAttributes,
             },
-          ],
-          data: {
-            authorized_creator: ual.activeUser.accountName,
-            collection_name: collectionName,
-            schema_name: fileName,
-            schema_format: schemaAttributes,
-          },
-        };
+          };
 
-        newActions.push(createSchema);
+          newActions.push(createSchema);
+        } else {
+          setExistentSchemaInfo(schemaInfo);
+        }
 
         await templates.map(async (template, index) => {
           const immutableDataList = [];
@@ -546,6 +564,7 @@ function Import({ ual }: ImportProps) {
     templates,
     attributes,
     headersLength,
+    chainKey,
     ual,
   ]);
 
@@ -703,7 +722,11 @@ function Import({ ual }: ImportProps) {
               ) : (
                 <>
                   {actions.length > 0 && (
-                    <Review actions={actions} errors={importErrors} />
+                    <Review
+                      actions={actions}
+                      errors={importErrors}
+                      schema={existentSchemaInfo['schema']}
+                    />
                   )}
                   <button onClick={() => onSubmit()} className="btn w-fit">
                     {pluginInfo.name}
@@ -775,7 +798,11 @@ function Import({ ual }: ImportProps) {
               )}
 
               {actions.length > 0 && (
-                <Review actions={actions} errors={importErrors} />
+                <Review
+                  actions={actions}
+                  errors={importErrors}
+                  schema={existentSchemaInfo['schema']}
+                />
               )}
 
               <button
