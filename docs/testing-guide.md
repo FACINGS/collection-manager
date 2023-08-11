@@ -3,7 +3,7 @@
 ## Prerequisites
 
 1. Anchor
-2. If testing locally: either (a) js dev env or (b) docker. (see ["Getting Started"](../README.txt) for instructions)
+2. If testing locally: either (a) js dev env or (b) docker. (see ["Getting Started"](../README.md) for instructions)
 
 ## 1. Running the app
 
@@ -15,7 +15,7 @@ Open http://localhost:3000 in a web browser to access the app.
 
 Option 3. Public dev instance
 
-https://collectionmanager.test.facings.io
+https://creator.facings.io
 
 ## 2. Testing Stage 1, Milestone 1 deliverables
 
@@ -37,7 +37,7 @@ Proceed to login. The app will ask you to launch Anchor to authenticate. Once yo
 
 By clicking on a collection image, you will see collection attributes such as Author, URL, creation date, and stats. You are also able to view Templates, NFTs (assets), schemas, and a list of holder accounts.
 
-Note that many published collections may not have any published shemas or templates. To see one example collection which has a lot of data to demo, you may visit https://collectionmanager.test.facings.io/collections/cutiecatsand (no affiliation).
+Note that many published collections may not have any published shemas or templates. To see one example collection which has a lot of data to demo, you may visit https://creator.facings.io/eos/collection/cutiecatsand (no affiliation).
 
 ## 3. Testing Stage 1, Milestone 2 deliverables
 
