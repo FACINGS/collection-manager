@@ -14,8 +14,9 @@ The benefits of this approach:
 3. **Automation**: By using a portable file format (CSV), schema/template
    definitions can also be created programmatically, and/or passed through
    any number of intermediate tools/apps.
-4. **Accuracy**: Optional "validator hints" provided by the plugin can help
-   catch mistakes before the schema and templates are created.
+4. **Integrity**: Optional "validator hints" provided by the plugin can help
+   catch mistakes such as empty or non-unique entries before the schema and
+   templates are created.
 
 
 ## Step 1: Preparing the Spreadsheet
