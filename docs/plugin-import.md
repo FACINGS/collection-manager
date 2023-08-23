@@ -169,7 +169,7 @@ This CSV file can now be uploaded in the UI.
 
 ## Step 6: Upload to Data Import
 
-1. In the app, navigate to your collection and click the "Add-ons" tab.
+1. In the app, navigate to your collection and click the "Plugins" tab.
 2. Click "Import" to bring up the data import form.
 3. Click "Select File" and use the CSV file you saved in the last step.
 

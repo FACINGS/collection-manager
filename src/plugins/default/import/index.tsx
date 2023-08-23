@@ -3,28 +3,20 @@ import { Disclosure } from '@headlessui/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { useRouter } from 'next/router';
 import Papa from 'papaparse';
-import { WarningCircle } from 'phosphor-react';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import {
-  pluginInfo,
-  breakArray,
-  clearBatch,
-  batchOptions,
-  validateDataType,
-  checkIfSchemaExists,
-  suggestionDataTypes,
-  continueImportBatchTransactions,
-} from './config';
-import { Review } from './review';
-
 import { Modal } from '@components/Modal';
 import { Select } from '@components/Select';
+import { WarningCard } from '@components/WarningCard';
 
 import { handleAttributesData } from '@utils/handleAttributesData';
+
+import { pluginInfo, batchOptions } from './config';
+import * as utils from './utils/utils';
+import { Review } from './components/review';
 
 const csv = yup.object().shape({
   csvFile: yup.mixed().required(),
@@ -99,7 +91,8 @@ function Import({ ual }: ImportProps) {
   const modalRef = useRef(null);
   const router = useRouter();
 
-  const { chainKey, collectionName } = router.query;
+  const chainKey = router.query.chainKey as string;
+  const collection = router.query.collection as string;
 
   const [rows, setRows] = useState<RowsProps[]>([]);
   const [fileName, setFileName] = useState<string>('');
@@ -139,7 +132,7 @@ function Import({ ual }: ImportProps) {
 
   useEffect(() => {
     if (actions.length > 0) {
-      setTransactions(breakArray(actions, selectedBatchSizeOption));
+      setTransactions(utils.breakArray(actions, selectedBatchSizeOption));
     }
   }, [actions, selectedBatchSizeOption]);
 
@@ -187,7 +180,7 @@ function Import({ ual }: ImportProps) {
         localStorage.removeItem('transactionBatch');
 
         async function redirect() {
-          router.push(`/${chainKey}/collection/${collectionName}`);
+          router.push(`/${chainKey}/collection/${collection}`);
         }
         setTimeout(redirect, 8000);
       }
@@ -323,7 +316,7 @@ function Import({ ual }: ImportProps) {
       })
       .splice(headersLength);
 
-    const suggestions = suggestionDataTypes({
+    const suggestions = utils.suggestionDataTypes({
       dataTypes: dataTypes,
       templates: templateRows,
     });
@@ -462,15 +455,15 @@ function Import({ ual }: ImportProps) {
     async function handleActions() {
       if (
         fileName &&
-        collectionName &&
+        collection &&
         ual &&
         templates.length > 0 &&
         schemaAttributes.length > 0
       ) {
         const newActions = [];
-        const schemaInfo = await checkIfSchemaExists({
+        const schemaInfo = await utils.checkIfSchemaExists({
           chainKey,
-          collectionName,
+          collectionName: collection,
           schemaName: fileName,
         });
 
@@ -486,7 +479,7 @@ function Import({ ual }: ImportProps) {
             ],
             data: {
               authorized_creator: ual.activeUser.accountName,
-              collection_name: collectionName,
+              collection_name: collection,
               schema_name: fileName,
               schema_format: schemaAttributes,
             },
@@ -507,7 +500,7 @@ function Import({ ual }: ImportProps) {
               key !== 'max_supply' &&
               key !== 'transferable'
             ) {
-              const attributeError = validateDataType({
+              const attributeError = utils.validateDataType({
                 data: template[key],
                 attribute: key,
                 index: index,
@@ -540,7 +533,7 @@ function Import({ ual }: ImportProps) {
               ],
               data: {
                 authorized_creator: ual.activeUser.accountName,
-                collection_name: collectionName,
+                collection_name: collection,
                 schema_name: fileName,
                 transferable: template.transferable,
                 burnable: template.burnable,
@@ -559,7 +552,7 @@ function Import({ ual }: ImportProps) {
     handleActions();
   }, [
     schemaAttributes,
-    collectionName,
+    collection,
     fileName,
     templates,
     attributes,
@@ -686,38 +679,19 @@ function Import({ ual }: ImportProps) {
             <>
               {transactionBatch?.length > 0 && actions.length === 0 ? (
                 <div className="flex flex-col gap-8">
-                  <div className="flex flex-row items-center p-8 gap-4 bg-yellow-50 text-neutral-900 rounded-md w-full">
-                    <div className="text-yellow-600 p-3.5 rounded-full bg-yellow-400/10">
-                      <WarningCircle size={28} />
-                    </div>
-                    <div className="flex flex-col gap-4">
-                      <div className="flex flex-col">
-                        <span className="title-1">Transaction Batch</span>
-                        <span className="body-2">{`It appears that you have a batch of transactions that weren't replicated to the chain. Select continue to review imported data or clear to start a new import.`}</span>
-                      </div>
-                      <div className="flex flex-row gap-4">
-                        <button
-                          className="btn btn-solid w-fit bg-neutral-900 text-white border-neutral-900 hover:text-white"
-                          onClick={() =>
-                            continueImportBatchTransactions({
-                              transactionBatch,
-                              setActions,
-                            })
-                          }
-                        >
-                          Continue
-                        </button>
-                        <button
-                          className="btn btn-outline w-fit hover:text-white"
-                          onClick={() =>
-                            clearBatch(setHasRemainingTransactions)
-                          }
-                        >
-                          Clear batch
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <WarningCard
+                    title="Transaction Batch"
+                    content="It appears that you have a batch of transactions that
+                  weren't replicated to the chain. Select continue to
+                  review imported data or clear to start a new import."
+                    callback={() =>
+                      utils.continueImportBatchTransactions({
+                        transactionBatch,
+                        setActions,
+                      })
+                    }
+                    clear={() => utils.clearBatch(setHasRemainingTransactions)}
+                  />
                 </div>
               ) : (
                 <>
@@ -756,19 +730,11 @@ function Import({ ual }: ImportProps) {
                 <div className="flex flex-col gap-4">
                   {hints.map((item, index) => {
                     return (
-                      <div
-                        key={index}
-                        className="flex flex-row items-center p-8 gap-4 bg-yellow-50 text-neutral-900 rounded-md w-full"
-                      >
-                        <div className="text-yellow-600 p-3.5 rounded-full bg-yellow-400/10">
-                          <WarningCircle size={28} />
-                        </div>
-                        <div className="flex flex-col">
-                          <>
-                            <span className="title-1">{item?.title}</span>
-                            <span className="body-2">{item?.message}</span>
-                          </>
-                        </div>
+                      <div key={index}>
+                        <WarningCard
+                          title={item?.title}
+                          content={item?.message}
+                        />
                       </div>
                     );
                   })}
@@ -777,17 +743,10 @@ function Import({ ual }: ImportProps) {
 
               {actions.length > 25 && (
                 <div className="flex flex-col gap-8">
-                  <div className="flex flex-row items-center p-8 gap-4 bg-yellow-50 text-neutral-900 rounded-md w-full">
-                    <div className="text-yellow-600 p-3.5 rounded-full bg-yellow-400/10">
-                      <WarningCircle size={28} />
-                    </div>
-                    <div className="flex flex-col">
-                      <>
-                        <span className="title-1">Transaction Batch</span>
-                        <span className="body-2">{`This process was batched into ${transactions.length} transactions because of the amount of actions, this means that you will have to sign each transaction. You can also change the amount of actions per batch using the batch size selection.`}</span>
-                      </>
-                    </div>
-                  </div>
+                  <WarningCard
+                    title="Transaction Batch"
+                    content={`This process was batched into ${transactions.length} transactions because of the amount of actions, this means that you will have to sign each transaction. You can also change the amount of actions per batch using the batch size selection.`}
+                  />
                   <Select
                     onChange={(option) => setSelectedBatchSizeOption(option)}
                     label="Batch size"

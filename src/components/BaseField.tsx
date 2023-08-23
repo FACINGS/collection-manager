@@ -19,7 +19,9 @@ export function BaseField({
   return (
     <label className="block w-full">
       {label && (
-        <span className="block body-2 font-bold text-white mb-2">{label}</span>
+        <span className="block body-2 font-bold text-white mb-2 truncate">
+          {label}
+        </span>
       )}
 
       <div
@@ -32,7 +34,7 @@ export function BaseField({
             {icon}
           </div>
         )}
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 w-full">{children}</div>
         {error && (
           <div className="flex-none text-red-600 pt-[calc(1rem-1px)]">
             <WarningCircle size={24} />

@@ -73,4 +73,14 @@
   .tab {
     @apply body-1 font-bold px-4 py-[calc(1rem-2px)] border border-transparent flex gap-2 ui-not-selected:text-neutral-400 ui-selected:border-b-white ui-selected:text-white whitespace-nowrap focus:outline-none;
   }
+
+  .tooltip {
+    @apply relative;
+  }
+  .tooltip .tooltip-text {
+    @apply hidden absolute p-4 -top-16 right-0 bg-neutral-700 whitespace-nowrap rounded
+  }  
+  .tooltip:hover .tooltip-text {
+    @apply block;
+  }
 }

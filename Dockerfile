@@ -7,6 +7,7 @@ WORKDIR /usr/app
 RUN npm install --global pm2
 
 # Installing dependencies
+COPY ./yarn.lock ./
 COPY ./package*.json ./
 
 # Install dependencies

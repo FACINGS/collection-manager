@@ -10,6 +10,7 @@ interface CollectionPluginsProps {
 interface PluginsListProps {
   plugin: string;
   label: string;
+  page: string;
 }
 
 export function CollectionPlugins({
@@ -46,27 +47,38 @@ export function CollectionPlugins({
       {(pluginsList.length > 0 || externalPluginsList.length > 0) && (
         <div className="flex-1">
           <div className="flex md:flex-row flex-col gap-8">
-            {pluginsList.map((item) => (
-              <Link
-                key={item.plugin}
-                href={{
-                  pathname: `/${chainKey}/collection/${collectionName}/plugins/${item.plugin}`,
-                  query: { type: 'default' },
-                }}
-                className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
-              >
-                <span className="title-1">{item.label}</span>
-              </Link>
-            ))}
-            {externalPluginsList.map((item) => (
-              <Link
-                key={item.plugin}
-                href={`/${chainKey}/collection/${collectionName}/plugins/${item.plugin}?type=external`}
-                className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
-              >
-                <span className="title-1">{item.label}</span>
-              </Link>
-            ))}
+            {pluginsList.map((item) => {
+              if (item.page === 'collection') {
+                return (
+                  <Link
+                    key={item.plugin}
+                    href={{
+                      pathname: `/${chainKey}/plugins/${item.plugin}`,
+                      query: { type: 'default', collection: collectionName },
+                    }}
+                    className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
+                  >
+                    <span className="title-1">{item.label}</span>
+                  </Link>
+                );
+              }
+            })}
+            {externalPluginsList.map((item) => {
+              if (item.page === 'collection') {
+                return (
+                  <Link
+                    key={item.plugin}
+                    href={{
+                      pathname: `/${chainKey}/plugins/${item.plugin}`,
+                      query: { type: 'external', collection: collectionName },
+                    }}
+                    className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
+                  >
+                    <span className="title-1">{item.label}</span>
+                  </Link>
+                );
+              }
+            })}
           </div>
         </div>
       )}

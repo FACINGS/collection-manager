@@ -4,7 +4,7 @@ The Collection Manager has a plugin system which allows you add custom
 functionality to your deployment.
 
 Currently, all plugins are collection-level and, when enabled, are exposed on
-the "Add-ons" tab of the Collection page.
+the "Plugins" tab of the Collection page.
 
 
 ## Configuring Plugins
@@ -48,7 +48,7 @@ cd src/plugins/external
 git clone https://github.com/FACINGS/hello-plugin.git
 ```
 
-After restarting the app, you will see "Hello" in the Collection Add-ons tab.
+After restarting the app, you will see "Hello" in the Collection Plugins tab.
 
 
 

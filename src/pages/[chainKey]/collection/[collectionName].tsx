@@ -207,7 +207,7 @@ function Collection({
               chainKey={chainKey}
               initialAssets={assets}
               initialBurnedAssets={burnedAssets}
-              totalAssets={stats.assets}
+              totalAssets={stats.assets - stats.burned}
               totalBurned={stats.burned}
               collectionName={collection.collection_name}
               hasAuthorization={hasAuthorization}

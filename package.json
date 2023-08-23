@@ -28,6 +28,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.39.4",
     "react-swipeable": "^7.0.0",
+    "seed-random": "^2.2.0",
     "sharp": "^0.31.3",
     "ual-anchor": "^1.3.0",
     "ual-reactjs-renderer": "^0.3.1",

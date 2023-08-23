@@ -48,19 +48,21 @@ interface ParamsProps {
   offset?: number;
   limit?: number;
   schemaName?: string;
+  templateId?: string;
 }
 
 export async function collectionTemplatesService(
   chainKey: string,
-  { collectionName, page, offset, limit, schemaName }: ParamsProps
+  { collectionName, page, offset, templateId }: ParamsProps
 ): Promise<AxiosResponse<DataProps>> {
-  const url = `${chainsConfig[chainKey].aaEndpoint}/atomicassets/v1/templates?collection_name=${collectionName}`;
+  const url = `${chainsConfig[chainKey].aaEndpoint}/atomicassets/v1/templates`;
 
   const response = await api.get(url, {
     params: {
-      schema_name: schemaName || '',
+      collection_name: collectionName || '',
+      template_id: templateId || '',
       page: page || 1,
-      limit: limit || 12,
+      limit: 12,
       offset: offset || 12,
       order: 'desc',
       sort: 'created',

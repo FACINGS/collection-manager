@@ -14,8 +14,17 @@ export default async function handler(req, res) {
         try {
           const configContent = await fs.readFile(configPath, 'utf-8');
           const name = configContent.match(/name: '(.+?)'/)?.[1];
+          const page = configContent.match(/page: '(.+?)'/)?.[1];
+          const description = configContent.match(
+            /description: '([^']+)'/s
+          )?.[1];
           if (name) {
-            pluginInfo.push({ plugin: file.name, label: name });
+            pluginInfo.push({
+              plugin: file.name,
+              label: name,
+              page,
+              description,
+            });
           }
         } catch (error) {
           console.error(`Error reading ${configPath}`, error);
