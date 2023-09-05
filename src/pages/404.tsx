@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { FlyingSaucer } from 'phosphor-react';
+import { FlyingSaucer } from '@phosphor-icons/react';
 
 export default function PageNotFound() {
   return (

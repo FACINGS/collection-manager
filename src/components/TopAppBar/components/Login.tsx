@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Menu } from '@headlessui/react';
 import { withUAL } from 'ual-reactjs-renderer';
-import { CaretDown } from 'phosphor-react';
+import { CaretDown } from '@phosphor-icons/react';
 
 import { getAccount } from '@services/account/getAccount';
 import { getChainKeyByChainId } from '@utils/getChainKeyByChainId';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 
 interface LoginComponentProps {
   chainKey: string;

@@ -1,4 +1,4 @@
-import { TrashSimple, HandGrabbing } from 'phosphor-react';
+import { TrashSimple, HandGrabbing } from '@phosphor-icons/react';
 import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';

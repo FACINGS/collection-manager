@@ -8,7 +8,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { UploadSimple, CircleNotch, CaretDown } from 'phosphor-react';
+import { UploadSimple, CircleNotch, CaretDown } from '@phosphor-icons/react';
 import { Disclosure } from '@headlessui/react';
 
 import { createCollectionService } from '@services/collection/createCollectionService';
@@ -22,12 +22,17 @@ import { Select } from '@components/Select';
 
 import { countriesList } from '@utils/countriesList';
 
-import { appName } from '@configs/globalsConfig';
+import { appName, ipfsEndpoint } from '@configs/globalsConfig';
 
 const schema = yup.object().shape({
-  image: yup.mixed().test('image', 'Image is required', (value) => {
-    return value.length > 0;
-  }),
+  // image: yup.mixed().test('image', 'Image is required', (value) => {
+  //   return value.length > 0;
+  // }),
+  imageIpfsHash: yup
+    .mixed()
+    .test('imageIpfsHash', 'Image IPFS hash is required', (value) => {
+      return value.startsWith('Qm') || value.startsWith('bafy');
+    }),
   collectionName: yup.string().matches(/^[a-z1-5.]+$/, {
     message: 'Only lowercase letters (a-z) and numbers 1-5 are allowed.',
     excludeEmptyString: false,
@@ -64,27 +69,36 @@ function CreateNewCollection({ ual }) {
     watch,
     control,
     formState: { errors },
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const image = watch('image');
+  // const image = watch('image');
+  const imageIpfsHash = watch('imageIpfsHash');
   const collectionName = watch('collectionName');
 
   useEffect(() => {
-    if (image && image.length > 0) {
-      const [img] = image;
+    // if (image && image.length > 0) {
+    //   const [img] = image;
 
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        setPreviewImageSrc(fileReader.result);
-      };
+    //   const fileReader = new FileReader();
+    //   fileReader.onload = () => {
+    //     setPreviewImageSrc(fileReader.result);
+    //   };
 
-      fileReader.readAsDataURL(img);
+    //   fileReader.readAsDataURL(img);
+    // }
+    if (
+      imageIpfsHash &&
+      (imageIpfsHash.startsWith('Qm') || imageIpfsHash.startsWith('bafy'))
+    ) {
+      setPreviewImageSrc(`${ipfsEndpoint}/${imageIpfsHash}`);
     } else {
       setPreviewImageSrc(null);
     }
-  }, [image]);
+    // }, [image]);
+  }, [imageIpfsHash]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -112,8 +126,6 @@ function CreateNewCollection({ ual }) {
       return false;
     }
 
-    console.log(collectionName.startsWith(`.`));
-
     if (
       (collectionName.length <= 12 &&
         (collectionName === userAccount ||
@@ -127,8 +139,20 @@ function CreateNewCollection({ ual }) {
     return false;
   }
 
+  function generateCollectionName() {
+    const validNumbers = '12345';
+    let result = '';
+
+    for (let i = 0; i < 12; i++) {
+      const randomIndex = Math.floor(Math.random() * validNumbers.length);
+      result += validNumbers.charAt(randomIndex);
+    }
+    setValue('collectionName', result);
+  }
+
   async function onSubmit({
-    image,
+    // image,
+    imageIpfsHash,
     collectionName,
     displayName,
     website,
@@ -152,7 +176,7 @@ function CreateNewCollection({ ual }) {
     setIsLoading(true);
 
     try {
-      const data = await uploadImageToIpfsService(image[0]);
+      // const data = await uploadImageToIpfsService(image[0]);
 
       if (collectionNameError) {
         setIsLoading(false);
@@ -182,7 +206,7 @@ function CreateNewCollection({ ual }) {
           },
           {
             key: 'img',
-            value: ['string', data['IpfsHash']],
+            value: ['string', imageIpfsHash],
           },
           {
             key: 'socials',
@@ -329,24 +353,38 @@ function CreateNewCollection({ ual }) {
                   />
                 </div>
               ) : (
+                // <div
+                //   className={`w-full h-full flex flex-col justify-center items-center gap-2 ${
+                //     errors.image?.message ? 'text-red-600' : 'text-center'
+                //   }`}
+                // >
+                //   <UploadSimple size={56} weight="bold" />
+                //   <p className="title-1">Add Collection Image</p>
+                //   <p className="body-3">
+                //     Transparent backgrounds are recommended
+                //   </p>
+                // </div>
                 <div
                   className={`w-full h-full flex flex-col justify-center items-center gap-2 ${
-                    errors.image?.message ? 'text-red-600' : 'text-center'
+                    errors.imageIpfsHash?.message
+                      ? 'text-red-600'
+                      : 'text-center'
                   }`}
                 >
-                  <UploadSimple size={56} weight="bold" />
-                  <p className="title-1">Add Collection Image</p>
+                  <p className="title-1">Collection Image Preview</p>
                   <p className="body-3">
-                    Transparent backgrounds are recommended
+                    Will be shown if you provide a valid IPFS hash in the form.
+                    <br />
+                    Transparent backgrounds are recommended.
                   </p>
                 </div>
               )}
-              <input
+              {/* <input
                 {...register('image')}
                 type="file"
                 accept="image/png, image/gif, image/jpeg"
                 className="hidden"
-              />
+              /> */}
             </label>
           </div>
 
@@ -354,16 +392,29 @@ function CreateNewCollection({ ual }) {
             <Input
               {...register('collectionName')}
               error={errors.collectionName?.message || collectionNameError}
-              label="Collection name"
-              hint="Must be up to 12 characters (a-z, 1-5) with no spaces."
+              label="Collection ID"
+              hint="Unique identifier of the collection. Must be up to 12 characters (a-z, 1-5) with no spaces."
               type="text"
               maxLength={12}
             />
+            <button
+              type="button"
+              className={`btn w-fit whitespace-nowrap`}
+              onClick={generateCollectionName}
+            >
+              Random ID
+            </button>
             <Input
               {...register('displayName')}
               error={errors.displayName?.message}
               type="text"
               label="Display Name"
+            />
+            <Input
+              {...register('imageIpfsHash')}
+              error={errors.imageIpfsHash?.message}
+              type="text"
+              label="Image IPFS Hash"
             />
             <Controller
               control={control}

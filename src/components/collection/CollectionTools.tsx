@@ -2,41 +2,41 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { collectionTabs } from '@utils/collectionTabs';
 
-interface CollectionPluginsProps {
+interface CollectionToolsProps {
   chainKey: string;
   collectionName: string;
 }
 
-interface PluginsListProps {
-  plugin: string;
+interface ToolsListProps {
+  tool: string;
   label: string;
   page: string;
 }
 
-export function CollectionPlugins({
+export function CollectionTools({
   chainKey,
   collectionName,
-}: CollectionPluginsProps) {
-  const [pluginsList, setPluginsList] = useState<PluginsListProps[]>([]);
-  const [externalPluginsList, setExternalPluginsList] = useState<
-    PluginsListProps[]
-  >([]);
+}: CollectionToolsProps) {
+  const [toolsList, setToolsList] = useState<ToolsListProps[]>([]);
+  const [externalToolsList, setExternalToolsList] = useState<ToolsListProps[]>(
+    []
+  );
 
   useEffect(() => {
-    async function fetchPlugins() {
+    async function fetchTools() {
       try {
-        const response = await fetch('/api/plugins?path=default');
-        const pluginNames = await response.json();
-        setPluginsList(pluginNames);
+        const response = await fetch('/api/tools?path=default');
+        const toolNames = await response.json();
+        setToolsList(toolNames);
 
-        const res = await fetch('/api/plugins?path=external');
-        const externalPluginNames = await res.json();
-        setExternalPluginsList(externalPluginNames);
+        const res = await fetch('/api/tools?path=external');
+        const externalToolNames = await res.json();
+        setExternalToolsList(externalToolNames);
       } catch (error) {
         console.log(error);
       }
     }
-    fetchPlugins();
+    fetchTools();
   }, []);
 
   return (
@@ -44,16 +44,16 @@ export function CollectionPlugins({
       <div className="flex flex-col py-8 gap-12">
         <h2 className="headline-2">{collectionTabs[5].name}</h2>
       </div>
-      {(pluginsList.length > 0 || externalPluginsList.length > 0) && (
+      {(toolsList.length > 0 || externalToolsList.length > 0) && (
         <div className="flex-1">
           <div className="flex md:flex-row flex-col gap-8">
-            {pluginsList.map((item) => {
+            {toolsList.map((item) => {
               if (item.page === 'collection') {
                 return (
                   <Link
-                    key={item.plugin}
+                    key={item.tool}
                     href={{
-                      pathname: `/${chainKey}/plugins/${item.plugin}`,
+                      pathname: `/${chainKey}/tools/${item.tool}`,
                       query: { type: 'default', collection: collectionName },
                     }}
                     className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
@@ -63,13 +63,13 @@ export function CollectionPlugins({
                 );
               }
             })}
-            {externalPluginsList.map((item) => {
+            {externalToolsList.map((item) => {
               if (item.page === 'collection') {
                 return (
                   <Link
-                    key={item.plugin}
+                    key={item.tool}
                     href={{
-                      pathname: `/${chainKey}/plugins/${item.plugin}`,
+                      pathname: `/${chainKey}/tools/${item.tool}`,
                       query: { type: 'external', collection: collectionName },
                     }}
                     className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"

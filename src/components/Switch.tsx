@@ -1,4 +1,4 @@
-import { Check, X, Minus } from 'phosphor-react';
+import { Check, X, Minus } from '@phosphor-icons/react';
 import { Switch as SwitchComponent, Transition } from '@headlessui/react';
 
 interface SwitchProps {

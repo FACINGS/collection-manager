@@ -1,4 +1,4 @@
-export const pluginInfo = {
+export const toolInfo = {
   name: 'Import',
   page: 'collection',
   description: 'Import a CSV to create schema and templates.',

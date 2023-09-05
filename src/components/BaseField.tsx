@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { WarningCircle } from 'phosphor-react';
+import { WarningCircle } from '@phosphor-icons/react';
 
 interface BaseFieldProps {
   icon?: ReactNode;

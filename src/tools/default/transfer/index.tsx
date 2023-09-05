@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { CircleNotch, MagnifyingGlass } from 'phosphor-react';
+import { CircleNotch, MagnifyingGlass } from '@phosphor-icons/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
 
@@ -19,7 +18,7 @@ import { CardContainer } from '@components/CardContainer';
 import { SeeMoreButton } from '@components/SeeMoreButton';
 import { Header } from '@components/Header';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 import { ipfsEndpoint, chainKeyDefault, appName } from '@configs/globalsConfig';
 
 import { transferAssetService } from '@services/asset/transferAssetService';
@@ -83,6 +82,13 @@ function Transfer({ ual }) {
 
   const accountName = ual?.activeUser?.accountName;
 
+  const getViewLink = (asset) => {
+    if (chainKey == 'xpr') {
+      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=card&utm_source=nft-manager`;
+    }
+    return `/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`;
+  };
+
   useEffect(() => {
     async function getUserInfo() {
       try {
@@ -128,7 +134,7 @@ function Transfer({ ual }) {
 
     ownedCollections.forEach((item) =>
       options.push({
-        label: item.collection.collection_name,
+        label: `(${item.collection.name}) By ${item.collection.author}`,
         value: item.collection.collection_name,
       })
     );
@@ -160,9 +166,7 @@ function Transfer({ ual }) {
         });
       }
     }
-    if (selectedCollection) {
-      getUserInventory();
-    }
+    getUserInventory();
   }, [selectedCollection, accountName, chainKey]);
 
   async function handleSeeMoreAssets() {
@@ -306,6 +310,16 @@ function Transfer({ ual }) {
           <h2 className="headline-2 mt-4 md:mt-8">
             Send your NFTs to another user
           </h2>
+          <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
+            <li className="pl-1">
+              Select the NFTs by clicking on their pictures to the right.
+            </li>
+            <li className="pl-1">
+              Enter the recipient's account name in the "Recipient account"
+              input field.
+            </li>
+            <li className="pl-1">Click the "Transfer NFT" button.</li>
+          </ol>
           <Modal ref={modalRef} title={modal.title}>
             <p className="body-2 mt-2">{modal.message}</p>
             {!modal.isError ? (
@@ -357,6 +371,10 @@ function Transfer({ ual }) {
                           image={
                             asset.data['img']
                               ? `${ipfsEndpoint}/${asset.data['img']}`
+                              : asset.data['image']
+                              ? `${ipfsEndpoint}/${asset.data['image']}`
+                              : asset.data['glbthumb']
+                              ? `${ipfsEndpoint}/${asset.data['glbthumb']}`
                               : ''
                           }
                           video={
@@ -366,7 +384,7 @@ function Transfer({ ual }) {
                           }
                           title={asset.name}
                           subtitle={`by ${asset.collection.author}`}
-                          viewLink={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
+                          viewLink={getViewLink(asset)}
                         />
                       </div>
                     ))}
@@ -439,8 +457,12 @@ function Transfer({ ual }) {
                                 id={asset.template_mint}
                                 onClick={() => handleAssetSelection(asset)}
                                 image={
-                                  asset.data.img
+                                  asset.data.image
+                                    ? `${ipfsEndpoint}/${asset.data.image}`
+                                    : asset.data.img
                                     ? `${ipfsEndpoint}/${asset.data.img}`
+                                    : asset.data.glbthumb
+                                    ? `${ipfsEndpoint}/${asset.data.glbthumb}`
                                     : ''
                                 }
                                 video={
@@ -450,7 +472,7 @@ function Transfer({ ual }) {
                                 }
                                 title={asset.name}
                                 subtitle={`by ${asset.collection.author}`}
-                                viewLink={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
+                                viewLink={getViewLink(asset)}
                               />
                             </div>
                           </div>
@@ -495,7 +517,7 @@ function Transfer({ ual }) {
         <div className="mx-auto my-14 text-center">
           <h2 className="headline-2">Connect your wallet</h2>
           <p className="body-1 mt-2 mb-6">
-            You need to connect your wallet to transfer a NFT
+            You need to connect your wallet to transfer one or multiple NFTs
           </p>
           <button type="button" className="btn" onClick={handleLogin}>
             Connect Wallet

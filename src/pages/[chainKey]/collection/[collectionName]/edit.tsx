@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent, useRef } from 'react';
-import { UploadSimple, CircleNotch } from 'phosphor-react';
+import { UploadSimple, CircleNotch } from '@phosphor-icons/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { GetServerSideProps } from 'next';
 import { Tab, Disclosure } from '@headlessui/react';

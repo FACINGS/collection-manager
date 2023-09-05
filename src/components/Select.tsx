@@ -1,7 +1,7 @@
 import { useState, Fragment, ReactNode } from 'react';
 import { BaseField } from '@components/BaseField';
 import { Listbox, Transition } from '@headlessui/react';
-import { CaretDown } from 'phosphor-react';
+import { CaretDown } from '@phosphor-icons/react';
 
 interface SelectProps {
   icon?: ReactNode;

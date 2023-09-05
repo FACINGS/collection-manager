@@ -1,4 +1,4 @@
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 
 export function isValidChainKey(chainKey: string) {
   const chainsKeys = Object.keys(chainsConfig);

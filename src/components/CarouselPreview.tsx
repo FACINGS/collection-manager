@@ -6,7 +6,7 @@ import {
   Ref,
 } from 'react';
 import Image from 'next/image';
-import { X, CaretLeft, CaretRight } from 'phosphor-react';
+import { X, CaretLeft, CaretRight } from '@phosphor-icons/react';
 import { useSwipeable } from 'react-swipeable';
 import { Dialog, Transition } from '@headlessui/react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';

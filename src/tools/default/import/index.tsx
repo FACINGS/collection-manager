@@ -14,7 +14,7 @@ import { WarningCard } from '@components/WarningCard';
 
 import { handleAttributesData } from '@utils/handleAttributesData';
 
-import { pluginInfo, batchOptions } from './config';
+import { toolInfo, batchOptions } from './config';
 import * as utils from './utils/utils';
 import { Review } from './components/review';
 
@@ -660,8 +660,8 @@ function Import({ ual }: ImportProps) {
       <div className="container">
         <div className="flex flex-col pb-8 gap-16">
           <div className="flex flex-col gap-4">
-            <h1 className="headline-1">{pluginInfo.name}</h1>
-            <span className="body-1">{pluginInfo.description}</span>
+            <h1 className="headline-1">{toolInfo.name}</h1>
+            <span className="body-1">{toolInfo.description}</span>
             <span className="body-1">
               For file specification, see{' '}
               <a
@@ -703,7 +703,7 @@ function Import({ ual }: ImportProps) {
                     />
                   )}
                   <button onClick={() => onSubmit()} className="btn w-fit">
-                    {pluginInfo.name}
+                    {toolInfo.name}
                   </button>
                 </>
               )}
@@ -768,7 +768,7 @@ function Import({ ual }: ImportProps) {
                 className="btn w-fit"
                 disabled={!fileName || importErrors.length > 0}
               >
-                {pluginInfo.name}
+                {toolInfo.name}
               </button>
             </form>
           )}

@@ -7,7 +7,7 @@ import {
   DiscordLogo,
   YoutubeLogo,
   TelegramLogo,
-} from 'phosphor-react';
+} from '@phosphor-icons/react';
 import { CollectionProps } from '@services/collection/getCollectionService';
 
 interface CollectionStatsProps {
@@ -54,27 +54,20 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
   function handleSocialIcon(social) {
     switch (social) {
       case 'twitter':
+        /* TODO change to X, see https://github.com/phosphor-icons/homepage/issues/323 */
         return <TwitterLogo size={24} />;
-        break;
       case 'facebook':
         return <FacebookLogo size={24} />;
-        break;
       case 'medium':
         return <MediumLogo size={24} />;
-        break;
       case 'github':
         return <GithubLogo size={24} />;
-        break;
       case 'discord':
         return <DiscordLogo size={24} />;
-        break;
       case 'youtube':
         return <YoutubeLogo size={24} />;
-        break;
       case 'telegram':
         return <TelegramLogo size={24} />;
-        break;
-
       default:
         break;
     }

@@ -3,7 +3,7 @@ import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { DiceFive, CircleNotch } from 'phosphor-react';
+import { DiceFive, CircleNotch } from '@phosphor-icons/react';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,13 +17,13 @@ import { Switch } from '@components/Switch';
 import { Textarea } from '@components/Textarea';
 import { WarningCard } from '@components/WarningCard';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 import { appName } from '@configs/globalsConfig';
 
 import * as utils from './utils/utils';
 import { validationSchema } from './utils/validationSchema';
 import {
-  pluginInfo,
+  toolInfo,
   batchOptions,
   searchByOptions,
   dropAssetsOptions,
@@ -408,7 +408,7 @@ function Airdrop({ ual }: AirdropProps) {
     return (
       <div className="container flex flex-col gap-12">
         <div className="flex flex-col gap-4">
-          <h1 className="headline-1">{pluginInfo.name}</h1>
+          <h1 className="headline-1">{toolInfo.name}</h1>
           <span className="body-1">Bulk send NFTs with filters.</span>
         </div>
         {hasRemainingTransactions ? (
@@ -445,7 +445,7 @@ function Airdrop({ ual }: AirdropProps) {
                   />
                 </div>
                 <button onClick={() => onSubmit()} className="btn w-fit">
-                  {pluginInfo.name}
+                  {toolInfo.name}
                 </button>
               </>
             )}
@@ -804,7 +804,7 @@ function Airdrop({ ual }: AirdropProps) {
                 loading
               }
             >
-              {pluginInfo.name}
+              {toolInfo.name}
             </button>
           </form>
         )}

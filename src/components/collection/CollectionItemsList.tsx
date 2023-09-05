@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MagnifyingGlass } from 'phosphor-react';
+import { MagnifyingGlass } from '@phosphor-icons/react';
 import { ipfsEndpoint } from '@configs/globalsConfig';
 import {
   listCollectionsService,

@@ -1,4 +1,4 @@
-import { CircleNotch } from 'phosphor-react';
+import { CircleNotch } from '@phosphor-icons/react';
 
 interface SeeMoreButtonProps {
   isLoading: boolean;

@@ -7,7 +7,7 @@ import {
   Ref,
 } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { X } from 'phosphor-react';
+import { X } from '@phosphor-icons/react';
 
 interface ModalProps {
   title: string;

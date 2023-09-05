@@ -1,4 +1,4 @@
-import { WarningCircle } from 'phosphor-react';
+import { WarningCircle } from '@phosphor-icons/react';
 
 interface WarningCardProps {
   title: string;

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Chain } from './components/Chain';
 import { NavItem } from './components/NavItem';
 import { Login } from './components/Login';
-import { List, X } from 'phosphor-react';
+import { List, X } from '@phosphor-icons/react';
 
 import { chainKeyDefault } from '@configs/globalsConfig';
 
@@ -25,27 +25,29 @@ export function TopAppBar() {
           <NavItem href={`/${chainKey}`} onClick={() => setOpen(false)}>
             My Collections
           </NavItem>
-          <NavItem
-            href={`/${chainKey}/explorer`}
-            onClick={() => setOpen(false)}
-          >
-            Explorer
+          <NavItem href={`/${chainKey}/tools`} onClick={() => setOpen(false)}>
+            Tools
           </NavItem>
           <NavItem
-            href={`/${chainKey}/transfer`}
-            onClick={() => setOpen(false)}
-          >
-            Transfer
-          </NavItem>
-          <NavItem href={`/${chainKey}/plugins`} onClick={() => setOpen(false)}>
-            Plugins
-          </NavItem>
-          <NavItem
-            href="https://github.com/FACINGS/collection-manager/tree/main/docs/user-guide.md"
+            href="https://soon.market/explore?utm_medium=navbar&utm_source=nft-manager"
             onClick={() => setOpen(false)}
             target="_blank"
           >
-            Docs
+            Explore
+          </NavItem>
+          <NavItem
+            href="https://soon.market/sell?utm_medium=navbar&utm_source=nft-manager"
+            onClick={() => setOpen(false)}
+            target="_blank"
+          >
+            Sell
+          </NavItem>
+          <NavItem
+            href="https://soon.market/soon-spot-nfts?utm_medium=navbar&utm_source=nft-manager"
+            onClick={() => setOpen(false)}
+            target="_blank"
+          >
+            Promote
           </NavItem>
           <NavItem href={`/${chainKey}/about`} onClick={() => setOpen(false)}>
             About

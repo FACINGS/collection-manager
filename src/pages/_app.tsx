@@ -13,7 +13,7 @@ import { authenticators } from '@libs/authenticators';
 import { blockchains } from '@utils/blockchains';
 import '@utils/yupMethods';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 
 import '@styles/globals.css';
 

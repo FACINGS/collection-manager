@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Tab, Disclosure } from '@headlessui/react';
-import { CircleNotch } from 'phosphor-react';
+import { CircleNotch } from '@phosphor-icons/react';
 import Head from 'next/head';
 
 import { useForm, Controller } from 'react-hook-form';

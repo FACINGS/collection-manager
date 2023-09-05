@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { withUAL } from 'ual-reactjs-renderer';
-import { CircleNotch } from 'phosphor-react';
+import { CircleNotch } from '@phosphor-icons/react';
 import { useRouter } from 'next/router';
 import { Disclosure } from '@headlessui/react';
 import Head from 'next/head';

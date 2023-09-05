@@ -1,4 +1,4 @@
-import * as chains from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 
 interface BlockchainsProps {
   chainId: string;
@@ -8,9 +8,9 @@ interface BlockchainsProps {
   port: string;
 }
 
-export const blockchains = Object.keys(chains).map((chainKey) => {
+export const blockchains = Object.keys(chainsConfig).map((chainKey) => {
   const { chainId, name, protocol, host, port }: BlockchainsProps =
-    chains[chainKey];
+    chainsConfig[chainKey];
 
   return {
     chainId,

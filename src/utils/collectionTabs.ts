@@ -20,7 +20,7 @@ export const collectionTabs = [
     key: 'accounts',
   },
   {
-    name: 'Plugins',
+    name: 'Tools',
     key: 'add-ons',
   },
 ];

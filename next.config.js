@@ -7,13 +7,13 @@ const nextConfig = {
   distDir: '.next',
   images: {
     domains: [
-      'wax.bloks.io',
-      'bloks.io',
-      'facings.mypinata.cloud',
       'robohash.org',
-      'ipfs.ledgerwise.io',
+      'ipfs-gateway.soon.market',
+      'media.soon.market',
+      'soon.market',
     ],
   },
+  output: 'standalone',
 };
 
 module.exports = nextConfig;

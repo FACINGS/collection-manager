@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PlusCircle } from 'phosphor-react';
+import { PlusCircle } from '@phosphor-icons/react';
 
 interface CreateNewItemProps {
   label: string;

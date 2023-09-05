@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
-import { ImageSquare } from 'phosphor-react';
+import { ImageSquare } from '@phosphor-icons/react';
 
 import { ipfsEndpoint } from '@configs/globalsConfig';
 import { CarouselPreview } from './CarouselPreview';

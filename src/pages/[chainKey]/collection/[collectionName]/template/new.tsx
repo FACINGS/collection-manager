@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { withUAL } from 'ual-reactjs-renderer';
-import { CircleNotch, Info } from 'phosphor-react';
+import { CircleNotch, Info } from '@phosphor-icons/react';
 import { Disclosure, Popover } from '@headlessui/react';
 import { useForm, Controller } from 'react-hook-form';
 

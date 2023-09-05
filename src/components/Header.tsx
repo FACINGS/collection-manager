@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CaretRight } from 'phosphor-react';
+import { CaretRight } from '@phosphor-icons/react';
 import { ReactNode } from 'react';
 
 import { Carousel } from '@components/Carousel';

@@ -1,4 +1,4 @@
-import { TrashSimple } from 'phosphor-react';
+import { TrashSimple } from '@phosphor-icons/react';
 
 interface TableProps {
   list: string[];

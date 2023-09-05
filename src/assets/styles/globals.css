@@ -51,10 +51,10 @@
     @apply border-transparent;
   }
   .btn-small.btn-square {
-    @apply px-[calc(0.5rem-1px)]
+    @apply px-[calc(0.5rem-1px)];
   }
   .btn-square {
-    @apply px-[calc(1rem-1px)]
+    @apply px-[calc(1rem-1px)];
   }
 
   .badge-small {
@@ -78,8 +78,8 @@
     @apply relative;
   }
   .tooltip .tooltip-text {
-    @apply hidden absolute p-4 -top-16 right-0 bg-neutral-700 whitespace-nowrap rounded
-  }  
+    @apply hidden absolute p-4 -top-16 right-0 bg-neutral-700 whitespace-nowrap rounded;
+  }
   .tooltip:hover .tooltip-text {
     @apply block;
   }

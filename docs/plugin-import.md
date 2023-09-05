@@ -18,7 +18,6 @@ The benefits of this approach:
    catch mistakes such as empty or non-unique entries before the schema and
    templates are created.
 
-
 ## Step 1: Preparing the Spreadsheet
 
 To start, we assume you have a spreadsheet where the first row contains
@@ -33,39 +32,34 @@ This spreadsheet consists of 4 columns and 5 rows, from which 1 schema and 4
 templates will be created.
 
 | name   | img                                                         | points | description         |
-|--------|-------------------------------------------------------------|--------|---------------------|
+| ------ | ----------------------------------------------------------- | ------ | ------------------- |
 | Apple  | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5      | Crunchy round fruit |
 | Banana | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2      | Mushy yellow fruit  |
 | Kiwi   | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3      | Hairy green fruit   |
 | Cherry | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8      | Red stone fruit     |
-
-
 
 ## Step 2: Add system columns
 
 There are 4 columns that **must be present** when importing a CSV file:
 
 1. `max_supply`: (whole number) the maximum number of NFTs which can be minted
-   from the template. (set to `0` for *unlimited*)
+   from the template. (set to `0` for _unlimited_)
 2. `burnable`: (`TRUE` or `FALSE`) recommended set to `TRUE` to allow
    users the option to burn their NFTs.
 3. `transferable`: (`TRUE` or `FALSE`) recommended set to `TRUE` to allow users
    to trade their NFTs.
 4. `sysflag`: leave this column blank for now.
 
-
 ##### Example:
 
 Note: ❌ indicates cells which are to be left blank.
 
 | name   | img                                                         | points | description         | **max_supply** | **burnable** | **transferable** | **sysflag** |
-|--------|-------------------------------------------------------------|--------|---------------------|:--------------:|:------------:|:----------------:|:-----------:|
-| Apple  | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5      | Crunchy round fruit | **100**        | **TRUE**     | **TRUE**         |      ❌     |
-| Banana | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2      | Mushy yellow fruit  | **100**        | **TRUE**     | **TRUE**         |      ❌     |
-| Kiwi   | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3      | Hairy green fruit   | **100**        | **TRUE**     | **TRUE**         |      ❌     |
-| Cherry | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8      | Red stone fruit     | **100**        | **TRUE**     | **TRUE**         |      ❌     |
-
-
+| ------ | ----------------------------------------------------------- | ------ | ------------------- | :------------: | :----------: | :--------------: | :---------: |
+| Apple  | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5      | Crunchy round fruit |    **100**     |   **TRUE**   |     **TRUE**     |     ❌      |
+| Banana | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2      | Mushy yellow fruit  |    **100**     |   **TRUE**   |     **TRUE**     |     ❌      |
+| Kiwi   | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3      | Hairy green fruit   |    **100**     |   **TRUE**   |     **TRUE**     |     ❌      |
+| Cherry | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8      | Red stone fruit     |    **100**     |   **TRUE**   |     **TRUE**     |     ❌      |
 
 ## Step 3: Specify data types
 
@@ -74,6 +68,7 @@ Note: ❌ indicates cells which are to be left blank.
 3. For each of your original columns, enter the desired datatype in this row (ignore `max_supply`, `burnable`, and `transferable`).
 
 Example data types:
+
 1. `string`: any text content
 2. `uint8`: whole numbers from `0` to `255`
 3. `int16`: whole numbers from `-32,768` to `32,767`
@@ -84,19 +79,17 @@ Example data types:
 
 For a full list of allowed types, see [Data Types](data-types.md).
 
-
 ##### Example
 
 Note: ❌ indicates cells which are to be left blank.
 
-| name       | img                                                         | points    | description         | max_supply | burnable | transferable | sysflag      |
-|------------|-------------------------------------------------------------|-----------|---------------------|:----------:|:--------:|:------------:|:------------:|
-| **string** | **image**                                                   | **uint8** | **string**          | ❌         | ❌       | ❌           | **datatype** |
-| Apple      | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5         | Crunchy round fruit | 100        | TRUE     | TRUE         |        ❌    |
-| Banana     | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2         | Mushy yellow fruit  | 100        | TRUE     | TRUE         |        ❌    |
-| Kiwi       | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3         | Hairy green fruit   | 100        | TRUE     | TRUE         |        ❌    |
-| Cherry     | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8         | Red stone fruit     | 100        | TRUE     | TRUE         |        ❌    |
-
+| name       | img                                                         | points    | description         | max_supply | burnable | transferable |   sysflag    |
+| ---------- | ----------------------------------------------------------- | --------- | ------------------- | :--------: | :------: | :----------: | :----------: |
+| **string** | **image**                                                   | **uint8** | **string**          |     ❌     |    ❌    |      ❌      | **datatype** |
+| Apple      | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5         | Crunchy round fruit |    100     |   TRUE   |     TRUE     |      ❌      |
+| Banana     | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2         | Mushy yellow fruit  |    100     |   TRUE   |     TRUE     |      ❌      |
+| Kiwi       | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3         | Hairy green fruit   |    100     |   TRUE   |     TRUE     |      ❌      |
+| Cherry     | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8         | Red stone fruit     |    100     |   TRUE   |     TRUE     |      ❌      |
 
 ## Step 4: (Optional) Additional properties and validators
 
@@ -111,7 +104,7 @@ Note: ❌ indicates cells which are to be left blank.
 
 Validators are optional but recommended as they will help you capture any
 potential issues or mistakes in your data (e.g. missing or repeated values).
-Any failed validations will be reported by the Importer *before* anything is
+Any failed validations will be reported by the Importer _before_ anything is
 written to the blockchain.
 Futute validators may include features like "spellcheck".
 
@@ -120,10 +113,11 @@ Futute validators may include features like "spellcheck".
 - `unique`: `TRUE` or `FALSE` - if set to `TRUE`, the data import will verify
   that all templates to be created have no duplicate values for this field.
 
-### How to add a *Property* or *Validator*
+### How to add a _Property_ or _Validator_
 
-The process of adding *properties* or *validators* is similar to adding the
-required `datatype` *sysflag*:
+The process of adding _properties_ or _validators_ is similar to adding the
+required `datatype` _sysflag_:
+
 1. Insert a new header row (e.g. after the `datatype` row but before the
    templates start. in the example below, two validators were added).
 2. Enter the desired values, ignoring `max_supply`, `burnable`, and `transferable`.
@@ -134,16 +128,15 @@ At this point, the spreadsheet will look something like this:
 
 Note: ❌ indicates cells which are to be left blank.
 
-| name     | img                                                         | points    | description         | max_supply | burnable | transferable | sysflag      |
-|----------|-------------------------------------------------------------|-----------|---------------------|:----------:|:--------:|:------------:|:------------:|
-| string   | image                                                       | uint8     | string              | ❌         | ❌       | ❌           | datatype     |
-| **TRUE** | **TRUE**                                                    | **TRUE**  | **TRUE**            | ❌         | ❌       | ❌           | **required** |
-| **TRUE** | **TRUE**                                                    | **FALSE** | **TRUE**            | ❌         | ❌       | ❌           | **unique**   |
-| Apple    | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5         | Crunchy round fruit | 100        | TRUE     | TRUE         | ❌           |
-| Banana   | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2         | Mushy yellow fruit  | 100        | TRUE     | TRUE         | ❌           |
-| Kiwi     | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3         | Hairy green fruit   | 100        | TRUE     | TRUE         | ❌           |
-| Cherry   | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8         | Red stone fruit     | 100        | TRUE     | TRUE         | ❌           |
-
+| name     | img                                                         | points    | description         | max_supply | burnable | transferable |   sysflag    |
+| -------- | ----------------------------------------------------------- | --------- | ------------------- | :--------: | :------: | :----------: | :----------: |
+| string   | image                                                       | uint8     | string              |     ❌     |    ❌    |      ❌      |   datatype   |
+| **TRUE** | **TRUE**                                                    | **TRUE**  | **TRUE**            |     ❌     |    ❌    |      ❌      | **required** |
+| **TRUE** | **TRUE**                                                    | **FALSE** | **TRUE**            |     ❌     |    ❌    |      ❌      |  **unique**  |
+| Apple    | QmY2yFqDmSPWiFbzsMeREHXyCkY5LdY62WWyYUhe5ogpmT              | 5         | Crunchy round fruit |    100     |   TRUE   |     TRUE     |      ❌      |
+| Banana   | bafkreidullbimqjiob2apauxv3tj23kupb5em3c4i5soks2svsbqrvasce | 2         | Mushy yellow fruit  |    100     |   TRUE   |     TRUE     |      ❌      |
+| Kiwi     | bafkreichwf6uollkwe55bmrvnt3744rnmn5g3boekoh62krgu2umv4qpgu | 3         | Hairy green fruit   |    100     |   TRUE   |     TRUE     |      ❌      |
+| Cherry   | QmeciM9AtHdCycNAwtWh6bAsLCaKnWjgFAg95pFuP63AGW              | 8         | Red stone fruit     |    100     |   TRUE   |     TRUE     |      ❌      |
 
 ## Step 5: Export to CSV
 

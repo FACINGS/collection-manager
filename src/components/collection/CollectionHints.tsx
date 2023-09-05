@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { WarningCircle } from 'phosphor-react';
+import { WarningCircle } from '@phosphor-icons/react';
 import { useRouter } from 'next/router';
 
 import { AssetProps } from '@services/collection/collectionAssetsService';

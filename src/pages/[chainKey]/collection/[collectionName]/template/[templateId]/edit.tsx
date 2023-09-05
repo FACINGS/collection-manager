@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
-import { CircleNotch } from 'phosphor-react';
+import { CircleNotch } from '@phosphor-icons/react';
 
 import {
   getTemplateService,

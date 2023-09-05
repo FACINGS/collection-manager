@@ -6,7 +6,6 @@ functionality to your deployment.
 Currently, all plugins are collection-level and, when enabled, are exposed on
 the "Plugins" tab of the Collection page.
 
-
 ## Configuring Plugins
 
 The following directories are scanned for plugins:
@@ -16,7 +15,6 @@ The following directories are scanned for plugins:
 
 All plugins found in either folder will be enabled on the UI.
 
-
 ## Default Plugins
 
 ### `import`: Data import
@@ -24,7 +22,6 @@ All plugins found in either folder will be enabled on the UI.
 This plugin enables users to upload a CSV file from which to create a schema and
 any number of templates. See [`plugin-import.md`](plugin-import.md) for
 additional details.
-
 
 ## External Plugins
 
@@ -34,7 +31,6 @@ They will be detected automatically upon restarting the app.
 
 It is recommended to use remote git repos, but the only requirement is that
 the plugins follow the rules outlined in the "Creating a Plugin" section below.
-
 
 ### Installing the "Hello World" plugin
 
@@ -49,9 +45,6 @@ git clone https://github.com/FACINGS/hello-plugin.git
 ```
 
 After restarting the app, you will see "Hello" in the Collection Plugins tab.
-
-
-
 
 ## Creating a Plugin
 
@@ -85,7 +78,6 @@ export default function Hello() {
   );
 }
 ```
-
 
 ## Contributing Plugins
 

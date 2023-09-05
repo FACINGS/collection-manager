@@ -88,7 +88,6 @@ Note that many published collections may not have any published shemas or templa
 2. Click on "Edit NFT", then "Burn NFT" tab.
 3. Click on the "Burn NFT" button to sign and broadcast the transaction.
 
-
 ## 4. Testing Stage 2, Milestone 1 deliverables
 
 ### Deliverable 1: TypeScript Implementation
@@ -129,8 +128,6 @@ Documentation of the plugin system and instructions on how to install a sample p
 
 https://github.com/FACINGS/collection-manager/blob/main/docs/plugins.md
 
-
-
 ## 5. Testing Stage 2, Milestone 2 deliverables
 
 ### Deliverable 1: Import Function
@@ -158,7 +155,6 @@ You may view the documentation of the standard here: [Data Import Plugin](plugin
 
 > Ability to submit transactions in batches
 
-
 1. Download sample file: [batch.test.csv](plugin-import-sample/batch.test.csv)
 2. Start on the "Import" page (Collection > Plugins > Import)
 3. Select the `batch.test.csv` file you downloaded in step 1
@@ -166,13 +162,12 @@ You may view the documentation of the standard here: [Data Import Plugin](plugin
    and you will be able to adjust the batch size from the default of 25, if desired.
 5. Submitting the form will result in the user being prompted to sign a series of transactions.
 
-
 ### Deliverable 2: Advanced Validation
 
 > Data validation heuristics upon import:
->  (a) Uniqueness;
->  (b) Completeness;
->  (c) Datatype optimization
+> (a) Uniqueness;
+> (b) Completeness;
+> (c) Datatype optimization
 
 1. Download sample file: [validationtest.csv](plugin-import-sample/validationtest.csv)
 2. Start on the "Import" page (Collection > Plugins > Import)
@@ -183,9 +178,7 @@ You may view the documentation of the standard here: [Data Import Plugin](plugin
    3. Required field error: "Kiwi" is missing a value for the `points` field, which was marked as 'required'
    4. IPFS field validation error: "Orange" has an invalid entry for the `img` field, which expects an IPFS address
 
-
 ## 6. Testing Stage 2, Milestone 3 deliverables
-
 
 ### Deliverable 1: Airdrop Plugin Core
 
@@ -205,15 +198,16 @@ You may view the documentation of the standard here: [Data Import Plugin](plugin
       2. Transfer from NFT IDs - specify (or query) a list of NFT (asset) IDs; submission transfers to the specified accounts.
    4. Batch Size - at the bottom of the form, the user has control over batch size. This can be verified by inspecting the generated transactions.
 
-
 ### Deliverable 2: Airdrop API Queries
 
 > Look-up Queries:
+>
 > - everyone who has specific template
 > - everyone who doesn’t have specific templates within a collection
 > - everyone who has any item from a collection
 >
 > Unique Queries:
+>
 > - option to send single or multiple assets to matched accounts
 
 1. From the Airdrop page, these account queries are visible at the very top

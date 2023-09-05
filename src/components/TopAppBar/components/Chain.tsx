@@ -2,9 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Menu } from '@headlessui/react';
-import { CaretDown } from 'phosphor-react';
+import { CaretDown } from '@phosphor-icons/react';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 
 import { ChainLink } from './ChainLink';
 

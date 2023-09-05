@@ -7,7 +7,13 @@ import {
   InputHTMLAttributes,
 } from 'react';
 import Image from 'next/image';
-import { UploadSimple, File, FileCsv, FilePdf, FileX } from 'phosphor-react';
+import {
+  UploadSimple,
+  File,
+  FileCsv,
+  FilePdf,
+  FileX,
+} from '@phosphor-icons/react';
 import { ipfsEndpoint } from '@configs/globalsConfig';
 import { convertToBase64 } from '@utils/convertToBase64';
 

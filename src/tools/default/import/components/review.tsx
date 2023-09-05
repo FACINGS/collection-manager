@@ -1,5 +1,5 @@
 import { Disclosure, Transition } from '@headlessui/react';
-import { CaretDown, WarningCircle } from 'phosphor-react';
+import { CaretDown, WarningCircle } from '@phosphor-icons/react';
 import * as isIPFS from 'is-ipfs';
 import 'tailwindcss/tailwind.css';
 

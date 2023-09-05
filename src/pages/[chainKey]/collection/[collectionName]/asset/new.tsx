@@ -4,7 +4,12 @@ import { useRouter } from 'next/router';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
 import { Listbox, Transition } from '@headlessui/react';
-import { CaretDown, Check, CircleNotch, TrashSimple } from 'phosphor-react';
+import {
+  CaretDown,
+  Check,
+  CircleNotch,
+  TrashSimple,
+} from '@phosphor-icons/react';
 import { GetServerSideProps } from 'next';
 
 import { useForm, Controller, useFieldArray } from 'react-hook-form';

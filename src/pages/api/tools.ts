@@ -3,10 +3,10 @@ import { promises as fs } from 'fs';
 export default async function handler(req, res) {
   try {
     const { path } = req.query;
-    const dirPath = `src/plugins/${path}`;
+    const dirPath = `src/tools/${path}`;
     const files = await fs.readdir(dirPath, { withFileTypes: true });
 
-    const pluginInfo = [];
+    const toolInfo = [];
 
     for (const file of files) {
       if (file.isDirectory()) {
@@ -19,8 +19,8 @@ export default async function handler(req, res) {
             /description: '([^']+)'/s
           )?.[1];
           if (name) {
-            pluginInfo.push({
-              plugin: file.name,
+            toolInfo.push({
+              tool: file.name,
               label: name,
               page,
               description,
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       }
     }
 
-    res.status(200).json(pluginInfo);
+    res.status(200).json(toolInfo);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
