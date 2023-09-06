@@ -26,17 +26,21 @@ interface CollectionStatsProps {
     schemas: number;
   };
   collection: CollectionProps;
+  chainKey: string;
 }
 
-export function CollectionStats({ stats, collection }: CollectionStatsProps) {
+export function CollectionStats({ stats, collection, chainKey }: CollectionStatsProps) {
   const statsContent = [
-    ['Name', collection.collection_name],
+    // ['ID', collection.collection_name],
     ['Created', new Date(Number(collection.created_at_time)).toLocaleString()],
     ['NFTs', stats.assets ?? 0],
     ['Burned', stats.burned ?? 0],
     ['Templates', stats.templates],
-    ['Schemas', stats.schemas],
   ];
+
+  if(chainKey != "xpr") {
+    statsContent.push(['Schemas', stats.schemas])
+  }
 
   const creatorInfo =
     collection.data.creator_info && JSON.parse(collection.data.creator_info);
@@ -83,7 +87,7 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
             <p className="body-1">{collection.data.description}</p>
           </div>
           <div className="flex-1">
-            <h3 className="headline-3 mb-4">Stats</h3>
+            <h3 className="headline-3 mb-4">Numbers</h3>
             {statsContent.map(([label, value]) => (
               <div
                 key={label}

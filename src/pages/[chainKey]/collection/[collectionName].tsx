@@ -110,6 +110,26 @@ function Collection({
       >
         <Header.Content title={collection.name} subtitle="Collection">
           <div className="flex flex-wrap gap-4 mt-4">
+          {(hasAuthorization && chainKey == 'xpr') && (
+              <a
+                href={`https://soon.market/mint?collection=${collection.collection_name}&utm_medium=create-nft&utm_source=nft-manager`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn"
+              >
+                Create NFT on Soon.Market
+              </a>
+            )}
+            {chainKey == 'xpr' && (
+              <a
+                href={`https://soon.market/collections/${collection.collection_name}?utm_medium=show-collection&utm_source=nft-manager`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn"
+              >
+                Show on Soon.Market
+              </a>
+            )}
             {hasAuthorization ? (
               <Link
                 href={`/${chainKey}/collection/${collection.collection_name}/edit`}
@@ -125,14 +145,6 @@ function Collection({
                 Created by {collection.author}
               </Link>
             )}
-            <a
-              href={collection.data.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn"
-            >
-              Website
-            </a>
           </div>
         </Header.Content>
         <Header.Banner
@@ -163,10 +175,12 @@ function Collection({
           }`}
         >
           <Tab className="tab">{collectionTabs[0].name}</Tab>
-          <Tab className="tab">
-            {collectionTabs[1].name}
-            <span className="badge-small">{stats.schemas ?? '0'}</span>
-          </Tab>
+          {chainKey != "xpr" && (
+            <Tab className="tab">
+              {collectionTabs[1].name}
+              <span className="badge-small">{stats.schemas ?? '0'}</span>
+            </Tab>
+          )}
           <Tab className="tab">
             {collectionTabs[2].name}
             <span className="badge-small">{stats.templates ?? '0'}</span>
@@ -176,23 +190,25 @@ function Collection({
             <span className="badge-small">{stats.assets ?? '0'}</span>
           </Tab>
           <Tab className="tab">{collectionTabs[4].name}</Tab>
-          {hasAuthorization && (
-            <Tab className="tab">{collectionTabs[5].name}</Tab>
-          )}
+          {/* {hasAuthorization && (
+            <Tab className="tab">{collectionTabs[4].name}</Tab>
+          )} */}
         </Tab.List>
         <Tab.Panels>
           <Tab.Panel>
-            <CollectionStats stats={stats} collection={collection} />
+            <CollectionStats stats={stats} collection={collection} chainKey={chainKey} />
           </Tab.Panel>
-          <Tab.Panel>
-            <CollectionSchemasList
-              chainKey={chainKey}
-              initialSchemas={schemas}
-              totalSchemas={stats.schemas}
-              collectionName={collection.collection_name}
-              hasAuthorization={hasAuthorization}
-            />
-          </Tab.Panel>
+          {chainKey != "xpr" && (
+            <Tab.Panel>
+              <CollectionSchemasList
+                chainKey={chainKey}
+                initialSchemas={schemas}
+                totalSchemas={stats.schemas}
+                collectionName={collection.collection_name}
+                hasAuthorization={hasAuthorization}
+              />
+            </Tab.Panel>
+          )}
           <Tab.Panel>
             <CollectionTemplatesList
               chainKey={chainKey}
@@ -220,12 +236,12 @@ function Collection({
               collectionName={collection.collection_name}
             />
           </Tab.Panel>
-          <Tab.Panel>
+          {/* <Tab.Panel>
             <CollectionTools
               chainKey={chainKey}
               collectionName={collection.collection_name}
             />
-          </Tab.Panel>
+          </Tab.Panel> */}
         </Tab.Panels>
       </Tab.Group>
     </>

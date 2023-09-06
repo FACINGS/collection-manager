@@ -71,7 +71,7 @@ export function CollectionTemplatesList({
       {templates.length > 0 ? (
         <>
           <CardContainer>
-            {hasAuthorization && (
+            {(hasAuthorization && chainKey != "xpr") && (
               <CreateNewItem
                 href={`/${chainKey}/collection/${collectionName}/template/new`}
                 label="Create template"
@@ -89,6 +89,8 @@ export function CollectionTemplatesList({
                     ? `${ipfsEndpoint}/${template.immutable_data.image}`
                     : template.immutable_data.img
                     ? `${ipfsEndpoint}/${template.immutable_data.img}`
+                    : template.immutable_data.glbthumb
+                    ? `${ipfsEndpoint}/${template.immutable_data.glbthumb}`
                     : ''
                 }
                 video={

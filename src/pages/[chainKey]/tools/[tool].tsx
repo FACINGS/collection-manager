@@ -41,8 +41,8 @@ function Tool({ ual, tool, type, collection, chainKey }: ToolProps) {
               `/${chainKey}/collection/${collection.collection_name}`,
             ],
             [
-              collectionTabs[5].name,
-              `/${chainKey}/collection/${collection.collection_name}?tab=${collectionTabs[5].key}`,
+              collectionTabs[4].name,
+              `/${chainKey}/collection/${collection.collection_name}?tab=${collectionTabs[4].key}`,
             ],
             [tool],
           ]}

@@ -100,7 +100,7 @@ export function CollectionAssetsList({
         {assets.length > 0 ? (
           <>
             <CardContainer>
-              {hasAuthorization && (
+              {(hasAuthorization && chainKey != "xpr") && (
                 <CreateNewItem
                   href={`/${chainKey}/collection/${collectionName}/asset/new`}
                   label="Create NFT"
@@ -140,7 +140,7 @@ export function CollectionAssetsList({
           </>
         ) : (
           <>
-            {hasAuthorization ? (
+            {(hasAuthorization && chainKey != "xpr") ? (
               <CreateNewItem
                 href={`/${chainKey}/collection/${collectionName}/asset/new`}
                 label="Create your first NFT"

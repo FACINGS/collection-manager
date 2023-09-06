@@ -25,9 +25,14 @@ export function CardContent({
 }: CardContentProps) {
   return (
     <>
-      {(id && saleInfo) && (
+      {(saleInfo && saleInfo.assetCount > 1) && (
         <div className="p-2 text-center">
-          <h3 className="title-1">#{id}</h3>
+          Bundle ({saleInfo.assetCount} NFTs)
+        </div>
+      )}
+      {(saleInfo && saleInfo.assetCount == 1) && (
+        <div className="p-2 text-center">
+          Single Sale
         </div>
       )}
 

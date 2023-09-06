@@ -41,6 +41,31 @@ export async function createCollectionService({
             data,
           },
         },
+        {
+          account: 'atomicassets',
+          name: 'createschema',
+          authorization: [
+            {
+              actor: activeUser.accountName,
+              permission: activeUser.requestPermission,
+            },
+          ],
+          data: {
+            authorized_creator: activeUser.accountName,
+            collection_name: collectionName,
+            schema_name: collectionName,
+            // current default schema of NFTs on XPR Network
+            schema_format: [
+              { name: 'name', type: 'string' },
+              { name: 'desc', type: 'string' },
+              { name: 'image', type: 'string' },
+              { name: 'audio', type: 'string' },
+              { name: 'video', type: 'string' },
+              { name: 'model', type: 'string' },
+              { name: 'glbthumb', type: 'string' },
+            ],
+          },
+        },
       ],
     },
     {

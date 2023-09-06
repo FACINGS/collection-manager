@@ -73,35 +73,35 @@ function UserCollectionsListComponent({
     ual?.showModal();
   }
 
-  async function handleSearch(event) {
-    const { value } = event.target;
-    clearTimeout(waitToSearch);
+  // async function handleSearch(event) {
+  //   const { value } = event.target;
+  //   clearTimeout(waitToSearch);
 
-    const newWaitToSearch = setTimeout(async () => {
-      const { data: collections } = await listCollectionsService(chainKey, {
-        match: value || '',
-        authorizedAccount: author,
-      });
-      setMatch(value);
-      setCollections(collections.data);
-    });
+  //   const newWaitToSearch = setTimeout(async () => {
+  //     const { data: collections } = await listCollectionsService(chainKey, {
+  //       match: value || '',
+  //       authorizedAccount: author,
+  //     });
+  //     setMatch(value);
+  //     setCollections(collections.data);
+  //   });
 
-    setWaitToSearch(newWaitToSearch);
-  }
+  //   setWaitToSearch(newWaitToSearch);
+  // }
 
   if (author) {
     return (
       <>
         <Header.Root border>
           <Header.Content title="My Collections" />
-          <Header.Search>
+          {/* <Header.Search>
             <Input
               icon={<MagnifyingGlass size={24} />}
               type="search"
               placeholder="Search collection"
               onChange={handleSearch}
             />
-          </Header.Search>
+          </Header.Search> */}
         </Header.Root>
 
         <section className="container py-8">

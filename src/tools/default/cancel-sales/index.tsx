@@ -397,21 +397,6 @@ function CancelSales({ ual }) {
                         return (
                           <div key={index} className="w-full flex flex-col gap-4">
                             <div className={`cursor-pointer ${selectedSales.includes(sale) && 'border-4 rounded-xl'} relative`}>
-                              {sale.listing_price && (
-                                <div className="absolute top-0 right-0 z-10">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-800 opacity-75"></span>
-                                  <span className="relative inline-flex rounded-full h-6 w-10 bg-red-800 text-white text-sm items-center justify-center">
-                                    Sale
-                                  </span>
-                                </div>
-                              )}
-                              {sale.assets.length > 1 && (
-                                <div className="absolute">
-                                  <span className="text-white text-sm items-center justify-center">
-                                    {sale.assets.length} NFTs
-                                  </span>
-                                </div>
-                              )}
                               <Card
                                 id={sale.sale_id}
                                 onClick={() => handleSaleSelection(sale)}
