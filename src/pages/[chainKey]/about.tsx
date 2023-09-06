@@ -15,36 +15,23 @@ export default function About() {
           </header>
 
           <section className="mt-8 md:mt-12 lg:mt-16">
-            <h2 className="headline-2 mb-2">Purpose</h2>
+            <h2 className="headline-2 mb-2">NFT Manager</h2>
+            <p className="body-1 text-neutral-200 mb-2">
+              Creators can easily create and manage their NFT collections. Regular users can also benefit from the NFT Manager
+              by making use of other provided tools:
+            </p>
+            <ol className="list-decimal pl-6 body-1 text-neutral-200">
+              <li className="pl-1">Airdrop NFTs</li>
+              <li className="pl-1">Burn NFTs</li>
+              <li className="pl-1">Cancel Sales</li>
+              <li className="pl-1">Transfer NFTs</li>
+            </ol>
+            <br />
             <p className="body-1 text-neutral-200 mb-2">
               NFT Manager is a fork of the reference UI implementation that has
               originally been built by FACINGS and funded by the EOS Network
               Foundation.
-              <br />
-              <br />
-              <a
-                href="https://soon.market?utm_medium=about&utm_source=nft-manager"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                Soon.Market
-              </a>{' '}
-              is the leading NFT marketplace on XPR Network and currently does not allow to manage NFT collections.
-              Therefore, this application was forked in order to provide creators
-              the possibility to easily create and manage their NFT collections.
-              <br />
-              <br />
-              Creators and regular users can also benefit from the NFT Manager
-              by making use of other provided tools:
-              <ol className="list-decimal pl-6 body-1 text-neutral-200">
-                <li className="pl-1">Airdrop NFTs</li>
-                <li className="pl-1">Burn NFTs</li>
-                <li className="pl-1">Cancel Sales</li>
-                <li className="pl-1">Transfer NFTs</li>
-              </ol>
             </p>
-
             <h3 className="title-1 mt-4 md:mt-8 mb-1">Source Code</h3>
             <p className="body-1 text-neutral-200">
               <a
@@ -68,7 +55,7 @@ export default function About() {
           </section>
 
           <section className="my-8 md:my-12 lg:my-16">
-            <h2 className="headline-2 mb-2">About AtomicAssets</h2>
+            <h2 className="headline-2 mb-2">AtomicAssets</h2>
             <p className="body-1 text-neutral-200">
               <a
                 href="https://github.com/pinknetworkx/atomicassets-contract"
@@ -94,13 +81,38 @@ export default function About() {
           </section>
 
           <section className="my-8 md:my-12 lg:my-16">
-            <h2 className="headline-2 mb-2">About kryptokrauts</h2>
+            <h2 className="headline-2 mb-2">Soon.Market</h2>
+            <p className="body-1 text-neutral-200">
+              <a
+                href="https://soon.market?utm_medium=about&utm_source=nft-manager"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                Soon.Market
+              </a>{' '}
+              is the leading NFT marketplace on XPR Network and currently does not allow to manage NFT collections.
+              Therefore, this application was forked in order to provide creators
+              the possibility to easily create and manage their NFT collections.
+            </p>
+          </section>
+
+          <section className="my-8 md:my-12 lg:my-16">
+            <h2 className="headline-2 mb-2">kryptokrauts</h2>
             <p className="body-1 text-neutral-200 mb-2">
-              We have been around in the crypto community since 2017 and we are
+              <a
+                href="https://kryptokrauts.com"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                kryptokrauts
+              </a>{' '}
+              have been around in the crypto community since 2017 and are
               winners of several hackathons.
               <br />
               <br />
-              Currently, we are focusing on building{' '}
+              Currently, the team is focusing on building{' '}
               <a
                 href="https://soon.market?utm_medium=about&utm_source=nft-manager"
                 target="_blank"
@@ -109,16 +121,6 @@ export default function About() {
                 Soon.Market
               </a>{' '}
               - the leading NFT marketplace on XPR Network!
-            </p>
-            <p className="body-1 text-neutral-200">
-              <a
-                href="https://kryptokrauts.com"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                https://kryptokrauts.com
-              </a>
             </p>
           </section>
         </article>
