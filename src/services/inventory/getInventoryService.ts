@@ -72,7 +72,6 @@ export async function getInventoryService(
   chainKey,
   options
 ): Promise<AxiosResponse<DataProps>> {
-  console.log(options);
   const url = `${chainsConfig[chainKey].aaEndpoint}/atomicassets/v1/assets`;
 
   const {

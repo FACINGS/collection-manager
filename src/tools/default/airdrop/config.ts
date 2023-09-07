@@ -13,7 +13,7 @@ export const searchByOptions = [
 
 export const dropAssetsOptions = [
   { label: 'Select option', value: '' },
-  { label: 'Mint NFTs from template', value: 'template' },
+  { label: 'Mint NFTs from Template', value: 'template' },
   { label: 'Transfer from NFT IDs', value: 'assets' },
 ];
 

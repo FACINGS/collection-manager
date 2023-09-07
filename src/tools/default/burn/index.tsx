@@ -312,11 +312,13 @@ function Burn({ ual }) {
         <main className="container">
           <h2 className="headline-2 mt-4 md:mt-8">Burn one or multiple NFTs</h2>
           <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
-            <li className="pl-1">
-              Select the NFTs by clicking on their pictures to the right.
-            </li>
+            <li className="pl-1">Select the NFTs by clicking on their pictures.</li>
+            <li className="pl-1">Click the "Burn NFT(s)" button.</li>
+          </ol>
+          <br />
+          <p>Note:</p>
+          <ol className="list-disc pl-6 body-1 text-neutral-200 mt-2">
             <li className="pl-1">Each selected NFT will be burned.</li>
-            <li className="pl-1">Click the "Burn NFTs" button.</li>
           </ol>
           <Modal ref={modalRef} title={modal.title}>
             <p className="body-2 mt-2">{modal.message}</p>
@@ -397,7 +399,7 @@ function Burn({ ual }) {
                   }`}
                   disabled={selectedAssets.length === 0}
                 >
-                  {isSaved ? 'Saved' : 'Burn NFTs'}
+                  {isSaved ? 'Saved' : `Burn NFT${selectedAssets.length > 1 ? 's': ''}`}
                 </button>
               )}
             </form>

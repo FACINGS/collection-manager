@@ -409,7 +409,9 @@ function Airdrop({ ual }: AirdropProps) {
       <div className="container flex flex-col gap-12">
         <div className="flex flex-col gap-4">
           <h1 className="headline-1">{toolInfo.name}</h1>
-          <span className="body-1">Bulk send NFTs with filters.</span>
+          <span className="body-1">
+            Distribute a batch of NFTs to many recipients.
+          </span>
         </div>
         {hasRemainingTransactions ? (
           <>
@@ -456,7 +458,7 @@ function Airdrop({ ual }: AirdropProps) {
             className="flex flex-col gap-12"
           >
             <div className="flex flex-col gap-12">
-              <div className="grid grid-flow-row grid-cols-12 gap-4 gap-y-8 border border-neutral-700 rounded-md p-8 justify-between">
+              {/* <div className="grid grid-flow-row grid-cols-12 gap-4 gap-y-8 border border-neutral-700 rounded-md p-8 justify-between">
                 <div className="md:col-span-4 col-span-12">
                   <Select
                     onChange={(option) => setSelectedSearchByOption(option)}
@@ -573,13 +575,11 @@ function Airdrop({ ual }: AirdropProps) {
                     </span>
                   )}
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row justify-between items-end h-8">
                   <div className="flex flex-row gap-2">
-                    <label className="body-2 font-bold">
-                      Accounts to Airdrop
-                    </label>
+                    <label className="body-2 font-bold">Recipients</label>
                     <span className="badge-small font-bold">{`${
                       accountsToReward && accountsToReward.length
                     }`}</span>

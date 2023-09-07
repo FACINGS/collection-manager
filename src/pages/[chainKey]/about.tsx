@@ -25,6 +25,7 @@ export default function About() {
               <li className="pl-1">Airdrop NFTs</li>
               <li className="pl-1">Burn NFTs</li>
               <li className="pl-1">Cancel Sales</li>
+              <li className="pl-1">Create Sales</li>
               <li className="pl-1">Transfer NFTs</li>
             </ol>
             <br />
@@ -42,8 +43,7 @@ export default function About() {
                 className="underline"
               >
                 https://github.com/kryptokrauts/nft-manager
-              </a>{' '}
-              forked from{' '}
+              </a> (this project)<br />
               <a
                 href="https://github.com/FACINGS/collection-manager"
                 target="_blank"
@@ -51,7 +51,15 @@ export default function About() {
                 className="underline"
               >
                 https://github.com/FACINGS/collection-manager
-              </a>
+              </a> (original)<br />
+              <a
+                href="https://github.com/Jackthegr8at/nfts_platform"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                https://github.com/Jackthegr8at/nfts_platform
+              </a> (some tool logic that has been adapted)
             </p>
           </section>
 

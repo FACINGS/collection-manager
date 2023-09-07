@@ -283,10 +283,14 @@ function CancelSales({ ual }) {
           </h2>
           <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
             <li className="pl-1">
-              Select the sales by clicking on their pictures to the right.
+              Select the sales by clicking on their pictures.
             </li>
+            <li className="pl-1">Click the "Cancel Sale(s)" button.</li>
+          </ol>
+          <br />
+          <p>Note:</p>
+          <ol className="list-disc pl-6 body-1 text-neutral-200 mt-2">
             <li className="pl-1">Each selected sale will be cancelled.</li>
-            <li className="pl-1">Click the "Cancel Sales" button.</li>
           </ol>
           <Modal ref={modalRef} title={modal.title}>
             <p className="body-2 mt-2">{modal.message}</p>
@@ -374,7 +378,7 @@ function CancelSales({ ual }) {
                   }`}
                   disabled={selectedSales.length === 0}
                 >
-                  {isSaved ? 'Saved' : 'Cancel Sales'}
+                  {isSaved ? 'Saved' : `Cancel Sale${selectedSales.length > 1 ? 's' : ''}`}
                 </button>
               )}
             </form>

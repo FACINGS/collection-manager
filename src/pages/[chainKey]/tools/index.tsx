@@ -44,7 +44,10 @@ export default function Tools({ chainKey }) {
         {toolsList.length > 0 && (
           <div className="flex-1">
             <div className="flex flex-col gap-4">
-              <ToolsContainer chainKey={chainKey} tools={toolsList} />
+              <ToolsContainer
+                chainKey={chainKey}
+                tools={toolsList.filter((tool) => tool.page === 'tools')}
+              />
             </div>
           </div>
         )}

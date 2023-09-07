@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CircleNotch, MagnifyingGlass } from '@phosphor-icons/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
 
-import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 
 import { Card } from '@components/Card';
 import { Input } from '@components/Input';
@@ -21,17 +20,13 @@ import { Header } from '@components/Header';
 import chainsConfig from '@configs/chainsConfig';
 import { ipfsEndpoint, chainKeyDefault, appName } from '@configs/globalsConfig';
 
-import { transferAssetService } from '@services/asset/transferAssetService';
+import { CreateSaleService } from '@services/asset/createSaleService';
 import {
   getInventoryService,
   AssetProps,
 } from '@services/inventory/getInventoryService';
 import { getAccountStatsService } from '@services/account/getAccountStatsService';
-
-const transferValidation = yup.object().shape({
-  recipient: yup.string().eosName(),
-  memo: yup.string(),
-});
+import { getAllAssetsOnSale } from '@services/sales/getAllAssetsOnSale';
 
 interface ModalProps {
   title: string;
@@ -40,27 +35,27 @@ interface ModalProps {
   isError?: boolean;
 }
 
-function Transfer({ ual }) {
+function CreateSales({ ual }) {
   const router = useRouter();
   const modalRef = useRef(null);
 
   const {
-    register,
     handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(transferValidation),
-  });
+  } = useForm({});
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState<AssetProps[]>([]);
+  const [allAssetsOnSale, setAllAssetsOnSale] = useState([]);
   const [ownedCollections, setOwnedCollections] = useState([]);
   const [collectionsFilterOptions, setCollectionsFilterOptions] = useState([]);
   const [filteredAssets, setFilteredAssets] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState('');
   const [match, setMatch] = useState('');
   const [waitToSearch, setWaitToSearch] = useState(null);
+  const [price, setPrice] = useState<number | null>(null);
+  const [priceUSD, setPriceUSD] = useState<number | null>(null);
+  const [exchangeRate, setExchangeRate] = useState(0);
   const [modal, setModal] = useState<ModalProps>({
     title: '',
     message: '',
@@ -82,12 +77,56 @@ function Transfer({ ual }) {
 
   const accountName = ual?.activeUser?.accountName;
 
-  const getViewLink = (asset) => {
-    if (chainKey == 'xpr') {
-      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=card&utm_source=nft-manager`;
-    }
-    return `/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`;
+  const [selectedToken, setSelectedToken] = useState('XPR');
+
+  const tokenOptions = [
+    { value: 'XPR', label: 'XPR' },
+    { value: 'XUSDC', label: 'XUSDC' },
+  ];
+
+  const handleTokenChange = (value) => {
+    setSelectedToken(value);
   };
+
+  const getTokenData = (token) => {
+    const tokenData = {
+      XPR: {
+        listing_price: `${price.toFixed(4)} XPR`,
+        settlement_symbol: '4,XPR',
+      },
+      XUSDC: {
+        listing_price: `${price.toFixed(6)} XUSDC`,
+        settlement_symbol: '6,XUSDC',
+      },
+    };
+    return tokenData[token];
+  };
+
+  useEffect(() => {
+    fetch('https://api.soon.market/soon-market-backend/v1/exchange_rates/XPR')
+      .then((response) => response.json())
+      .then((data) => setExchangeRate(data.usd));
+  }, []);
+
+  function handlePrice(event: React.ChangeEvent<HTMLInputElement>) {
+    const value = event.target.value;
+    if (value === '') {
+      setPrice(null);
+      setPriceUSD(null);
+    } else {
+      const price = parseFloat(value);
+      setPrice(price);
+      setPriceUSD(parseFloat((price * exchangeRate).toFixed(2)));
+    }
+  }
+
+  useEffect(() => {
+    if (accountName) {
+      getAllAssetsOnSale({ chainKey, seller: accountName })
+        .then(setAllAssetsOnSale)
+        .catch((err) => console.error(err));
+    }
+  }, [chainKey, accountName]);
 
   useEffect(() => {
     async function getUserInfo() {
@@ -201,7 +240,7 @@ function Transfer({ ual }) {
     setIsLoading(false);
   }
 
-  async function onSubmit({ recipient, memo }) {
+  async function onSubmit() {
     setIsLoading(true);
 
     let assetIds = [];
@@ -210,20 +249,63 @@ function Transfer({ ual }) {
     });
 
     try {
-      const data = {
-        activeUser: ual.activeUser,
-        from: ual.activeUser.accountName,
-        to: recipient,
-        memo: memo,
-        asset_ids: assetIds,
-      };
+      const marketplace = chainKey === 'xpr' ? 'soonmarket' : 'soooonmarket';
 
-      await transferAssetService(data);
+      const saleActionsByAsset = assetIds.reduce((acc, assetId) => {
+        const tokenData = getTokenData(selectedToken);
+
+        const announceSaleAction = {
+          account: 'atomicmarket',
+          name: 'announcesale',
+          authorization: [
+            {
+              actor: ual.activeUser.accountName,
+              permission: ual.activeUser.requestPermission,
+            },
+          ],
+          data: {
+            seller: ual.activeUser.accountName,
+            asset_ids: [assetId],
+            listing_price: tokenData.listing_price,
+            settlement_symbol: tokenData.settlement_symbol,
+            maker_marketplace: marketplace,
+          },
+        };
+
+        const createOfferAction = {
+          account: 'atomicassets',
+          name: 'createoffer',
+          authorization: [
+            {
+              actor: ual.activeUser.accountName,
+              permission: ual.activeUser.requestPermission,
+            },
+          ],
+          data: {
+            sender: ual.activeUser.accountName,
+            recipient: 'atomicmarket',
+            sender_asset_ids: [assetId],
+            recipient_asset_ids: [],
+            memo: 'sale',
+          },
+        };
+
+        return [...acc, announceSaleAction, createOfferAction];
+      }, []);
+
+      const createSaleActionProps = saleActionsByAsset.map((saleAction) => ({
+        ...saleAction,
+      }));
+
+      await CreateSaleService({
+        activeUser: ual.activeUser,
+        createSaleActionProps,
+      });
 
       setIsSaved(true);
 
       modalRef.current?.openModal();
-      const title = 'NFT was successfully transferred';
+      const title = 'Sale created successfully';
       const message = 'Please wait while we refresh the page.';
 
       setModal({
@@ -234,14 +316,14 @@ function Transfer({ ual }) {
       setTimeout(() => {
         router.reload();
         setIsSaved(false);
-      }, 3000);
+      }, 6000);
     } catch (e) {
       modalRef.current?.openModal();
       const jsonError = JSON.parse(JSON.stringify(e));
       const details = JSON.stringify(e, undefined, 2);
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
-        'Unable to send NFTs';
+        'Unable to create sale';
 
       setModal({
         title: 'Error',
@@ -299,26 +381,33 @@ function Transfer({ ual }) {
     return (
       <>
         <Head>
-          <title>{`Transfer - ${appName}`}</title>
+          <title>{`Create Sales - ${appName}`}</title>
         </Head>
 
         <Header.Root border>
-          <Header.Content title="Transfer" />
+          <Header.Content title="Create Sales" />
         </Header.Root>
 
         <main className="container">
-          <h2 className="headline-2 mt-4 md:mt-8">
-            Send your NFTs to another user
-          </h2>
+          <h2 className="headline-2 mt-4 md:mt-8">Put one or multiple NFTs on sale at the same price</h2>
           <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
             <li className="pl-1">
               Select the NFTs by clicking on their pictures.
             </li>
             <li className="pl-1">
-              Enter the recipient's account name in the "Recipient account"
-              input field.
+              Choose the token you want to list the NFTs for.
             </li>
-            <li className="pl-1">Click the "Transfer NFT(s)" button.</li>
+            <li className="pl-1">
+              Enter the price in the selected token in the price field. If
+              you're listing in another token than XUSDC, the USD equivalent will be displayed.
+            </li>
+            <li className="pl-1">Click the "Create Sale(s)" button.</li>
+          </ol>
+          <br />
+          <p>Note:</p>
+          <ol className="list-disc pl-6 body-1 text-neutral-200 mt-2">
+            <li className="pl-1">NFTs that are already included in a sale are not displayed!</li>
+            <li className="pl-1">A separate sale will be created for each NFT. No bundle sale will be created.</li>
           </ol>
           <Modal ref={modalRef} title={modal.title}>
             <p className="body-2 mt-2">{modal.message}</p>
@@ -346,19 +435,6 @@ function Transfer({ ual }) {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col md:w-1/2 w-full gap-8"
             >
-              <Input
-                {...register('recipient')}
-                error={errors.recipient?.message}
-                type="text"
-                label="Recipient account"
-                maxLength={12}
-              />
-              <Input
-                {...register('memo')}
-                error={errors.memo?.message}
-                type="text"
-                label="Memo"
-              />
               {selectedAssets.length > 0 ? (
                 <div className="flex flex-col gap-8">
                   <h3 className="headline-3">Selected NFTs</h3>
@@ -369,12 +445,10 @@ function Transfer({ ual }) {
                           id={asset.template_mint}
                           onClick={() => handleAssetSelection(asset)}
                           image={
-                            asset.data['img']
-                              ? `${ipfsEndpoint}/${asset.data['img']}`
-                              : asset.data['image']
-                              ? `${ipfsEndpoint}/${asset.data['image']}`
-                              : asset.data['glbthumb']
-                              ? `${ipfsEndpoint}/${asset.data['glbthumb']}`
+                            asset.data['image'] || asset.data['glbthumb']
+                              ? `${ipfsEndpoint}/${
+                                  asset.data['image'] || asset.data['glbthumb']
+                                }`
                               : ''
                           }
                           video={
@@ -384,15 +458,21 @@ function Transfer({ ual }) {
                           }
                           title={asset.name}
                           subtitle={`by ${asset.collection.author}`}
-                          viewLink={getViewLink(asset)}
                         />
+                        <Link
+                          href={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
+                          className="btn btn-small whitespace-nowrap w-full text-center truncate"
+                          target="_blank"
+                        >
+                          View Asset
+                        </Link>
                       </div>
                     ))}
                   </CardContainer>
                 </div>
               ) : (
                 <div className="bg-neutral-800 px-8 py-16 text-center rounded-xl">
-                  <h4 className="title-1">Select a NFT to transfer</h4>
+                  <h4 className="title-1">Select NFTs to put on sale</h4>
                 </div>
               )}
               {isLoading ? (
@@ -405,20 +485,41 @@ function Transfer({ ual }) {
                   Loading...
                 </span>
               ) : (
-                <button
-                  type="submit"
-                  className={`btn w-fit whitespace-nowrap ${
-                    isSaved && 'animate-pulse bg-emerald-600'
-                  }`}
-                  disabled={selectedAssets.length === 0}
-                >
-                  {isSaved ? 'Saved' : `Transfer NFT${selectedAssets.length > 1 ? 's' : ''}`}
-                </button>
+                <>
+                  <Select
+                    onChange={(option) => handleTokenChange(option)}
+                    label="Select Token"
+                    selectedValue={selectedToken}
+                    options={tokenOptions}
+                  />
+
+                  <Input
+                    icon={<MagnifyingGlass size={24} />}
+                    type="number"
+                    label={`Price (${selectedToken})`}
+                    placeholder={`Price in ${selectedToken}`}
+                    onChange={handlePrice}
+                    value={price}
+                    step={selectedToken === 'XUSDC' ? 'any' : '1'}
+                  />
+                  {priceUSD !== null && selectedToken === 'XPR' && (
+                    <p>USD Price: {priceUSD}</p>
+                  )}
+                  <button
+                    type="submit"
+                    className={`btn w-fit whitespace-nowrap ${
+                      isSaved && 'animate-pulse bg-emerald-600'
+                    }`}
+                    disabled={selectedAssets.length === 0}
+                  >
+                    {isSaved ? 'Saved' : `Create Sale${selectedAssets.length > 1 ? 's': ''}`}
+                  </button>
+                </>
               )}
             </form>
             <div className="flex flex-col md:w-1/2 w-full">
               <div className="flex flex-col gap-8">
-                <h3 className="headline-3">Select NFTs to transfer</h3>
+                <h3 className="headline-3">Select NFTs to put on sale</h3>
 
                 {collectionsFilterOptions.length > 0 && (
                   <div className="z-10">
@@ -441,7 +542,10 @@ function Transfer({ ual }) {
                 {filteredAssets.length > 0 ? (
                   <CardContainer style="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 sm:gap-8">
                     {filteredAssets.map((asset, index) => {
-                      if (asset.is_transferable) {
+                      if (
+                        asset.is_transferable &&
+                        !allAssetsOnSale.includes(asset.asset_id)
+                      ) {
                         return (
                           <div
                             key={index}
@@ -451,18 +555,16 @@ function Transfer({ ual }) {
                               className={`cursor-pointer ${
                                 selectedAssets.includes(asset) &&
                                 'border-4 rounded-xl'
-                              }`}
+                              } relative`}
                             >
                               <Card
                                 id={asset.template_mint}
                                 onClick={() => handleAssetSelection(asset)}
                                 image={
-                                  asset.data.image
-                                    ? `${ipfsEndpoint}/${asset.data.image}`
-                                    : asset.data.img
-                                    ? `${ipfsEndpoint}/${asset.data.img}`
-                                    : asset.data.glbthumb
-                                    ? `${ipfsEndpoint}/${asset.data.glbthumb}`
+                                  asset.data.image || asset.data.glbthumb
+                                    ? `${ipfsEndpoint}/${
+                                        asset.data.image || asset.data.glbthumb
+                                      }`
                                     : ''
                                 }
                                 video={
@@ -472,9 +574,15 @@ function Transfer({ ual }) {
                                 }
                                 title={asset.name}
                                 subtitle={`by ${asset.collection.author}`}
-                                viewLink={getViewLink(asset)}
                               />
                             </div>
+                            <Link
+                              href={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
+                              className="btn btn-small whitespace-nowrap w-full text-center truncate"
+                              target="_blank"
+                            >
+                              View Asset
+                            </Link>
                           </div>
                         );
                       }
@@ -486,7 +594,7 @@ function Transfer({ ual }) {
                       <Loading />
                     ) : (
                       <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
-                        <h4 className="title-1">NFT not found</h4>
+                        <h4 className="title-1">NFTs not found</h4>
                       </div>
                     )}
                   </>
@@ -510,14 +618,14 @@ function Transfer({ ual }) {
   return (
     <>
       <Head>
-        <title>{`Transfer - ${appName}`}</title>
+        <title>{`Create Sales - ${appName}`}</title>
       </Head>
 
       {!ual?.activeUser && (
         <div className="mx-auto my-14 text-center">
           <h2 className="headline-2">Connect your wallet</h2>
           <p className="body-1 mt-2 mb-6">
-            You need to connect your wallet to transfer one or multiple NFTs
+            You need to connect your wallet to put one or multiple NFTs on sale.
           </p>
           <button type="button" className="btn" onClick={handleLogin}>
             Connect Wallet
@@ -528,4 +636,4 @@ function Transfer({ ual }) {
   );
 }
 
-export default withUAL(Transfer);
+export default withUAL(CreateSales);
