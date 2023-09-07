@@ -33,9 +33,7 @@ function CancelSales({ ual }) {
   const router = useRouter();
   const modalRef = useRef(null);
 
-  const {
-    handleSubmit,
-  } = useForm({});
+  const { handleSubmit } = useForm({});
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -66,11 +64,11 @@ function CancelSales({ ual }) {
   const accountName = ual?.activeUser?.accountName;
 
   const getViewLink = (sale) => {
-    if(chainKey == 'xpr') {
+    if (chainKey == 'xpr') {
       return `https://soon.market/sales/${sale.sale_id}`;
     }
     return undefined;
-  }
+  };
 
   useEffect(() => {
     async function getUserInfo() {
@@ -188,7 +186,7 @@ function CancelSales({ ual }) {
 
     let saleIds = [];
     selectedSales.map((sale) => {
-        saleIds.push(sale.sale_id);
+      saleIds.push(sale.sale_id);
     });
     try {
       const actions = [];
@@ -284,7 +282,9 @@ function CancelSales({ ual }) {
             Cancel one or multiple sales
           </h2>
           <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
-            <li className="pl-1">Select the sales by clicking on their pictures to the right.</li>
+            <li className="pl-1">
+              Select the sales by clicking on their pictures to the right.
+            </li>
             <li className="pl-1">Each selected sale will be cancelled.</li>
             <li className="pl-1">Click the "Cancel Sales" button.</li>
           </ol>
@@ -333,19 +333,19 @@ function CancelSales({ ual }) {
                               : ''
                           }
                           video={
-                            sale.assets[0].data['video'] ? `${ipfsEndpoint}/${sale.assets[0].data['video']}` : ''
+                            sale.assets[0].data['video']
+                              ? `${ipfsEndpoint}/${sale.assets[0].data['video']}`
+                              : ''
                           }
                           title={sale.assets[0].name}
                           subtitle={`by ${sale.collection.author}`}
-                          saleInfo={
-                            {
-                                isBundle: true,
-                                assetCount: sale.assets.length,
-                                listingPrice: sale.listing_price,
-                                token: sale.listing_symbol,
-                                tokenPrecision: sale.price.token_precision
-                            }
-                          }
+                          saleInfo={{
+                            isBundle: true,
+                            assetCount: sale.assets.length,
+                            listingPrice: sale.listing_price,
+                            token: sale.listing_symbol,
+                            tokenPrecision: sale.price.token_precision,
+                          }}
                           viewLink={getViewLink(sale)}
                         />
                       </div>
@@ -369,8 +369,9 @@ function CancelSales({ ual }) {
               ) : (
                 <button
                   type="submit"
-                  className={`btn w-fit whitespace-nowrap ${isSaved && 'animate-pulse bg-emerald-600'
-                    }`}
+                  className={`btn w-fit whitespace-nowrap ${
+                    isSaved && 'animate-pulse bg-emerald-600'
+                  }`}
                   disabled={selectedSales.length === 0}
                 >
                   {isSaved ? 'Saved' : 'Cancel Sales'}
@@ -394,40 +395,45 @@ function CancelSales({ ual }) {
                 {filteredSales.length > 0 ? (
                   <CardContainer style="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 sm:gap-8">
                     {filteredSales.map((sale, index) => {
-                        return (
-                          <div key={index} className="w-full flex flex-col gap-4">
-                            <div className={`cursor-pointer ${selectedSales.includes(sale) && 'border-4 rounded-xl'} relative`}>
-                              <Card
-                                id={sale.sale_id}
-                                onClick={() => handleSaleSelection(sale)}
-                                image={
-                                    sale.assets[0].data['img']
-                                      ? `${ipfsEndpoint}/${sale.assets[0].data['img']}`
-                                      : sale.assets[0].data['image']
-                                      ? `${ipfsEndpoint}/${sale.assets[0].data['image']}`
-                                      : sale.assets[0].data['glbthumb']
-                                      ? `${ipfsEndpoint}/${sale.assets[0].data['glbthumb']}`
-                                      : ''
-                                  }
-                                video={
-                                  sale.assets[0].data['video'] ? `${ipfsEndpoint}/${sale.assets[0].data['video']}` : ''
-                                }
-                                title={sale.assets[0].name}
-                                subtitle={`by ${sale.collection.author}`}
-                                saleInfo={
-                                    {
-                                        isBundle: true,
-                                        assetCount: sale.assets.length,
-                                        listingPrice: sale.listing_price,
-                                        token: sale.listing_symbol,
-                                        tokenPrecision: sale.price.token_precision
-                                    }
-                                  }
-                                viewLink={getViewLink(sale)}
-                              />
-                            </div>
+                      return (
+                        <div key={index} className="w-full flex flex-col gap-4">
+                          <div
+                            className={`cursor-pointer ${
+                              selectedSales.includes(sale) &&
+                              'border-4 rounded-xl'
+                            } relative`}
+                          >
+                            <Card
+                              id={sale.sale_id}
+                              onClick={() => handleSaleSelection(sale)}
+                              image={
+                                sale.assets[0].data['img']
+                                  ? `${ipfsEndpoint}/${sale.assets[0].data['img']}`
+                                  : sale.assets[0].data['image']
+                                  ? `${ipfsEndpoint}/${sale.assets[0].data['image']}`
+                                  : sale.assets[0].data['glbthumb']
+                                  ? `${ipfsEndpoint}/${sale.assets[0].data['glbthumb']}`
+                                  : ''
+                              }
+                              video={
+                                sale.assets[0].data['video']
+                                  ? `${ipfsEndpoint}/${sale.assets[0].data['video']}`
+                                  : ''
+                              }
+                              title={sale.assets[0].name}
+                              subtitle={`by ${sale.collection.author}`}
+                              saleInfo={{
+                                isBundle: true,
+                                assetCount: sale.assets.length,
+                                listingPrice: sale.listing_price,
+                                token: sale.listing_symbol,
+                                tokenPrecision: sale.price.token_precision,
+                              }}
+                              viewLink={getViewLink(sale)}
+                            />
                           </div>
-                        );
+                        </div>
+                      );
                     })}
                   </CardContainer>
                 ) : (

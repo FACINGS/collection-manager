@@ -45,11 +45,11 @@ export function CollectionAssetsList({
   const isEndOfBurnedList = Number(totalBurned) === burnedAssets.length;
 
   const getAssetLink = (asset) => {
-    if(chainKey == "xpr") {
+    if (chainKey == 'xpr') {
       return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=nfts&utm_source=nft-manager`;
     }
     return `/${chainKey}/collection/${collectionName}/template/${asset.template.template_id}`;
-  }
+  };
 
   async function handleSeeMoreAssets() {
     setIsLoading(true);
@@ -100,7 +100,7 @@ export function CollectionAssetsList({
         {assets.length > 0 ? (
           <>
             <CardContainer>
-              {(hasAuthorization && chainKey != "xpr") && (
+              {hasAuthorization && chainKey != 'xpr' && (
                 <CreateNewItem
                   href={`/${chainKey}/collection/${collectionName}/asset/new`}
                   label="Create NFT"
@@ -111,7 +111,7 @@ export function CollectionAssetsList({
                   key={asset.asset_id}
                   id={asset.template && asset.template.template_id}
                   href={getAssetLink(asset)}
-                  target={chainKey == "xpr" ? "_blank" : "_self"}
+                  target={chainKey == 'xpr' ? '_blank' : '_self'}
                   /* XPR NFTs use data.image rather than data.img like on WAX */
                   image={
                     chainKey === 'xpr' || chainKey === 'xpr-test'
@@ -140,7 +140,7 @@ export function CollectionAssetsList({
           </>
         ) : (
           <>
-            {(hasAuthorization && chainKey != "xpr") ? (
+            {hasAuthorization && chainKey != 'xpr' ? (
               <CreateNewItem
                 href={`/${chainKey}/collection/${collectionName}/asset/new`}
                 label="Create your first NFT"

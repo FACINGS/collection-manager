@@ -59,10 +59,12 @@ export function CollectionAccountsList({
           <CardContainer>
             {accounts.map((account) => (
               <Card
-                {...chainKey == "xpr" ? {
-                  href:`https://soon.market/users/${account.account}?collection=${collectionName}&utm_medium=accounts&utm_source=nft-manager`,
-                  target: "_blank"
-                } : {}}
+                {...(chainKey == 'xpr'
+                  ? {
+                      href: `https://soon.market/users/${account.account}?collection=${collectionName}&utm_medium=accounts&utm_source=nft-manager`,
+                      target: '_blank',
+                    }
+                  : {})}
                 key={account.account}
                 image={
                   account.account

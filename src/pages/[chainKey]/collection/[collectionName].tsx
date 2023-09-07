@@ -110,7 +110,7 @@ function Collection({
       >
         <Header.Content title={collection.name} subtitle="Collection">
           <div className="flex flex-wrap gap-4 mt-4">
-          {(hasAuthorization && chainKey == 'xpr') && (
+            {hasAuthorization && chainKey == 'xpr' && (
               <a
                 href={`https://soon.market/mint?collection=${collection.collection_name}&utm_medium=create-nft&utm_source=nft-manager`}
                 target="_blank"
@@ -175,7 +175,7 @@ function Collection({
           }`}
         >
           <Tab className="tab">{collectionTabs[0].name}</Tab>
-          {chainKey != "xpr" && (
+          {chainKey != 'xpr' && (
             <Tab className="tab">
               {collectionTabs[1].name}
               <span className="badge-small">{stats.schemas ?? '0'}</span>
@@ -196,9 +196,13 @@ function Collection({
         </Tab.List>
         <Tab.Panels>
           <Tab.Panel>
-            <CollectionStats stats={stats} collection={collection} chainKey={chainKey} />
+            <CollectionStats
+              stats={stats}
+              collection={collection}
+              chainKey={chainKey}
+            />
           </Tab.Panel>
-          {chainKey != "xpr" && (
+          {chainKey != 'xpr' && (
             <Tab.Panel>
               <CollectionSchemasList
                 chainKey={chainKey}

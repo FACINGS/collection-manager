@@ -17,8 +17,9 @@ export default function About() {
           <section className="mt-8 md:mt-12 lg:mt-16">
             <h2 className="headline-2 mb-2">NFT Manager</h2>
             <p className="body-1 text-neutral-200 mb-2">
-              Creators can easily create and manage their NFT collections. Regular users can also benefit from the NFT Manager
-              by making use of other provided tools:
+              Creators can easily create and manage their NFT collections.
+              Regular users can also benefit from the NFT Manager by making use
+              of other provided tools:
             </p>
             <ol className="list-decimal pl-6 body-1 text-neutral-200">
               <li className="pl-1">Airdrop NFTs</li>
@@ -60,6 +61,7 @@ export default function About() {
               <a
                 href="https://github.com/pinknetworkx/atomicassets-contract"
                 target="_blank"
+                rel="noreferrer"
                 className="underline"
               >
                 AtomicAssets
@@ -68,6 +70,7 @@ export default function About() {
               <a
                 href="https://antelope.io"
                 target="_blank"
+                rel="noreferrer"
                 className="underline"
               >
                 Antelope
@@ -91,9 +94,10 @@ export default function About() {
               >
                 Soon.Market
               </a>{' '}
-              is the leading NFT marketplace on XPR Network and currently does not allow to manage NFT collections.
-              Therefore, this application was forked in order to provide creators
-              the possibility to easily create and manage their NFT collections.
+              is the leading NFT marketplace on XPR Network and currently does
+              not allow to manage NFT collections. Therefore, this application
+              was forked in order to provide creators the possibility to easily
+              create and manage their NFT collections.
             </p>
           </section>
 
@@ -116,6 +120,7 @@ export default function About() {
               <a
                 href="https://soon.market?utm_medium=about&utm_source=nft-manager"
                 target="_blank"
+                rel="noreferrer"
                 className="underline"
               >
                 Soon.Market

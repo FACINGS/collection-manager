@@ -132,11 +132,13 @@ function CreateNewCollection({ ual }) {
       result += validNumbers.charAt(randomIndex);
     }
     try {
-      await getCollectionService(router.query.chainKey as string, {collectionName: result});
+      await getCollectionService(router.query.chainKey as string, {
+        collectionName: result,
+      });
       // expecting an error if the collection does not exist
       // calling the function again if the ID is already used
       generateCollectionName();
-    } catch(e) {
+    } catch (e) {
       // we have a unique collection id
       setValue('collectionName', result);
     }
@@ -179,7 +181,9 @@ function CreateNewCollection({ ual }) {
 
       const socials = socialLinks
         .map((link) => {
-          const trimmedLink = link.link ? link.link.trim().replace(/\/+$/, '') : '';
+          const trimmedLink = link.link
+            ? link.link.trim().replace(/\/+$/, '')
+            : '';
           return `${link.name}:${trimmedLink}`;
         })
         .join('\n');

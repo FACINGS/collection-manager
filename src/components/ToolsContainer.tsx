@@ -1,5 +1,11 @@
 import Link from 'next/link';
-import { Fire, Parachute, Prohibit, PuzzlePiece, ShareFat } from '@phosphor-icons/react';
+import {
+  Fire,
+  Parachute,
+  Prohibit,
+  PuzzlePiece,
+  ShareFat,
+} from '@phosphor-icons/react';
 
 export function ToolsContainer({ tools, chainKey }) {
   const handleIcons = (tool) => {

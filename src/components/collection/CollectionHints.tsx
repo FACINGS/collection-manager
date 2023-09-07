@@ -33,7 +33,7 @@ export function CollectionHints({
   const [content, setContent] = useState<ContentProps>(null);
 
   useEffect(() => {
-    if (chainKey != "xpr" && schemas.length === 0) {
+    if (chainKey != 'xpr' && schemas.length === 0) {
       setContent({
         title: `Create your first schema`,
         description: `Schemas allow you to define the metadata fields that are included in your NFTs.`,
@@ -42,7 +42,7 @@ export function CollectionHints({
       });
     }
 
-    if (chainKey != "xpr" && templates.length === 0 && schemas.length > 0) {
+    if (chainKey != 'xpr' && templates.length === 0 && schemas.length > 0) {
       setContent({
         title: `Create your first template`,
         description: `Templates allow you to define the permanent metadata values for a given run of NFTs, using a pre-defined schema.`,
@@ -51,7 +51,12 @@ export function CollectionHints({
       });
     }
 
-    if (chainKey != "xpr" && templates.length > 0 && schemas.length > 0 && assets.length === 0) {
+    if (
+      chainKey != 'xpr' &&
+      templates.length > 0 &&
+      schemas.length > 0 &&
+      assets.length === 0
+    ) {
       setContent({
         title: `Mint your first NFT`,
         description: `You can mint one or many NFTs using a pre-defined template, and optionally set mutable data that can be changed by the collection owner later.`,

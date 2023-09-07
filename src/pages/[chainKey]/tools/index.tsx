@@ -16,9 +16,6 @@ interface ToolsListProps {
 
 export default function Tools({ chainKey }) {
   const [toolsList, setToolsList] = useState<ToolsListProps[]>([]);
-  const [externalToolsList, setexternalToolsList] = useState<ToolsListProps[]>(
-    []
-  );
 
   useEffect(() => {
     async function fetchTools() {
@@ -26,10 +23,6 @@ export default function Tools({ chainKey }) {
         const response = await fetch('/api/tools?path=default');
         const toolNames = await response.json();
         setToolsList(toolNames);
-
-        const res = await fetch('/api/tools?path=external');
-        const externalToolNames = await res.json();
-        setexternalToolsList(externalToolNames);
       } catch (error) {
         console.log(error);
       }
@@ -48,11 +41,10 @@ export default function Tools({ chainKey }) {
       </Header.Root>
 
       <main className="container pt-16">
-        {(toolsList.length > 0 || externalToolsList.length > 0) && (
+        {toolsList.length > 0 && (
           <div className="flex-1">
             <div className="flex flex-col gap-4">
               <ToolsContainer chainKey={chainKey} tools={toolsList} />
-              <ToolsContainer chainKey={chainKey} tools={externalToolsList} />
             </div>
           </div>
         )}

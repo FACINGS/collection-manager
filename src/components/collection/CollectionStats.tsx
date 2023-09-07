@@ -29,7 +29,11 @@ interface CollectionStatsProps {
   chainKey: string;
 }
 
-export function CollectionStats({ stats, collection, chainKey }: CollectionStatsProps) {
+export function CollectionStats({
+  stats,
+  collection,
+  chainKey,
+}: CollectionStatsProps) {
   const statsContent = [
     // ['ID', collection.collection_name],
     ['Created', new Date(Number(collection.created_at_time)).toLocaleString()],
@@ -38,8 +42,8 @@ export function CollectionStats({ stats, collection, chainKey }: CollectionStats
     ['Templates', stats.templates],
   ];
 
-  if(chainKey != "xpr") {
-    statsContent.push(['Schemas', stats.schemas])
+  if (chainKey != 'xpr') {
+    statsContent.push(['Schemas', stats.schemas]);
   }
 
   const creatorInfo =

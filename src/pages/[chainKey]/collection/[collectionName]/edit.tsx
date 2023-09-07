@@ -29,7 +29,8 @@ import { Modal } from '@components/Modal';
 import { countriesList } from '@utils/countriesList';
 
 const informationValidations = yup.object().shape({
-  imageIpfsHash: yup.mixed()
+  imageIpfsHash: yup
+    .mixed()
     .test('imageIpfsHash', 'Image IPFS hash is required', (value) => {
       return value.startsWith('Qm') || value.startsWith('bafy');
     }),
@@ -105,7 +106,9 @@ function EditCollection({
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [collection, setCollection] = useState(initialCollection);
-  const [previewImageSrc, setPreviewImageSrc] = useState(collection.img ? `${ipfsEndpoint}/${collection.img}` : null);
+  const [previewImageSrc, setPreviewImageSrc] = useState(
+    collection.img ? `${ipfsEndpoint}/${collection.img}` : null
+  );
   const [modal, setModal] = useState<ModalProps>({
     title: '',
     message: '',
@@ -113,20 +116,29 @@ function EditCollection({
     isError: false,
   });
 
-  const socials = collection.data.url && collection.data.url.includes('\n') ? collection.data.url.split('\n').map((line) => {
-    if (line.includes('https:') || line.includes('www.')) {
-      const colonIndex = line.indexOf(':', line.indexOf('https:') > -1 ? 6 : 5);
-      const platform = line.substring(0, colonIndex);
-      let url = line.substring(colonIndex + 1);
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "https://" + url;
-      }
-      return { platform, url };
-    }
-    return null;
-  }).filter((item) => item !== null) : [];
+  const socials =
+    collection.data.url && collection.data.url.includes('\n')
+      ? collection.data.url
+          .split('\n')
+          .map((line) => {
+            if (line.includes('https:') || line.includes('www.')) {
+              const colonIndex = line.indexOf(
+                ':',
+                line.indexOf('https:') > -1 ? 6 : 5
+              );
+              const platform = line.substring(0, colonIndex);
+              let url = line.substring(colonIndex + 1);
+              if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+              }
+              return { platform, url };
+            }
+            return null;
+          })
+          .filter((item) => item !== null)
+      : [];
 
-  // this will be used in the future most likely. at this point we stick to the status quo on XPR Network 
+  // this will be used in the future most likely. at this point we stick to the status quo on XPR Network
   //
   // const creatorInfo =
   //   collection.data.creator_info && JSON.parse(collection.data.creator_info);
@@ -237,7 +249,9 @@ function EditCollection({
 
       const socials = socialLinks
         .map((link) => {
-          const trimmedLink = link.link ? link.link.trim().replace(/\/+$/, '') : '';
+          const trimmedLink = link.link
+            ? link.link.trim().replace(/\/+$/, '')
+            : '';
           return `${link.name}:${trimmedLink}`;
         })
         .join('\n');
@@ -628,7 +642,8 @@ function EditCollection({
                       >
                         <p className="title-1">Collection Image Preview</p>
                         <p className="body-3">
-                          Will be shown if you provide a valid IPFS hash in the form.
+                          Will be shown if you provide a valid IPFS hash in the
+                          form.
                           <br />
                           Transparent backgrounds are recommended.
                         </p>
@@ -663,7 +678,10 @@ function EditCollection({
                     {...register('website')}
                     error={errors.website?.message}
                     type="text"
-                    defaultValue={socials?.find((item) => item.platform === 'website')?.url ?? ''}
+                    defaultValue={
+                      socials?.find((item) => item.platform === 'website')
+                        ?.url ?? ''
+                    }
                     label="Website"
                   />
                   <Textarea
@@ -681,7 +699,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="twitter"
-                      defaultValue={socials?.find((item) => item.platform === 'twitter')?.url ?? ''}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'twitter')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Twitter"
@@ -698,7 +719,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="telegram"
-                      defaultValue={socials?.find((item) => item.platform === 'telegram')?.url ?? ''}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'telegram')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Telegram"
@@ -715,7 +739,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="discord"
-                      defaultValue={socials?.find((item) => item.platform === 'discord')?.url ?? ''}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'discord')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Discord"
@@ -732,7 +759,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="snipverse"
-                      defaultValue={socials?.find((item) => item.platform === 'snipverse')?.url ?? ''}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'snipverse')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Snipverse"
@@ -749,7 +779,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="instagram"
-                      defaultValue={socials?.find((item) => item.platform === 'instagram')?.url ?? ''}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'instagram')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Instagram"
@@ -766,7 +799,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="youtube"
-                      defaultValue={socials?.find((item) => item.platform === 'youtube')?.url ?? ''}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'youtube')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Youtube"
@@ -783,7 +819,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="facebook"
-                      defaultValue={socials?.find((item) => item.platform === 'facebook')?.url ?? ''}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'facebook')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Facebook"
@@ -800,7 +839,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="medium"
-                      defaultValue={socials?.find((item) => item.platform === 'medium')?.url ?? ''}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'medium')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Medium"

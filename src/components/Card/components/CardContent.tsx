@@ -25,15 +25,13 @@ export function CardContent({
 }: CardContentProps) {
   return (
     <>
-      {(saleInfo && saleInfo.assetCount > 1) && (
+      {saleInfo && saleInfo.assetCount > 1 && (
         <div className="p-2 text-center">
           Bundle ({saleInfo.assetCount} NFTs)
         </div>
       )}
-      {(saleInfo && saleInfo.assetCount == 1) && (
-        <div className="p-2 text-center">
-          Single Sale
-        </div>
+      {saleInfo && saleInfo.assetCount == 1 && (
+        <div className="p-2 text-center">Single Sale</div>
       )}
 
       {withThumbnail && (
@@ -72,7 +70,10 @@ export function CardContent({
           <p className="body-2 text-neutral-200 truncate">{subtitle}</p>
         )}
         {saleInfo && (
-          <p className="body-2 text-neutral-200 truncate">{`${(Number(saleInfo.listingPrice) / Math.pow(10, saleInfo.tokenPrecision))} ${saleInfo.token}`}</p>
+          <p className="body-2 text-neutral-200 truncate">{`${
+            Number(saleInfo.listingPrice) /
+            Math.pow(10, saleInfo.tokenPrecision)
+          } ${saleInfo.token}`}</p>
         )}
         {viewLink && (
           <Link
