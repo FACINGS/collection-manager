@@ -14,7 +14,7 @@
     "@headlessui/tailwindcss": "0.1.1",
     "@hookform/resolvers": "2.9.10",
     "@phosphor-icons/react": "2.0.10",
-    "@proton/ual-webauth": "0.1.19",
+    "@proton/ual-webauth": "0.1.18",
     "@types/react-beautiful-dnd": "13.1.4",
     "axios": "1.1.3",
     "eosjs": "22.1.0",

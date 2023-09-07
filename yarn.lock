@@ -536,13 +536,13 @@
   dependencies:
     "@greymass/eosio" "^0.6.1"
 
-"@proton/ual-webauth@0.1.19":
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/@proton/ual-webauth/-/ual-webauth-0.1.19.tgz#c2324a54812d786b95ab4bc18ab00f7857bfb115"
-  integrity sha512-98RCagIYPF6VcASpbnhaqG2uoknEwFHLt6j73v3+ludnzTHrzuYTOdb+34riSTrl34Sg4L6nfwhnBIoZoXSXjg==
+"@proton/ual-webauth@0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@proton/ual-webauth/-/ual-webauth-0.1.18.tgz#23ec9ff165b80420ca2a365c9049a0b4e2aada30"
+  integrity sha512-JgGj41TG9P4RaCMf9PrbX2npsEQnkQWgRm3gJjmKl0rYIoSFNWmsFIcRFvqC5fIgIh97fLGqwfQT318c4VWmWg==
   dependencies:
     "@greymass/eosio" "^0.6.0"
-    "@proton/web-sdk" "^4.2.15"
+    "@proton/web-sdk" "^4.2.14"
     bufferutil "^4.0.7"
     cache-base "4.0.2"
     elliptic "6.5.4"
@@ -553,7 +553,7 @@
     universal-authenticator-library "0.3.0"
     utf-8-validate "^5.0.10"
 
-"@proton/web-sdk@^4.2.15":
+"@proton/web-sdk@^4.2.14":
   version "4.2.15"
   resolved "https://registry.yarnpkg.com/@proton/web-sdk/-/web-sdk-4.2.15.tgz#51c1d6d1de5eebb25a6c095108447af970b714d6"
   integrity sha512-zFUzRuXw16vmLviLMYFWO60MJ8om/Q+rj+OqDmV5gtjDve7FQyF+HbKxZS9EU1iI3DGa1eG3qyykZQ7y/Q1Dhg==
