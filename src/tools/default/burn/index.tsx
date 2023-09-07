@@ -20,7 +20,7 @@ import { Header } from '@components/Header';
 import chainsConfig from '@configs/chainsConfig';
 import { ipfsEndpoint, chainKeyDefault, appName } from '@configs/globalsConfig';
 
-import { burnAssetService } from '@services/asset/massburnAssetService';
+import { burnMultipleAssetService } from '@services/asset/burnAssetService';
 import {
   getInventoryService,
   AssetProps,
@@ -72,7 +72,7 @@ function Burn({ ual }) {
 
   const getViewLink = (asset) => {
     if (chainKey == 'xpr') {
-      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=card&utm_source=nft-manager`;
+      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=burn-nfts-card&utm_source=nft-manager`;
     }
     return `/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`;
   };
@@ -218,7 +218,7 @@ function Burn({ ual }) {
         actions.push(action);
       });
 
-      await burnAssetService({
+      await burnMultipleAssetService({
         activeUser: ual.activeUser,
         actions: actions,
       });
@@ -312,7 +312,9 @@ function Burn({ ual }) {
         <main className="container">
           <h2 className="headline-2 mt-4 md:mt-8">Burn one or multiple NFTs</h2>
           <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
-            <li className="pl-1">Select the NFTs by clicking on their pictures.</li>
+            <li className="pl-1">
+              Select the NFTs by clicking on their pictures.
+            </li>
             <li className="pl-1">Click the "Burn NFT(s)" button.</li>
           </ol>
           <br />
@@ -399,7 +401,9 @@ function Burn({ ual }) {
                   }`}
                   disabled={selectedAssets.length === 0}
                 >
-                  {isSaved ? 'Saved' : `Burn NFT${selectedAssets.length > 1 ? 's': ''}`}
+                  {isSaved
+                    ? 'Saved'
+                    : `Burn NFT${selectedAssets.length > 1 ? 's' : ''}`}
                 </button>
               )}
             </form>

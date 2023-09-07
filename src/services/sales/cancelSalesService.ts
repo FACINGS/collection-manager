@@ -14,7 +14,7 @@ interface CancelSalesAssetProps {
   actions: ActionProps[];
 }
 
-export async function CancelSalesAssetService({
+export async function CancelSalesService({
   activeUser,
   actions,
 }: CancelSalesAssetProps) {
@@ -24,7 +24,7 @@ export async function CancelSalesAssetService({
     },
     {
       blocksBehind: 3,
-      expireSeconds: 30,
+      expireSeconds: 120,
     }
   );
 

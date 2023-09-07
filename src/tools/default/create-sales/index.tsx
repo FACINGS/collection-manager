@@ -20,7 +20,7 @@ import { Header } from '@components/Header';
 import chainsConfig from '@configs/chainsConfig';
 import { ipfsEndpoint, chainKeyDefault, appName } from '@configs/globalsConfig';
 
-import { CreateSaleService } from '@services/asset/createSaleService';
+import { CreateSaleService } from '@services/sales/createSaleService';
 import {
   getInventoryService,
   AssetProps,
@@ -39,9 +39,7 @@ function CreateSales({ ual }) {
   const router = useRouter();
   const modalRef = useRef(null);
 
-  const {
-    handleSubmit,
-  } = useForm({});
+  const { handleSubmit } = useForm({});
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -83,6 +81,13 @@ function CreateSales({ ual }) {
     { value: 'XPR', label: 'XPR' },
     { value: 'XUSDC', label: 'XUSDC' },
   ];
+
+  const getViewLink = (asset) => {
+    if (chainKey == 'xpr') {
+      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=create-sales-card&utm_source=nft-manager`;
+    }
+    return `/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`;
+  };
 
   const handleTokenChange = (value) => {
     setSelectedToken(value);
@@ -389,7 +394,9 @@ function CreateSales({ ual }) {
         </Header.Root>
 
         <main className="container">
-          <h2 className="headline-2 mt-4 md:mt-8">Put one or multiple NFTs on sale at the same price</h2>
+          <h2 className="headline-2 mt-4 md:mt-8">
+            Put one or multiple NFTs on sale at the same price
+          </h2>
           <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
             <li className="pl-1">
               Select the NFTs by clicking on their pictures.
@@ -399,15 +406,21 @@ function CreateSales({ ual }) {
             </li>
             <li className="pl-1">
               Enter the price in the selected token in the price field. If
-              you're listing in another token than XUSDC, the USD equivalent will be displayed.
+              you're listing in another token than XUSDC, the USD equivalent
+              will be displayed.
             </li>
             <li className="pl-1">Click the "Create Sale(s)" button.</li>
           </ol>
           <br />
           <p>Note:</p>
           <ol className="list-disc pl-6 body-1 text-neutral-200 mt-2">
-            <li className="pl-1">NFTs that are already included in a sale are not displayed!</li>
-            <li className="pl-1">A separate sale will be created for each NFT. No bundle sale will be created.</li>
+            <li className="pl-1">
+              NFTs that are already included in a sale are not displayed!
+            </li>
+            <li className="pl-1">
+              A separate sale will be created for each NFT. No bundle sale will
+              be created.
+            </li>
           </ol>
           <Modal ref={modalRef} title={modal.title}>
             <p className="body-2 mt-2">{modal.message}</p>
@@ -458,14 +471,8 @@ function CreateSales({ ual }) {
                           }
                           title={asset.name}
                           subtitle={`by ${asset.collection.author}`}
+                          viewLink={getViewLink(asset)}
                         />
-                        <Link
-                          href={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
-                          className="btn btn-small whitespace-nowrap w-full text-center truncate"
-                          target="_blank"
-                        >
-                          View Asset
-                        </Link>
                       </div>
                     ))}
                   </CardContainer>
@@ -512,7 +519,9 @@ function CreateSales({ ual }) {
                     }`}
                     disabled={selectedAssets.length === 0}
                   >
-                    {isSaved ? 'Saved' : `Create Sale${selectedAssets.length > 1 ? 's': ''}`}
+                    {isSaved
+                      ? 'Saved'
+                      : `Create Sale${selectedAssets.length > 1 ? 's' : ''}`}
                   </button>
                 </>
               )}
@@ -574,15 +583,9 @@ function CreateSales({ ual }) {
                                 }
                                 title={asset.name}
                                 subtitle={`by ${asset.collection.author}`}
+                                viewLink={getViewLink(asset)}
                               />
                             </div>
-                            <Link
-                              href={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
-                              className="btn btn-small whitespace-nowrap w-full text-center truncate"
-                              target="_blank"
-                            >
-                              View Asset
-                            </Link>
                           </div>
                         );
                       }

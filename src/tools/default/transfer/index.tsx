@@ -84,7 +84,7 @@ function Transfer({ ual }) {
 
   const getViewLink = (asset) => {
     if (chainKey == 'xpr') {
-      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=card&utm_source=nft-manager`;
+      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=transfer-nfts-card&utm_source=nft-manager`;
     }
     return `/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`;
   };
@@ -412,7 +412,9 @@ function Transfer({ ual }) {
                   }`}
                   disabled={selectedAssets.length === 0}
                 >
-                  {isSaved ? 'Saved' : `Transfer NFT${selectedAssets.length > 1 ? 's' : ''}`}
+                  {isSaved
+                    ? 'Saved'
+                    : `Transfer NFT${selectedAssets.length > 1 ? 's' : ''}`}
                 </button>
               )}
             </form>

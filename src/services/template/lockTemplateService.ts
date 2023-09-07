@@ -33,7 +33,7 @@ export async function lockTemplateService({
     },
     {
       blocksBehind: 3,
-      expireSeconds: 30,
+      expireSeconds: 120,
     }
   );
 

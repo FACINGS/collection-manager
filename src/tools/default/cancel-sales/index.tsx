@@ -20,7 +20,7 @@ import { ipfsEndpoint, chainKeyDefault, appName } from '@configs/globalsConfig';
 
 import { SaleProps, getSalesService } from '@services/sales/getSalesService';
 import { getAccountStatsService } from '@services/account/getAccountStatsService';
-import { CancelSalesAssetService } from '@services/asset/masscancelSalesService';
+import { CancelSalesService } from '@services/sales/cancelSalesService';
 
 interface ModalProps {
   title: string;
@@ -65,7 +65,7 @@ function CancelSales({ ual }) {
 
   const getViewLink = (sale) => {
     if (chainKey == 'xpr') {
-      return `https://soon.market/sales/${sale.sale_id}`;
+      return `https://soon.market/sales/${sale.sale_id}?utm_medium=cancel-sales-card&utm_source=nft-manager`;
     }
     return undefined;
   };
@@ -207,7 +207,7 @@ function CancelSales({ ual }) {
         actions.push(action);
       });
 
-      await CancelSalesAssetService({
+      await CancelSalesService({
         activeUser: ual.activeUser,
         actions: actions,
       });
@@ -378,7 +378,9 @@ function CancelSales({ ual }) {
                   }`}
                   disabled={selectedSales.length === 0}
                 >
-                  {isSaved ? 'Saved' : `Cancel Sale${selectedSales.length > 1 ? 's' : ''}`}
+                  {isSaved
+                    ? 'Saved'
+                    : `Cancel Sale${selectedSales.length > 1 ? 's' : ''}`}
                 </button>
               )}
             </form>

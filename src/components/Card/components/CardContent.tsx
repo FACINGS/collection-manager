@@ -34,6 +34,8 @@ export function CardContent({
         <div className="p-2 text-center">Single Sale</div>
       )}
 
+      {!saleInfo && id && <div className="p-2 text-center">#{id}</div>}
+
       {withThumbnail && (
         <div className="aspect-square bg-neutral-700 relative">
           {video && (

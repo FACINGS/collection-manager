@@ -43,7 +43,9 @@ export default function About() {
                 className="underline"
               >
                 https://github.com/kryptokrauts/nft-manager
-              </a> (this project)<br />
+              </a>{' '}
+              (this project)
+              <br />
               <a
                 href="https://github.com/FACINGS/collection-manager"
                 target="_blank"
@@ -51,7 +53,9 @@ export default function About() {
                 className="underline"
               >
                 https://github.com/FACINGS/collection-manager
-              </a> (original)<br />
+              </a>{' '}
+              (original)
+              <br />
               <a
                 href="https://github.com/Jackthegr8at/nfts_platform"
                 target="_blank"
@@ -59,7 +63,8 @@ export default function About() {
                 className="underline"
               >
                 https://github.com/Jackthegr8at/nfts_platform
-              </a> (some tool logic that has been adapted)
+              </a>{' '}
+              (some tool logic that has been adapted)
             </p>
           </section>
 

@@ -46,7 +46,7 @@ export async function CreateSaleService({
     },
     {
       blocksBehind: 3,
-      expireSeconds: 30,
+      expireSeconds: 120,
     }
   );
   return response;

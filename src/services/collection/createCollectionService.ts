@@ -70,7 +70,7 @@ export async function createCollectionService({
     },
     {
       blocksBehind: 3,
-      expireSeconds: 30,
+      expireSeconds: 120,
     }
   );
 

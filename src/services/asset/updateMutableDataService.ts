@@ -39,7 +39,7 @@ export async function updateMutableDataService({
     },
     {
       blocksBehind: 3,
-      expireSeconds: 30,
+      expireSeconds: 120,
     }
   );
 
