@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { Chain } from './components/Chain';
 import { NavItem } from './components/NavItem';
 import { Login } from './components/Login';
-import { List, X } from '@phosphor-icons/react';
+import { List, X, ArrowUpRight } from '@phosphor-icons/react';
+
 
 import { chainKeyDefault } from '@configs/globalsConfig';
 
@@ -32,22 +33,25 @@ export function TopAppBar() {
             href="https://soon.market/explore?utm_medium=navbar&utm_source=nft-manager"
             onClick={() => setOpen(false)}
             target="_blank"
-          >
-            Explore
+          ><span className="flex items-center">
+            Explore<ArrowUpRight className="icon" size={24} />
+            </span>
           </NavItem>
           <NavItem
             href="https://soon.market/sell?utm_medium=navbar&utm_source=nft-manager"
             onClick={() => setOpen(false)}
             target="_blank"
-          >
-            Sell
+          ><span className="flex items-center">
+            Sell<ArrowUpRight className="icon" size={24} />
+            </span>
           </NavItem>
           <NavItem
             href="https://soon.market/soon-spot-nfts?utm_medium=navbar&utm_source=nft-manager"
             onClick={() => setOpen(false)}
             target="_blank"
-          >
-            Promote
+          ><span className="flex items-center">
+            Promote<ArrowUpRight className="icon" size={24} />
+            </span>
           </NavItem>
           <NavItem href={`/${chainKey}/about`} onClick={() => setOpen(false)}>
             About

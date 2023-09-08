@@ -40,7 +40,7 @@ export default function Tools({ chainKey }) {
         <Header.Content title="Tools" />
       </Header.Root>
 
-      <main className="container pt-16">
+      <main className="container pt-8">
         {toolsList.length > 0 && (
           <div className="flex-1">
             <div className="flex flex-col gap-4">

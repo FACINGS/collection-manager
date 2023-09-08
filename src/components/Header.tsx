@@ -61,7 +61,7 @@ function HeaderRoot({ border, breadcrumb, children }: HeaderRootProps) {
           </ul>
         </nav>
       )}
-      <div className="container flex gap-4 md:gap-8 flex-col md:flex-row md:items-center overflow-x-hidden sm:overflow-x-visible">
+      <div className="container flex gap-1 md:gap-8 flex-col md:flex-row md:items-center overflow-x-hidden sm:overflow-x-visible">
         {children}
       </div>
     </header>
