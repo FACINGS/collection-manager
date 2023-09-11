@@ -32,7 +32,7 @@ function HeaderRoot({ border, breadcrumb, children }: HeaderRootProps) {
   return (
     <header
       className={`${breadcrumb ? 'pb-4 md:pb-8' : 'py-4 md:py-8'} ${
-        border ? 'border-b border-neutral-700' : ''
+        border ? 'border-b border-zinc-700' : ''
       }`}
     >
       {breadcrumb && (
@@ -41,13 +41,13 @@ function HeaderRoot({ border, breadcrumb, children }: HeaderRootProps) {
             {breadcrumb.map(([label, href], index) => (
               <li
                 key={index}
-                className="flex gap-2 items-center text-neutral-400"
+                className="flex gap-2 items-center text-zinc-400"
               >
                 {index !== 0 && <CaretRight size={16} weight="bold" />}
                 {href ? (
                   <Link
                     href={href}
-                    className="block text-neutral-400 hover:text-white py-2"
+                    className="block text-zinc-400 hover:text-white py-2"
                   >
                     {label}
                   </Link>

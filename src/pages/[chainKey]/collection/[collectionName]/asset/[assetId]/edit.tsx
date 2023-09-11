@@ -220,7 +220,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
               Details
             </Disclosure.Button>
             <Disclosure.Panel>
-              <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+              <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                 {modal.details}
               </pre>
             </Disclosure.Panel>
@@ -250,7 +250,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
                         <>
                           {item.type === 'image' && (
                             <div className="flex md:flex-row flex-col gap-4">
-                              <div className="p-4 flex items-center justify-center border border-neutral-700 rounded">
+                              <div className="p-4 flex items-center justify-center border border-zinc-700 rounded">
                                 <span className="md:w-56 w-full text-center title-1 whitespace-nowrap">
                                   {item.name}
                                 </span>
@@ -265,7 +265,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
                           )}
                           {item.type === 'ipfs' && (
                             <div className="flex md:flex-row flex-col gap-4">
-                              <div className="p-4 flex items-center justify-center border border-neutral-700 rounded">
+                              <div className="p-4 flex items-center justify-center border border-zinc-700 rounded">
                                 <span className="md:w-56 w-full text-center title-1 whitespace-nowrap">
                                   {item.name}
                                 </span>
@@ -279,7 +279,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
                           )}
                           {item.type === 'bool' && (
                             <div className="flex md:flex-row flex-col items-center gap-4">
-                              <div className="p-4 border flex items-center justify-center border-neutral-700 rounded">
+                              <div className="p-4 border flex items-center justify-center border-zinc-700 rounded">
                                 <span className="w-full md:w-56 text-center title-1 whitespace-nowrap">
                                   {item.name}
                                 </span>
@@ -303,7 +303,7 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
                         </>
                       ) : (
                         <div className="flex md:flex-row flex-col gap-4">
-                          <div className="p-4 border flex items-center justify-center border-neutral-700 rounded">
+                          <div className="p-4 border flex items-center justify-center border-zinc-700 rounded">
                             <span className="w-full md:w-56 text-center title-1 whitespace-nowrap">
                               {item.name}
                             </span>

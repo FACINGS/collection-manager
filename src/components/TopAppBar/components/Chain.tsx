@@ -46,7 +46,7 @@ function ChainComponent({ chainKey, ual }: ChainComponentProps) {
           <CaretDown size={16} weight="bold" className="ui-open:rotate-180" />
         </div>
       </Menu.Button>
-      <Menu.Items className="absolute z-10 bg-neutral-800 top-14 left-0 rounded w-max">
+      <Menu.Items className="absolute z-10 bg-zinc-800 top-14 left-0 rounded w-max">
         {Object.keys(chainsConfig).map((chainKey) => {
           const chain = chainsConfig[chainKey];
 
@@ -54,7 +54,7 @@ function ChainComponent({ chainKey, ual }: ChainComponentProps) {
             <Menu.Item key={chainKey}>
               <ChainLink
                 href={`/${chainKey}`}
-                className="ui-active:bg-neutral-700 w-full body-2 font-bold p-4 rounded flex items-center gap-2 whitespace-nowrap"
+                className="ui-active:bg-zinc-700 w-full body-2 font-bold p-4 rounded flex items-center gap-2 whitespace-nowrap"
               >
                 <div className="flex-none">
                   <Image width={24} height={24} src={chain?.imageUrl} alt="" />

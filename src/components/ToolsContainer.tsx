@@ -35,10 +35,10 @@ export function ToolsContainer({ tools, chainKey }) {
               pathname: `/${chainKey}/tools/${item.tool}`,
               query: { type: 'default' },
             }}
-            className="flex flex-col w-full justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 p-8"
+            className="flex flex-col w-full justify-center items-center gap-md bg-zinc-800 rounded-xl cursor-pointer hover:scale-105 duration-300 p-8"
           >
-            <div className="flex flex-row items-center gap-8 bg-neutral-800 text-white rounded-md w-full">
-              <div className="text-neutral-900 p-3.5 rounded-full bg-white">
+            <div className="flex flex-row items-center gap-8 bg-zinc-800 text-white rounded-md w-full">
+              <div className="text-zinc-900 p-3.5 rounded-full bg-white">
                 {handleIcons(item.tool)}
               </div>
               <div className="flex flex-col gap-2">

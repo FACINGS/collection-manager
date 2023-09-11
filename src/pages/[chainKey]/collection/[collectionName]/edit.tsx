@@ -596,7 +596,7 @@ function EditCollection({
                 Details
               </Disclosure.Button>
               <Disclosure.Panel>
-                <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                   {modal.details}
                 </pre>
               </Disclosure.Panel>
@@ -621,7 +621,7 @@ function EditCollection({
                 <div className="flex flex-col">
                   <label
                     htmlFor="file"
-                    className="w-80 h-80 flex flex-col justify-center items-center gap-md bg-neutral-800 rounded-xl overflow-hidden p-4"
+                    className="w-80 h-80 flex flex-col justify-center items-center gap-md bg-zinc-800 rounded-xl overflow-hidden p-4"
                   >
                     {previewImageSrc ? (
                       <div className="w-full h-full relative">
@@ -997,7 +997,7 @@ function EditCollection({
                     action={onSubmitRemoveAccountAuthorization}
                   />
                 ) : (
-                  <div className="bg-neutral-800 px-8 py-16 text-center rounded-xl w-full">
+                  <div className="bg-zinc-800 px-8 py-16 text-center rounded-xl w-full">
                     <h4 className="title-1">
                       There are no authorized accounts.
                     </h4>
@@ -1051,7 +1051,7 @@ function EditCollection({
                       action={onSubmitRemoveNotificationAccount}
                     />
                   ) : (
-                    <div className="bg-neutral-800 px-8 py-16 text-center rounded-xl w-full">
+                    <div className="bg-zinc-800 px-8 py-16 text-center rounded-xl w-full">
                       <h4 className="title-1">
                         There is no accounts to notify.
                       </h4>
@@ -1093,7 +1093,7 @@ function EditCollection({
                   </form>
                 </div>
               ) : (
-                <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+                <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
                   <h4 className="title-1">Notifications were forbidden.</h4>
                 </div>
               )}
@@ -1148,7 +1148,7 @@ function EditCollection({
                   </form>
                 </div>
               ) : (
-                <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+                <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
                   <h4 className="title-1">Notifications were forbidden.</h4>
                 </div>
               )}

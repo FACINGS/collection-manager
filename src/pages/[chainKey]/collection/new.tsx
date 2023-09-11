@@ -297,7 +297,7 @@ function CreateNewCollection({ ual }) {
               Details
             </Disclosure.Button>
             <Disclosure.Panel>
-              <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+              <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                 {modal.details}
               </pre>
             </Disclosure.Panel>
@@ -314,8 +314,8 @@ function CreateNewCollection({ ual }) {
         >
           <div className="col-span-4 md:col-span-3 lg:col-span-5">
             <label
-              className={`block aspect-square bg-neutral-800 rounded-xl p-md border ${
-                errors.image?.message ? 'border-red-600' : 'border-neutral-700'
+              className={`block aspect-square bg-zinc-800 rounded-xl p-md border ${
+                errors.image?.message ? 'border-red-600' : 'border-zinc-700'
               }`}
             >
               {previewImageSrc ? (
@@ -412,7 +412,7 @@ function CreateNewCollection({ ual }) {
               <Disclosure>
                 {({ open }) => (
                   <>
-                    <Disclosure.Button className="flex flex-row justify-between items-center py-4 border-y border-neutral-700">
+                    <Disclosure.Button className="flex flex-row justify-between items-center py-4 border-y border-zinc-700">
                       <div className="flex flex-row gap-2 items-baseline">
                         <span className="title-1">Social Media</span>
                         <span className="body-1">(optional)</span>
@@ -568,7 +568,7 @@ function CreateNewCollection({ ual }) {
               {/* <Disclosure>
                 {({ open }) => (
                   <>
-                    <Disclosure.Button className="flex flex-row justify-between items-center pb-4 border-b border-neutral-700">
+                    <Disclosure.Button className="flex flex-row justify-between items-center pb-4 border-b border-zinc-700">
                       <div className="flex flex-row gap-2 items-baseline">
                         <span className="title-1">Company Details</span>
                         <span className="body-1">(optional)</span>

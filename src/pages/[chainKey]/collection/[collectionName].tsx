@@ -171,7 +171,7 @@ function Collection({
         <Tab.List
           ref={tabsRef}
           className={`tab-list sticky top-[5.5rem] z-10 duration-75 ${
-            isAddBackground ? 'bg-neutral-900' : ''
+            isAddBackground ? 'bg-zinc-900' : ''
           }`}
         >
           <Tab className="tab">{collectionTabs[0].name}</Tab>

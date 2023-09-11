@@ -92,11 +92,11 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
               </div>
               <div className="md:w-1/2 w-full">
                 <div className="w-full md:max-w-sm mx-auto">
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Owner</span>
                     <span className="font-bold">{asset.owner}</span>
                   </div>
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Mint Number</span>
                     <div>
                       <span className="font-bold pr-2">
@@ -115,7 +115,7 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
                     </div>
                   </div>
                   {asset.template && (
-                    <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                    <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                       <span>Template ID</span>
                       <Link
                         href={`/${chainKey}/collection/${collection.collection_name}/template/${asset.template.template_id}`}
@@ -125,7 +125,7 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
                       </Link>
                     </div>
                   )}
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Schema</span>
                     <Link
                       href={`/${chainKey}/collection/${collection.collection_name}/schema/${asset.schema.schema_name}`}
@@ -134,13 +134,13 @@ function Asset({ ual, chainKey, asset }: AssetViewProps) {
                       {asset.schema.schema_name}
                     </Link>
                   </div>
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Burnable</span>
                     <span className="font-bold">
                       {asset.is_burnable ? 'Yes' : 'No'}
                     </span>
                   </div>
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Transferable</span>
                     <span className="font-bold">
                       {asset.is_transferable ? 'Yes' : 'No'}

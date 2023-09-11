@@ -310,7 +310,7 @@ function Transfer({ ual }) {
           <h2 className="headline-2 mt-4 md:mt-8">
             Send your NFTs to another user
           </h2>
-          <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
+          <ol className="list-decimal pl-6 body-1 text-zinc-200 mt-2">
             <li className="pl-1">
               Select the NFTs by clicking on their pictures.
             </li>
@@ -333,7 +333,7 @@ function Transfer({ ual }) {
                   Details
                 </Disclosure.Button>
                 <Disclosure.Panel>
-                  <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                  <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                     {modal.details}
                   </pre>
                 </Disclosure.Panel>
@@ -391,7 +391,7 @@ function Transfer({ ual }) {
                   </CardContainer>
                 </div>
               ) : (
-                <div className="bg-neutral-800 px-8 py-16 text-center rounded-xl">
+                <div className="bg-zinc-800 px-8 py-16 text-center rounded-xl">
                   <h4 className="title-1">Select a NFT to transfer</h4>
                 </div>
               )}
@@ -487,7 +487,7 @@ function Transfer({ ual }) {
                     {isLoading ? (
                       <Loading />
                     ) : (
-                      <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+                      <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
                         <h4 className="title-1">NFT not found</h4>
                       </div>
                     )}

@@ -458,7 +458,7 @@ function Airdrop({ ual }: AirdropProps) {
             className="flex flex-col gap-12"
           >
             <div className="flex flex-col gap-12">
-              {/* <div className="grid grid-flow-row grid-cols-12 gap-4 gap-y-8 border border-neutral-700 rounded-md p-8 justify-between">
+              {/* <div className="grid grid-flow-row grid-cols-12 gap-4 gap-y-8 border border-zinc-700 rounded-md p-8 justify-between">
                 <div className="md:col-span-4 col-span-12">
                   <Select
                     onChange={(option) => setSelectedSearchByOption(option)}
@@ -654,7 +654,7 @@ function Airdrop({ ual }: AirdropProps) {
                 {selectedDropAssetOption === 'assets' && (
                   <div className="flex flex-col gap-8">
                     <div
-                      className={`flex flex-col md:flex-row gap-4 gap-y-8 border border-neutral-700 rounded-md p-8 justify-between items-start ${
+                      className={`flex flex-col md:flex-row gap-4 gap-y-8 border border-zinc-700 rounded-md p-8 justify-between items-start ${
                         errors.assetsByTemplateId &&
                         errors.assetsByTemplateId.message
                           ? 'md:items-center'
@@ -816,7 +816,7 @@ function Airdrop({ ual }: AirdropProps) {
                 Details
               </Disclosure.Button>
               <Disclosure.Panel>
-                <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                   <div
                     dangerouslySetInnerHTML={{ __html: modal.details }}
                   ></div>

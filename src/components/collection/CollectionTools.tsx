@@ -56,7 +56,7 @@ export function CollectionTools({
                       pathname: `/${chainKey}/tools/${item.tool}`,
                       query: { type: 'default', collection: collectionName },
                     }}
-                    className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
+                    className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-zinc-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
                   >
                     <span className="title-1">{item.label}</span>
                   </Link>
@@ -72,7 +72,7 @@ export function CollectionTools({
                       pathname: `/${chainKey}/tools/${item.tool}`,
                       query: { type: 'external', collection: collectionName },
                     }}
-                    className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-neutral-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
+                    className="flex flex-row w-full max-w-xs justify-center items-center gap-md bg-zinc-800 rounded-xl cursor-pointer hover:scale-105 duration-300 py-8 px-16"
                   >
                     <span className="title-1">{item.label}</span>
                   </Link>

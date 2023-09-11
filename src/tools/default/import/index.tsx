@@ -713,7 +713,7 @@ function Import({ ual }: ImportProps) {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col gap-16"
             >
-              <div className="flex gap-4 border-b pb-4 my-4 border-neutral-700 w-fit max-w-sm">
+              <div className="flex gap-4 border-b pb-4 my-4 border-zinc-700 w-fit max-w-sm">
                 <label className="flex flex-row items-center">
                   <input
                     {...register('csvFile')}
@@ -782,7 +782,7 @@ function Import({ ual }: ImportProps) {
               Details
             </Disclosure.Button>
             <Disclosure.Panel>
-              <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+              <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                 <div dangerouslySetInnerHTML={{ __html: modal.details }}></div>
               </pre>
             </Disclosure.Panel>

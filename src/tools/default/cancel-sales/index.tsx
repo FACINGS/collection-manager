@@ -281,7 +281,7 @@ function CancelSales({ ual }) {
           <h2 className="headline-2 mt-4 md:mt-8">
             Cancel one or multiple sales
           </h2>
-          <ol className="list-decimal pl-6 body-1 text-neutral-200 mt-2">
+          <ol className="list-decimal pl-6 body-1 text-zinc-200 mt-2">
             <li className="pl-1">
               Select the sales by clicking on their pictures.
             </li>
@@ -289,7 +289,7 @@ function CancelSales({ ual }) {
           </ol>
           <br />
           <p>Note:</p>
-          <ol className="list-disc pl-6 body-1 text-neutral-200 mt-2">
+          <ol className="list-disc pl-6 body-1 text-zinc-200 mt-2">
             <li className="pl-1">Each selected sale will be cancelled.</li>
           </ol>
           <Modal ref={modalRef} title={modal.title}>
@@ -305,7 +305,7 @@ function CancelSales({ ual }) {
                   Details
                 </Disclosure.Button>
                 <Disclosure.Panel>
-                  <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                  <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                     {modal.details}
                   </pre>
                 </Disclosure.Panel>
@@ -357,7 +357,7 @@ function CancelSales({ ual }) {
                   </CardContainer>
                 </div>
               ) : (
-                <div className="bg-neutral-800 px-8 py-16 text-center rounded-xl">
+                <div className="bg-zinc-800 px-8 py-16 text-center rounded-xl">
                   <h4 className="title-1">Select sales</h4>
                 </div>
               )}
@@ -447,7 +447,7 @@ function CancelSales({ ual }) {
                     {isLoading ? (
                       <Loading />
                     ) : (
-                      <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+                      <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
                         <h4 className="title-1">No sales found</h4>
                       </div>
                     )}

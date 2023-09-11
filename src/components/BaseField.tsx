@@ -25,12 +25,12 @@ export function BaseField({
       )}
 
       <div
-        className={`flex gap-2 px-[calc(1rem-1px)] rounded bg-neutral-800 border focus-within:border-white focus-within:bg-neutral-700 ${
-          error ? 'border-red-600' : 'border-neutral-700'
+        className={`flex gap-2 px-[calc(1rem-1px)] rounded bg-zinc-800 border focus-within:border-white focus-within:bg-zinc-700 ${
+          error ? 'border-red-600' : 'border-zinc-700'
         }`}
       >
         {icon && (
-          <div className="flex-none text-neutral-500 pt-[calc(1rem-1px)]">
+          <div className="flex-none text-zinc-500 pt-[calc(1rem-1px)]">
             {icon}
           </div>
         )}
@@ -46,7 +46,7 @@ export function BaseField({
         <span className="block body-3 text-red-600 mt-2">{error}</span>
       ) : (
         hint && (
-          <span className="block body-3 text-neutral-400 mt-2">{hint}</span>
+          <span className="block body-3 text-zinc-400 mt-2">{hint}</span>
         )
       )}
     </label>

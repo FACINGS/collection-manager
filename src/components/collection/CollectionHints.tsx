@@ -73,7 +73,7 @@ export function CollectionHints({
   if (content && Object.keys(content).length > 0) {
     return (
       <div className="container">
-        <div className="flex flex-col sm:flex-row justify-between p-8 mb-8 gap-4 bg-neutral-800 text-white rounded-md w-full">
+        <div className="flex flex-col sm:flex-row justify-between p-8 mb-8 gap-4 bg-zinc-800 text-white rounded-md w-full">
           <div className="flex flex-row gap-4 items-center">
             <div className="bg-yellow-400/10 p-3.5 rounded-full">
               <WarningCircle size={28} className="text-yellow-600" />
@@ -86,7 +86,7 @@ export function CollectionHints({
           <div className="flex flex-col gap-4 pt-2">
             <button
               type="button"
-              className="btn bg-neutral-900 text-white w-full sm:w-fit whitespace-nowrap"
+              className="btn bg-zinc-900 text-white w-full sm:w-fit whitespace-nowrap"
               onClick={() => router.push(content['redirect'])}
             >
               {content['button']}

@@ -37,7 +37,7 @@ export function CardContent({
       {!saleInfo && id && <div className="p-2 text-center">#{id}</div>}
 
       {withThumbnail && (
-        <div className="aspect-square bg-neutral-700 relative">
+        <div className="aspect-square bg-zinc-700 relative">
           {video && (
             <video
               muted
@@ -69,10 +69,10 @@ export function CardContent({
       <div className="p-5">
         <h4 className="title-1 truncate">{title ?? 'No name'}</h4>
         {subtitle && (
-          <p className="body-2 text-neutral-200 truncate">{subtitle}</p>
+          <p className="body-2 text-zinc-200 truncate">{subtitle}</p>
         )}
         {saleInfo && (
-          <p className="body-2 text-neutral-200 truncate">{`${
+          <p className="body-2 text-zinc-200 truncate">{`${
             Number(saleInfo.listingPrice) /
             Math.pow(10, saleInfo.tokenPrecision)
           } ${saleInfo.token}`}</p>

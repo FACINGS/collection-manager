@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { withUAL } from 'ual-reactjs-renderer';
-import { MagnifyingGlass } from '@phosphor-icons/react';
+import { ArrowUpRight } from '@phosphor-icons/react';
 
 import { ipfsEndpoint } from '@configs/globalsConfig';
 import { listCollectionsService } from '@services/collection/listCollectionsService';
@@ -170,7 +170,9 @@ function UserCollectionsListComponent({
                 className="btn border-0"
                 target="_blank"
               >
-                Explore on Soon.Market
+                <span className="flex items-center">
+                  Explore on Soon.Market<ArrowUpRight className="icon" size={24} />
+                </span>
               </Link>
             ) : (
               <Link href={`/${chainKey}/explorer`} className="btn border-0">

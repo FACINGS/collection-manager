@@ -16,12 +16,12 @@ export default function About() {
 
           <section className="mt-8 md:mt-12 lg:mt-16">
             <h2 className="headline-2 mb-2">NFT Manager</h2>
-            <p className="body-1 text-neutral-200 mb-2">
+            <p className="body-1 text-zinc-200 mb-2">
               Creators can easily create and manage their NFT collections.
               Regular users can also benefit from the NFT Manager by making use
               of other provided tools:
             </p>
-            <ol className="list-decimal pl-6 body-1 text-neutral-200">
+            <ol className="list-decimal pl-6 body-1 text-zinc-200">
               <li className="pl-1">Airdrop NFTs</li>
               <li className="pl-1">Burn NFTs</li>
               <li className="pl-1">Cancel Sales</li>
@@ -29,13 +29,13 @@ export default function About() {
               <li className="pl-1">Transfer NFTs</li>
             </ol>
             <br />
-            <p className="body-1 text-neutral-200 mb-2">
+            <p className="body-1 text-zinc-200 mb-2">
               NFT Manager is a fork of the reference UI implementation that has
               originally been built by FACINGS and funded by the EOS Network
               Foundation.
             </p>
             <h3 className="title-1 mt-4 md:mt-8 mb-1">Source Code</h3>
-            <p className="body-1 text-neutral-200">
+            <p className="body-1 text-zinc-200">
               <a
                 href="https://github.com/kryptokrauts/nft-manager"
                 target="_blank"
@@ -70,7 +70,7 @@ export default function About() {
 
           <section className="my-8 md:my-12 lg:my-16">
             <h2 className="headline-2 mb-2">AtomicAssets</h2>
-            <p className="body-1 text-neutral-200">
+            <p className="body-1 text-zinc-200">
               <a
                 href="https://github.com/pinknetworkx/atomicassets-contract"
                 target="_blank"
@@ -98,7 +98,7 @@ export default function About() {
 
           <section className="my-8 md:my-12 lg:my-16">
             <h2 className="headline-2 mb-2">Soon.Market</h2>
-            <p className="body-1 text-neutral-200">
+            <p className="body-1 text-zinc-200">
               <a
                 href="https://soon.market?utm_medium=about&utm_source=nft-manager"
                 target="_blank"
@@ -116,7 +116,7 @@ export default function About() {
 
           <section className="my-8 md:my-12 lg:my-16">
             <h2 className="headline-2 mb-2">kryptokrauts</h2>
-            <p className="body-1 text-neutral-200 mb-2">
+            <p className="body-1 text-zinc-200 mb-2">
               <a
                 href="https://kryptokrauts.com"
                 target="_blank"

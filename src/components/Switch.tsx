@@ -12,8 +12,8 @@ export function Switch({ label, hint, checked, onChange }: SwitchProps) {
   if (typeof checked === 'undefined') {
     return (
       <div className="flex items-center gap-4" onClick={() => onChange(false)}>
-        <button className="flex-none flex justify-center items-center h-8 w-14 rounded-full border border-neutral-700 focus:outline-none focus:border-white bg-neutral-800">
-          <div className="flex justify-center items-center h-6 w-6 rounded-full bg-white text-neutral-900">
+        <button className="flex-none flex justify-center items-center h-8 w-14 rounded-full border border-zinc-700 focus:outline-none focus:border-white bg-zinc-800">
+          <div className="flex justify-center items-center h-6 w-6 rounded-full bg-white text-zinc-900">
             <Minus size={16} weight="bold" />
           </div>
         </button>
@@ -30,13 +30,13 @@ export function Switch({ label, hint, checked, onChange }: SwitchProps) {
         name="isTransferable"
         checked={checked}
         onChange={onChange}
-        className={`flex-none flex items-center h-8 w-14 rounded-full border border-neutral-700 focus:outline-none focus:border-white ${
-          checked ? 'bg-neutral-700' : 'bg-neutral-800'
+        className={`flex-none flex items-center h-8 w-14 rounded-full border border-zinc-700 focus:outline-none focus:border-white ${
+          checked ? 'bg-zinc-700' : 'bg-zinc-800'
         }`}
       >
         <span className="sr-only">{label}</span>
         <div
-          className={`flex justify-center items-center h-6 w-6 transform rounded-full bg-white text-neutral-900 transition ${
+          className={`flex justify-center items-center h-6 w-6 transform rounded-full bg-white text-zinc-900 transition ${
             checked ? 'translate-x-7' : 'translate-x-1'
           }`}
         >
@@ -66,7 +66,7 @@ export function Switch({ label, hint, checked, onChange }: SwitchProps) {
         <SwitchComponent.Label className="flex-1">
           <span className="block body-1 font-bold text-white">{label}</span>
           {hint && (
-            <span className="block body-2 text-neutral-400">{hint}</span>
+            <span className="block body-2 text-zinc-400">{hint}</span>
           )}
         </SwitchComponent.Label>
       )}

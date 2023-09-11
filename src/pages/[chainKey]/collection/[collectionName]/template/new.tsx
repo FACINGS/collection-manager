@@ -246,7 +246,7 @@ function NewTemplate({
         </Header.Root>
 
         <div className="container py-8">
-          <div className="flex flex-col gap-4 justify-center items-center bg-neutral-800 rounded-xl py-16">
+          <div className="flex flex-col gap-4 justify-center items-center bg-zinc-800 rounded-xl py-16">
             <span className="title-1">
               There is no schema, please create one to continue.
             </span>
@@ -301,7 +301,7 @@ function NewTemplate({
                   Details
                 </Disclosure.Button>
                 <Disclosure.Panel>
-                  <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                  <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                     {modal.details}
                   </pre>
                 </Disclosure.Panel>
@@ -366,7 +366,7 @@ function NewTemplate({
 
             <div>
               <h3 className="headline-2">Set Immutable Attributes</h3>
-              <p className="body-1 text-neutral-400 max-w-3xl mb-8">
+              <p className="body-1 text-zinc-400 max-w-3xl mb-8">
                 Every attribute that is filled in here will be immutable. If you
                 leave the attribute blank, you will be able to set that data
                 during NFT creation and it will be mutable.
@@ -376,10 +376,10 @@ function NewTemplate({
                 (schemaAttribute, schemaAttributeIndex) => (
                   <div
                     key={schemaAttribute.name}
-                    className="grid grid-cols-12 gap-4 mt-8 pb-8 lg:pb-0 lg:mt-4 border-b border-neutral-700 lg:border-none"
+                    className="grid grid-cols-12 gap-4 mt-8 pb-8 lg:pb-0 lg:mt-4 border-b border-zinc-700 lg:border-none"
                   >
                     <div
-                      className={`col-span-12 sm:col-span-6 lg:col-span-3 xl:col-span-3 p-3 flex items-center justify-center border border-neutral-700 rounded ${
+                      className={`col-span-12 sm:col-span-6 lg:col-span-3 xl:col-span-3 p-3 flex items-center justify-center border border-zinc-700 rounded ${
                         schemaAttribute.isImmutable ? '' : 'opacity-50'
                       }`}
                     >
@@ -419,7 +419,7 @@ function NewTemplate({
                           clear={clearElement === schemaAttribute.name}
                         />
                       ) : schemaAttribute.type === 'bool' ? (
-                        <div className="p-3 bg-neutral-800 border border-neutral-700 rounded">
+                        <div className="p-3 bg-zinc-800 border border-zinc-700 rounded">
                           <Controller
                             control={control}
                             name={schemaAttribute.name}
@@ -511,7 +511,7 @@ function NewTemplate({
                         />
                       )}
                     </div>
-                    <div className="col-span-12 lg:col-span-3 xl:col-span-3 py-[calc(0.5rem-1px)] pr-[calc(0.5rem-1px)] pl-4 border border-neutral-700 rounded">
+                    <div className="col-span-12 lg:col-span-3 xl:col-span-3 py-[calc(0.5rem-1px)] pr-[calc(0.5rem-1px)] pl-4 border border-zinc-700 rounded">
                       <div className="flex items-center justify-between">
                         <div
                           className={`flex-1 ${
@@ -542,7 +542,7 @@ function NewTemplate({
                             >
                               <Info size={24} />
                             </Popover.Button>
-                            <Popover.Panel className="w-64 p-4 absolute z-10 bg-neutral-700 top-12 right-0 rounded">
+                            <Popover.Panel className="w-64 p-4 absolute z-10 bg-zinc-700 top-12 right-0 rounded">
                               {schemaAttribute.isImmutable ? (
                                 <p className="body-3">
                                   <strong className="text-white">

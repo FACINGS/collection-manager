@@ -214,7 +214,7 @@ function NewSchema({ ual, collection, chainKey }: NewSchemaProps) {
               Details
             </Disclosure.Button>
             <Disclosure.Panel>
-              <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+              <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                 {modal.details}
               </pre>
             </Disclosure.Panel>

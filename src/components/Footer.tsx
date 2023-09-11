@@ -7,7 +7,7 @@ import {
 
 export function Footer() {
   return (
-    <footer className="container border-t border-neutral-700 flex flex-col md:flex-row gap-4 justify-between items-center py-8 mt-8">
+    <footer className="container border-t border-zinc-700 flex flex-col md:flex-row gap-4 justify-between items-center py-8 mt-8">
       <div className="flex items-center gap-1">
         <span className="body-3">Created by</span>
         <a

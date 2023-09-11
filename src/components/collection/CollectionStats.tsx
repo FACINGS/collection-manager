@@ -95,7 +95,7 @@ export function CollectionStats({
             {statsContent.map(([label, value]) => (
               <div
                 key={label}
-                className="flex justify-between py-3 body-2 text-white border-b border-neutral-700"
+                className="flex justify-between py-3 body-2 text-white border-b border-zinc-700"
               >
                 <span>{label}</span>
                 <span className="font-bold">{value}</span>
@@ -110,7 +110,7 @@ export function CollectionStats({
                   return (
                     <div
                       key={key}
-                      className="flex justify-between py-3 body-2 text-white border-b border-neutral-700"
+                      className="flex justify-between py-3 body-2 text-white border-b border-zinc-700"
                     >
                       <span>{key}</span>
                       <span className="font-bold">{creatorInfo[key]}</span>
@@ -133,7 +133,7 @@ export function CollectionStats({
                       className="font-bold underline"
                       rel="noreferrer"
                     >
-                      <div className="flex justify-start gap-4 py-3 body-2 text-white border-b border-neutral-700">
+                      <div className="flex justify-start gap-4 py-3 body-2 text-white border-b border-zinc-700">
                         {handleSocialIcon(key)}
                         <span className="font-bold">{socials[key]}</span>
                       </div>

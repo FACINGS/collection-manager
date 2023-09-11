@@ -87,7 +87,7 @@ export function CollectionAccountsList({
           )}
         </>
       ) : (
-        <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+        <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
           <h4 className="title-1">There is no account in this collection</h4>
         </div>
       )}

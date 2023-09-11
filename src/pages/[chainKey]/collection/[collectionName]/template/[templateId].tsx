@@ -130,7 +130,7 @@ function Template({
               </div>
               <div className="md:w-1/2 w-full">
                 <div className="w-full md:max-w-sm mx-auto">
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Schema</span>
                     <Link
                       href={`/${chainKey}/collection/${collection.collection_name}/schema/${template.schema.schema_name}`}
@@ -139,23 +139,23 @@ function Template({
                       {template.schema.schema_name}
                     </Link>
                   </div>
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Burnable</span>
                     <span className="font-bold">
                       {template.is_burnable ? 'Yes' : 'No'}
                     </span>
                   </div>
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Transferable</span>
                     <span className="font-bold">
                       {template.is_transferable ? 'Yes' : 'No'}
                     </span>
                   </div>
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Issued Supply</span>
                     <span className="font-bold">{template.issued_supply}</span>
                   </div>
-                  <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                  <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                     <span>Max Supply</span>
                     <span className="font-bold">
                       {parseInt(template.max_supply, 10) || 'Infinite'}
