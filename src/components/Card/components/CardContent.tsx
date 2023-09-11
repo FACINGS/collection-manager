@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ImageSquare } from '@phosphor-icons/react';
+import { ArrowUpRight, ImageSquare } from '@phosphor-icons/react';
 import Link from 'next/link';
 
 interface CardContentProps {
@@ -78,14 +78,32 @@ export function CardContent({
           } ${saleInfo.token}`}</p>
         )}
         {viewLink && (
-          <Link
-            href={viewLink}
-            className="btn btn-small mt-4 whitespace-nowrap w-full text-center truncate"
-            target="_blank"
-            onClick={(event) => event.stopPropagation()}
-          >
-            View {saleInfo ? 'Sale' : 'NFT'}
-          </Link>
+          <>
+            {viewLink.includes('soon.market')
+              ?
+              <>
+                <a
+                  href={viewLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn"
+                >
+                  <span className="flex items-center">
+                    View {saleInfo ? 'Sale' : 'NFT'}<ArrowUpRight className="icon" size={24} />
+                  </span>
+                </a>
+              </>
+              :
+              <Link
+                href={viewLink}
+                className="btn btn-small mt-4 whitespace-nowrap w-full text-center truncate"
+                target="_blank"
+                onClick={(event) => event.stopPropagation()}
+              >
+                View {saleInfo ? 'Sale' : 'NFT'}
+              </Link>
+            }
+          </>
         )}
       </div>
     </>
