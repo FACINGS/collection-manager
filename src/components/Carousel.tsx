@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
-import { ImageSquare } from 'phosphor-react';
+import { ImageSquare } from '@phosphor-icons/react';
 
 import { ipfsEndpoint } from '@configs/globalsConfig';
 import { CarouselPreview } from './CarouselPreview';
@@ -75,7 +75,7 @@ export function Carousel({ images, unique }: CarouselProps) {
                   />
                 </video>
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-neutral-700 text-white rounded-xl">
+                <div className="w-full h-full flex items-center justify-center bg-zinc-700 text-white rounded-xl">
                   <ImageSquare size={96} />
                 </div>
               )}
@@ -134,7 +134,7 @@ export function Carousel({ images, unique }: CarouselProps) {
                               />
                             </video>
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-neutral-800 text-white rounded-xl">
+                            <div className="w-full h-full flex items-center justify-center bg-zinc-800 text-white rounded-xl">
                               <ImageSquare size={96} />
                             </div>
                           )}

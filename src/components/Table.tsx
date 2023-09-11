@@ -1,4 +1,4 @@
-import { TrashSimple } from 'phosphor-react';
+import { TrashSimple } from '@phosphor-icons/react';
 
 interface TableProps {
   list: string[];
@@ -8,12 +8,12 @@ interface TableProps {
 
 export function Table({ list, action, exception }: TableProps) {
   return (
-    <table className="w-full bg-neutral-800 border border-neutral-700 text-neutral-500 rounded overflow-hidden focus-within:text-white">
+    <table className="w-full bg-zinc-800 border border-zinc-700 text-zinc-500 rounded overflow-hidden focus-within:text-white">
       <tbody>
         {list.map((item, index) => (
           <tr
             key={index}
-            className="flex flex-1 flex-row justify-between odd:bg-neutral-800 even:bg-neutral-700 border border-neutral-700 text-neutral-400 w-full"
+            className="flex flex-1 flex-row justify-between odd:bg-zinc-800 even:bg-zinc-700 border border-zinc-700 text-zinc-400 w-full"
           >
             <td className="p-4">{item}</td>
             {item !== exception && (

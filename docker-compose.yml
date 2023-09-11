@@ -15,9 +15,9 @@ x-common: &commons
 
 services:
   app:
-    image: collection-manager
+    image: nft-manager
     build: .
     ports:
       - 3000:3000
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:3000/eos"]
+      test: ["CMD", "curl", "http://localhost:3000/xpr"]

@@ -17,7 +17,7 @@ function TextareaComponent(
       <textarea
         {...props}
         ref={ref}
-        className="w-full block py-[0.875rem] bg-transparent body-1 text-white placeholder:text-neutral-500 focus:outline-none"
+        className="w-full block py-[0.875rem] bg-transparent body-1 text-white placeholder:text-zinc-500 focus:outline-none"
       />
     </BaseField>
   );

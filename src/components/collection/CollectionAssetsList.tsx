@@ -44,6 +44,13 @@ export function CollectionAssetsList({
   const isEndOfList = Number(totalAssets) === assets.length;
   const isEndOfBurnedList = Number(totalBurned) === burnedAssets.length;
 
+  const getAssetLink = (asset) => {
+    if (chainKey == 'xpr') {
+      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=nfts&utm_source=nft-manager`;
+    }
+    return `/${chainKey}/collection/${collectionName}/template/${asset.template.template_id}`;
+  };
+
   async function handleSeeMoreAssets() {
     setIsLoading(true);
 
@@ -93,7 +100,7 @@ export function CollectionAssetsList({
         {assets.length > 0 ? (
           <>
             <CardContainer>
-              {hasAuthorization && (
+              {hasAuthorization && chainKey != 'xpr' && (
                 <CreateNewItem
                   href={`/${chainKey}/collection/${collectionName}/asset/new`}
                   label="Create NFT"
@@ -103,9 +110,13 @@ export function CollectionAssetsList({
                 <Card
                   key={asset.asset_id}
                   id={asset.template && asset.template.template_id}
-                  href={`/${chainKey}/collection/${collectionName}/asset/${asset.asset_id}`}
+                  href={getAssetLink(asset)}
+                  target={chainKey == 'xpr' ? '_blank' : '_self'}
+                  /* XPR NFTs use data.image rather than data.img like on WAX */
                   image={
-                    asset.data.img ? `${ipfsEndpoint}/${asset.data.img}` : ''
+                    chainKey === 'xpr' || chainKey === 'xpr-test'
+                      ? `${ipfsEndpoint}/${asset.data.image}`
+                      : `${ipfsEndpoint}/${asset.data.img}`
                   }
                   video={
                     asset.data.video
@@ -129,7 +140,7 @@ export function CollectionAssetsList({
           </>
         ) : (
           <>
-            {hasAuthorization ? (
+            {hasAuthorization && chainKey != 'xpr' ? (
               <CreateNewItem
                 href={`/${chainKey}/collection/${collectionName}/asset/new`}
                 label="Create your first NFT"
@@ -158,8 +169,11 @@ export function CollectionAssetsList({
                   key={asset.asset_id}
                   id={asset.template && asset.template.template_id}
                   href={`/${chainKey}/collection/${collectionName}/asset/${asset.asset_id}`}
+                  /* XPR NFTs use data.image rather than data.img like on WAX */
                   image={
-                    asset.data.img ? `${ipfsEndpoint}/${asset.data.img}` : ''
+                    chainKey === 'xpr' || chainKey === 'xpr-test'
+                      ? `${ipfsEndpoint}/${asset.data.image}`
+                      : `${ipfsEndpoint}/${asset.data.img}`
                   }
                   video={
                     asset.data.video

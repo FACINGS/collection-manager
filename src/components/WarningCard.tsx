@@ -1,4 +1,4 @@
-import { WarningCircle } from 'phosphor-react';
+import { WarningCircle } from '@phosphor-icons/react';
 
 interface WarningCardProps {
   title: string;
@@ -14,7 +14,7 @@ export function WarningCard({
   clear,
 }: WarningCardProps) {
   return (
-    <div className="flex sm:flex-row flex-col items-center p-8 gap-8 bg-yellow-50 text-neutral-900 rounded-md w-full">
+    <div className="flex sm:flex-row flex-col items-center p-8 gap-8 bg-yellow-50 text-zinc-900 rounded-md w-full">
       <div className="text-yellow-600 p-3.5 rounded-full bg-yellow-400/10">
         <WarningCircle size={28} />
       </div>
@@ -27,7 +27,7 @@ export function WarningCard({
           <div className="flex sm:flex-row flex-col gap-4">
             <button
               type="button"
-              className="btn btn-solid sm:w-fit w-full bg-neutral-900 text-white border-neutral-900 hover:text-white"
+              className="btn btn-solid sm:w-fit w-full bg-zinc-900 text-white border-zinc-900 hover:text-white"
               onClick={callback}
             >
               Continue

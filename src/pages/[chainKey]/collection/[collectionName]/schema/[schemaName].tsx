@@ -121,7 +121,7 @@ function Schema({
                   {schema.format.map((item) => (
                     <div
                       key={item.name}
-                      className="flex justify-between items-center py-3 body-2 gap-8 text-white border-b border-neutral-700"
+                      className="flex justify-between items-center py-3 body-2 gap-8 text-white border-b border-zinc-700"
                     >
                       <span>{item.name}</span>
                       <span className="font-bold break-all">{item.type}</span>

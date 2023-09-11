@@ -12,17 +12,17 @@ import {
   CollectionProps,
 } from '@services/collection/getCollectionService';
 
-interface PluginProps {
+interface ToolProps {
   ual: any;
   type: string;
-  plugin: string;
+  tool: string;
   chainKey: string;
   collection: CollectionProps;
 }
 
-function Plugin({ ual, plugin, type, collection, chainKey }: PluginProps) {
+function Tool({ ual, tool, type, collection, chainKey }: ToolProps) {
   const DynamicComponent = dynamic(() =>
-    import(`../../../plugins/${type}/${plugin}`).then((mod) => mod)
+    import(`../../../tools/${type}/${tool}`).then((mod) => mod)
   );
 
   const hasAuthorization = isAuthorizedAccount(ual, collection) as boolean;
@@ -41,10 +41,10 @@ function Plugin({ ual, plugin, type, collection, chainKey }: PluginProps) {
               `/${chainKey}/collection/${collection.collection_name}`,
             ],
             [
-              collectionTabs[5].name,
-              `/${chainKey}/collection/${collection.collection_name}?tab=${collectionTabs[5].key}`,
+              collectionTabs[4].name,
+              `/${chainKey}/collection/${collection.collection_name}?tab=${collectionTabs[4].key}`,
             ],
-            [plugin],
+            [tool],
           ]}
         ></Header.Root>
       )}
@@ -55,7 +55,7 @@ function Plugin({ ual, plugin, type, collection, chainKey }: PluginProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const plugin = query.plugin as string;
+  const tool = query.tool as string;
   const type = query.type as string;
   const chainKey = query.chainKey as string;
   const collectionName = query.collection as string;
@@ -74,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return {
       props: {
         type,
-        plugin,
+        tool,
         chainKey,
         collection: collectionData || null,
       },
@@ -86,4 +86,4 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 };
 
-export default withUAL(Plugin);
+export default withUAL(Tool);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MagnifyingGlass } from 'phosphor-react';
+import { MagnifyingGlass } from '@phosphor-icons/react';
 import { ipfsEndpoint } from '@configs/globalsConfig';
 import {
   listCollectionsService,
@@ -111,7 +111,7 @@ export function CollectionItemsList({
             {isLoading ? (
               <Loading />
             ) : (
-              <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+              <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
                 <h4 className="title-1">Collections not found</h4>
               </div>
             )}

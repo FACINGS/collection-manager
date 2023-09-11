@@ -7,7 +7,13 @@ import {
   InputHTMLAttributes,
 } from 'react';
 import Image from 'next/image';
-import { UploadSimple, File, FileCsv, FilePdf, FileX } from 'phosphor-react';
+import {
+  UploadSimple,
+  File,
+  FileCsv,
+  FilePdf,
+  FileX,
+} from '@phosphor-icons/react';
 import { ipfsEndpoint } from '@configs/globalsConfig';
 import { convertToBase64 } from '@utils/convertToBase64';
 
@@ -157,8 +163,8 @@ function InputPreviewComponent(
   return (
     <div className="w-full">
       <label
-        className={`block aspect-video rounded cursor-pointer p-4 bg-neutral-800 border ${
-          messageError ? 'border-red-600' : 'border-neutral-700'
+        className={`block aspect-video rounded cursor-pointer p-4 bg-zinc-800 border ${
+          messageError ? 'border-red-600' : 'border-zinc-700'
         }`}
       >
         {/image/.test(previewSrc) ? (
@@ -211,7 +217,7 @@ function InputPreviewComponent(
         )}
         <div
           className={`flex gap-4 items-center border-t pt-4 ${
-            messageError ? 'border-red-600' : 'border-neutral-700'
+            messageError ? 'border-red-600' : 'border-zinc-700'
           }`}
         >
           <div className="flex-1">
@@ -223,7 +229,7 @@ function InputPreviewComponent(
                 placeholder="IPFS hash"
                 onChange={handleOnChangeIpfs}
                 id={props.name}
-                className="w-full body-1 text-white bg-transparent focus:outline-none placeholder:text-neutral-500"
+                className="w-full body-1 text-white bg-transparent focus:outline-none placeholder:text-zinc-500"
               />
             ) : (
               <>

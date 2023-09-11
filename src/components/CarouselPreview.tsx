@@ -6,7 +6,7 @@ import {
   Ref,
 } from 'react';
 import Image from 'next/image';
-import { X, CaretLeft, CaretRight } from 'phosphor-react';
+import { X, CaretLeft, CaretRight } from '@phosphor-icons/react';
 import { useSwipeable } from 'react-swipeable';
 import { Dialog, Transition } from '@headlessui/react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
@@ -77,7 +77,7 @@ function CarouselPreviewComponent(
           <div className="absolute top-0 bottom-0 left-0 right-0 inset-0 bg-black bg-opacity-50" />
         </Transition.Child>
 
-        <div className="fixed inset-0 bg-neutral-900/70 backdrop-blur-2xl">
+        <div className="fixed inset-0 bg-zinc-900/70 backdrop-blur-2xl">
           <div className="flex flex-col h-screen">
             <Transition.Child
               as={Fragment}

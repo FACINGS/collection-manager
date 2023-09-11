@@ -31,7 +31,7 @@ export async function createAssetService({
     },
     {
       blocksBehind: 3,
-      expireSeconds: 30,
+      expireSeconds: 120,
     }
   );
 

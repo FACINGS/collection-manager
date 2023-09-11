@@ -1,35 +1,33 @@
-FROM node:16-alpine
+FROM node:18.17-alpine3.18 AS builder
 
-# Setting working directory. All the path will be relative to WORKDIR
-WORKDIR /usr/app
+ENV NODE_ENV production
 
-# Install PM2 globally
-RUN npm install --global pm2
+WORKDIR /app
+COPY . .
+RUN yarn install --frozen-lockfile
 
-# Installing dependencies
-COPY ./yarn.lock ./
-COPY ./package*.json ./
-
-# Install dependencies
-RUN yarn install
-
-
-# Copying source files
-COPY ./ ./
-
-# Build app
 RUN yarn build
 
-RUN chown -R node .next
+FROM node:18.17-alpine3.18 AS runner
 
-# Expose the listening port
+ENV NODE_ENV production
+ENV PORT 3000
+
+RUN adduser --disabled-password nftmanager && \
+  mkdir -p /app && \
+  chown -R nftmanager:nftmanager /app
+
+WORKDIR /app
+
+USER nftmanager
+
+COPY --from=builder /app/.env .env
+
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nftmanager:nftmanager /app/.next/standalone ./
+COPY --from=builder --chown=nftmanager:nftmanager /app/.next/static ./.next/static
+COPY --from=builder /app/next.config.js ./next.config.js
+
 EXPOSE 3000
 
-# The node user is provided in the Node.js Alpine base image
-
-USER node
-
-# Run npm start script with PM2 when container starts
-#CMD [ "pm2-runtime", "start", "yarn" ]
-
-CMD [ "pm2-runtime", "start", "npm", "--", "start" ]
+ENTRYPOINT ["node", "server.js"]

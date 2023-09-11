@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { withUAL } from 'ual-reactjs-renderer';
-import { CircleNotch } from 'phosphor-react';
+import { CircleNotch } from '@phosphor-icons/react';
 import { useRouter } from 'next/router';
 import { Disclosure } from '@headlessui/react';
 import Head from 'next/head';
@@ -188,7 +188,7 @@ function EditSchema({
               Details
             </Disclosure.Button>
             <Disclosure.Panel>
-              <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+              <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                 {modal.details}
               </pre>
             </Disclosure.Panel>

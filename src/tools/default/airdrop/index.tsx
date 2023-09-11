@@ -3,7 +3,7 @@ import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { DiceFive, CircleNotch } from 'phosphor-react';
+import { DiceFive, CircleNotch } from '@phosphor-icons/react';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,13 +17,13 @@ import { Switch } from '@components/Switch';
 import { Textarea } from '@components/Textarea';
 import { WarningCard } from '@components/WarningCard';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 import { appName } from '@configs/globalsConfig';
 
 import * as utils from './utils/utils';
 import { validationSchema } from './utils/validationSchema';
 import {
-  pluginInfo,
+  toolInfo,
   batchOptions,
   searchByOptions,
   dropAssetsOptions,
@@ -408,8 +408,10 @@ function Airdrop({ ual }: AirdropProps) {
     return (
       <div className="container flex flex-col gap-12">
         <div className="flex flex-col gap-4">
-          <h1 className="headline-1">{pluginInfo.name}</h1>
-          <span className="body-1">Bulk send NFTs with filters.</span>
+          <h1 className="headline-1">{toolInfo.name}</h1>
+          <span className="body-1">
+            Distribute a batch of NFTs to many recipients.
+          </span>
         </div>
         {hasRemainingTransactions ? (
           <>
@@ -445,7 +447,7 @@ function Airdrop({ ual }: AirdropProps) {
                   />
                 </div>
                 <button onClick={() => onSubmit()} className="btn w-fit">
-                  {pluginInfo.name}
+                  {toolInfo.name}
                 </button>
               </>
             )}
@@ -456,7 +458,7 @@ function Airdrop({ ual }: AirdropProps) {
             className="flex flex-col gap-12"
           >
             <div className="flex flex-col gap-12">
-              <div className="grid grid-flow-row grid-cols-12 gap-4 gap-y-8 border border-neutral-700 rounded-md p-8 justify-between">
+              {/* <div className="grid grid-flow-row grid-cols-12 gap-4 gap-y-8 border border-zinc-700 rounded-md p-8 justify-between">
                 <div className="md:col-span-4 col-span-12">
                   <Select
                     onChange={(option) => setSelectedSearchByOption(option)}
@@ -573,13 +575,11 @@ function Airdrop({ ual }: AirdropProps) {
                     </span>
                   )}
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row justify-between items-end h-8">
                   <div className="flex flex-row gap-2">
-                    <label className="body-2 font-bold">
-                      Accounts to Airdrop
-                    </label>
+                    <label className="body-2 font-bold">Recipients</label>
                     <span className="badge-small font-bold">{`${
                       accountsToReward && accountsToReward.length
                     }`}</span>
@@ -654,7 +654,7 @@ function Airdrop({ ual }: AirdropProps) {
                 {selectedDropAssetOption === 'assets' && (
                   <div className="flex flex-col gap-8">
                     <div
-                      className={`flex flex-col md:flex-row gap-4 gap-y-8 border border-neutral-700 rounded-md p-8 justify-between items-start ${
+                      className={`flex flex-col md:flex-row gap-4 gap-y-8 border border-zinc-700 rounded-md p-8 justify-between items-start ${
                         errors.assetsByTemplateId &&
                         errors.assetsByTemplateId.message
                           ? 'md:items-center'
@@ -804,7 +804,7 @@ function Airdrop({ ual }: AirdropProps) {
                 loading
               }
             >
-              {pluginInfo.name}
+              {toolInfo.name}
             </button>
           </form>
         )}
@@ -816,7 +816,7 @@ function Airdrop({ ual }: AirdropProps) {
                 Details
               </Disclosure.Button>
               <Disclosure.Panel>
-                <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                   <div
                     dangerouslySetInnerHTML={{ __html: modal.details }}
                   ></div>

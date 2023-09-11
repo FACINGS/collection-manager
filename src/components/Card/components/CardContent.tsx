@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ImageSquare } from 'phosphor-react';
+import { ImageSquare } from '@phosphor-icons/react';
 import Link from 'next/link';
 
 interface CardContentProps {
@@ -8,6 +8,7 @@ interface CardContentProps {
   video: string;
   title: string;
   subtitle: string;
+  saleInfo?: any;
   viewLink?: string;
   withThumbnail: boolean;
 }
@@ -18,19 +19,25 @@ export function CardContent({
   video,
   title,
   subtitle,
+  saleInfo,
   viewLink,
   withThumbnail,
 }: CardContentProps) {
   return (
     <>
-      {id && (
+      {saleInfo && saleInfo.assetCount > 1 && (
         <div className="p-2 text-center">
-          <h3 className="title-1">#{id}</h3>
+          Bundle ({saleInfo.assetCount} NFTs)
         </div>
       )}
+      {saleInfo && saleInfo.assetCount == 1 && (
+        <div className="p-2 text-center">Single Sale</div>
+      )}
+
+      {!saleInfo && id && <div className="p-2 text-center">#{id}</div>}
 
       {withThumbnail && (
-        <div className="aspect-square bg-neutral-700 relative">
+        <div className="aspect-square bg-zinc-700 relative">
           {video && (
             <video
               muted
@@ -62,7 +69,13 @@ export function CardContent({
       <div className="p-5">
         <h4 className="title-1 truncate">{title ?? 'No name'}</h4>
         {subtitle && (
-          <p className="body-2 text-neutral-200 truncate">{subtitle}</p>
+          <p className="body-2 text-zinc-200 truncate">{subtitle}</p>
+        )}
+        {saleInfo && (
+          <p className="body-2 text-zinc-200 truncate">{`${
+            Number(saleInfo.listingPrice) /
+            Math.pow(10, saleInfo.tokenPrecision)
+          } ${saleInfo.token}`}</p>
         )}
         {viewLink && (
           <Link
@@ -71,7 +84,7 @@ export function CardContent({
             target="_blank"
             onClick={(event) => event.stopPropagation()}
           >
-            View NFT
+            View {saleInfo ? 'Sale' : 'NFT'}
           </Link>
         )}
       </div>

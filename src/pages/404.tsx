@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { FlyingSaucer } from 'phosphor-react';
+import { FlyingSaucer } from '@phosphor-icons/react';
 
 export default function PageNotFound() {
   return (
@@ -11,7 +11,7 @@ export default function PageNotFound() {
 
       <div className="grid justify-items-center content-center h-[calc(100vh-15rem)]">
         <div className="col-start-1 col-end-2 row-start-1 row-end-2">
-          <h1 className="font-bold text-7xl uppercase text-center text-neutral-800">
+          <h1 className="font-bold text-7xl uppercase text-center text-zinc-800">
             Page Not Found
           </h1>
         </div>

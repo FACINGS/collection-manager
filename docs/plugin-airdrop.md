@@ -15,6 +15,7 @@ holders.
 ### Querying Accounts
 
 There are three options for querying holders:
+
 1. Search by template - enter 1 or more template ids to retrieve a list of holders.
 2. Search by collection - enter 1 or more collection names to retrieve a list of holders.
 3. Search by not holding template - enter a collection and template id to
@@ -26,6 +27,7 @@ There are three options for querying holders:
 When "Unique accounts only" is selected, the query will not return duplicate accounts.
 
 If this toggle is not selected:
+
 1. When searching by a template, accounts holding multiple ("X") copies will be added "X" times.
 2. When searching by multiple collections, accounts holding multiple collections will be added multiple times.
 
@@ -38,7 +40,6 @@ accounts here, separated by commas.
 
 The dice button on the right side of this field will shuffle the listed accounts
 using a seed obtained from random.org. Press it as many times as you like.
-
 
 ## NFT Selection
 

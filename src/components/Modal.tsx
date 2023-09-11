@@ -7,7 +7,7 @@ import {
   Ref,
 } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { X } from 'phosphor-react';
+import { X } from '@phosphor-icons/react';
 
 interface ModalProps {
   title: string;
@@ -61,7 +61,7 @@ export function ModalComponent(
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-neutral-800 p-6 md:p-8 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-zinc-800 p-6 md:p-8 text-left align-middle shadow-xl transition-all">
                 <button
                   type="button"
                   className="btn btn-ghost btn-square absolute top-0 right-0"

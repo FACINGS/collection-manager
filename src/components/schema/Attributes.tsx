@@ -1,4 +1,4 @@
-import { TrashSimple, HandGrabbing } from 'phosphor-react';
+import { TrashSimple, HandGrabbing } from '@phosphor-icons/react';
 import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -141,11 +141,11 @@ export function Attributes({ attributes }: AttributeProps) {
           <span className="flex-1">Attribute</span>
           <span className="flex-1">Type</span>
         </div>
-        <div className="bg-neutral-800 border border-neutral-700 rounded">
+        <div className="bg-zinc-800 border border-zinc-700 rounded">
           {attributes.map((attribute) => (
             <div
               key={attribute.name}
-              className="flex gap-4 p-4 border-b border-neutral-700 last:border-b-0"
+              className="flex gap-4 p-4 border-b border-zinc-700 last:border-b-0"
             >
               <span className="flex-1">{attribute.name}</span>
               <span className="flex-1">
@@ -173,7 +173,7 @@ export function Attributes({ attributes }: AttributeProps) {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                       >
-                        <div className="flex w-full flex-col sm:flex-row gap-4 sm:border-0 border-b border-neutral-700 pb-4">
+                        <div className="flex w-full flex-col sm:flex-row gap-4 sm:border-0 border-b border-zinc-700 pb-4">
                           <div className="flex-1">
                             <Input
                               {...register(`attributes.${index}.name`)}

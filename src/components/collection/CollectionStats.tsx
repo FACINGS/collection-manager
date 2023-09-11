@@ -7,7 +7,7 @@ import {
   DiscordLogo,
   YoutubeLogo,
   TelegramLogo,
-} from 'phosphor-react';
+} from '@phosphor-icons/react';
 import { CollectionProps } from '@services/collection/getCollectionService';
 
 interface CollectionStatsProps {
@@ -26,17 +26,25 @@ interface CollectionStatsProps {
     schemas: number;
   };
   collection: CollectionProps;
+  chainKey: string;
 }
 
-export function CollectionStats({ stats, collection }: CollectionStatsProps) {
+export function CollectionStats({
+  stats,
+  collection,
+  chainKey,
+}: CollectionStatsProps) {
   const statsContent = [
-    ['Name', collection.collection_name],
+    // ['ID', collection.collection_name],
     ['Created', new Date(Number(collection.created_at_time)).toLocaleString()],
     ['NFTs', stats.assets ?? 0],
     ['Burned', stats.burned ?? 0],
     ['Templates', stats.templates],
-    ['Schemas', stats.schemas],
   ];
+
+  if (chainKey != 'xpr') {
+    statsContent.push(['Schemas', stats.schemas]);
+  }
 
   const creatorInfo =
     collection.data.creator_info && JSON.parse(collection.data.creator_info);
@@ -54,27 +62,20 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
   function handleSocialIcon(social) {
     switch (social) {
       case 'twitter':
+        /* TODO change to X, see https://github.com/phosphor-icons/homepage/issues/323 */
         return <TwitterLogo size={24} />;
-        break;
       case 'facebook':
         return <FacebookLogo size={24} />;
-        break;
       case 'medium':
         return <MediumLogo size={24} />;
-        break;
       case 'github':
         return <GithubLogo size={24} />;
-        break;
       case 'discord':
         return <DiscordLogo size={24} />;
-        break;
       case 'youtube':
         return <YoutubeLogo size={24} />;
-        break;
       case 'telegram':
         return <TelegramLogo size={24} />;
-        break;
-
       default:
         break;
     }
@@ -90,11 +91,11 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
             <p className="body-1">{collection.data.description}</p>
           </div>
           <div className="flex-1">
-            <h3 className="headline-3 mb-4">Stats</h3>
+            <h3 className="headline-3 mb-4">Numbers</h3>
             {statsContent.map(([label, value]) => (
               <div
                 key={label}
-                className="flex justify-between py-3 body-2 text-white border-b border-neutral-700"
+                className="flex justify-between py-3 body-2 text-white border-b border-zinc-700"
               >
                 <span>{label}</span>
                 <span className="font-bold">{value}</span>
@@ -109,7 +110,7 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
                   return (
                     <div
                       key={key}
-                      className="flex justify-between py-3 body-2 text-white border-b border-neutral-700"
+                      className="flex justify-between py-3 body-2 text-white border-b border-zinc-700"
                     >
                       <span>{key}</span>
                       <span className="font-bold">{creatorInfo[key]}</span>
@@ -132,7 +133,7 @@ export function CollectionStats({ stats, collection }: CollectionStatsProps) {
                       className="font-bold underline"
                       rel="noreferrer"
                     >
-                      <div className="flex justify-start gap-4 py-3 body-2 text-white border-b border-neutral-700">
+                      <div className="flex justify-start gap-4 py-3 body-2 text-white border-b border-zinc-700">
                         {handleSocialIcon(key)}
                         <span className="font-bold">{socials[key]}</span>
                       </div>

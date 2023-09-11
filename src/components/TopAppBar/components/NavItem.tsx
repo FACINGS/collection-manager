@@ -16,7 +16,7 @@ export function NavItem({ children, href, ...rest }: NavItemProps) {
     <Link
       href={href}
       className={`md:text-base text-2xl font-bold p-4 ${
-        isNavItemActive ? 'text-white' : 'text-neutral-400'
+        isNavItemActive ? 'text-white' : 'text-zinc-400'
       }`}
       {...rest}
     >

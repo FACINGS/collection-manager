@@ -59,6 +59,12 @@ export function CollectionAccountsList({
           <CardContainer>
             {accounts.map((account) => (
               <Card
+                {...(chainKey == 'xpr'
+                  ? {
+                      href: `https://soon.market/users/${account.account}?collection=${collectionName}&utm_medium=accounts&utm_source=nft-manager`,
+                      target: '_blank',
+                    }
+                  : {})}
                 key={account.account}
                 image={
                   account.account
@@ -81,7 +87,7 @@ export function CollectionAccountsList({
           )}
         </>
       ) : (
-        <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+        <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
           <h4 className="title-1">There is no account in this collection</h4>
         </div>
       )}

@@ -8,11 +8,10 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { UploadSimple, CircleNotch, CaretDown } from 'phosphor-react';
+import { CircleNotch, CaretDown } from '@phosphor-icons/react';
 import { Disclosure } from '@headlessui/react';
 
 import { createCollectionService } from '@services/collection/createCollectionService';
-import { uploadImageToIpfsService } from '@services/collection/uploadImageToIpfsService';
 
 import { Input } from '@components/Input';
 import { Textarea } from '@components/Textarea';
@@ -22,18 +21,21 @@ import { Select } from '@components/Select';
 
 import { countriesList } from '@utils/countriesList';
 
-import { appName } from '@configs/globalsConfig';
+import { appName, ipfsEndpoint } from '@configs/globalsConfig';
+import { getCollectionService } from '@services/collection/getCollectionService';
 
 const schema = yup.object().shape({
-  image: yup.mixed().test('image', 'Image is required', (value) => {
-    return value.length > 0;
-  }),
+  imageIpfsHash: yup
+    .mixed()
+    .test('imageIpfsHash', 'Image IPFS hash is required', (value) => {
+      return value.startsWith('Qm') || value.startsWith('bafy');
+    }),
   collectionName: yup.string().matches(/^[a-z1-5.]+$/, {
     message: 'Only lowercase letters (a-z) and numbers 1-5 are allowed.',
     excludeEmptyString: false,
   }),
   displayName: yup.string().required().label('Display name'),
-  website: yup.string().required().url().label('Website'),
+  // website: yup.string().required().url().label('Website'),
   marketFee: yup
     .number()
     .typeError('Must be between 0% and 15%. Only numbers.')
@@ -64,27 +66,24 @@ function CreateNewCollection({ ual }) {
     watch,
     control,
     formState: { errors },
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const image = watch('image');
+  const imageIpfsHash = watch('imageIpfsHash');
   const collectionName = watch('collectionName');
 
   useEffect(() => {
-    if (image && image.length > 0) {
-      const [img] = image;
-
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        setPreviewImageSrc(fileReader.result);
-      };
-
-      fileReader.readAsDataURL(img);
+    if (
+      imageIpfsHash &&
+      (imageIpfsHash.startsWith('Qm') || imageIpfsHash.startsWith('bafy'))
+    ) {
+      setPreviewImageSrc(`${ipfsEndpoint}/${imageIpfsHash}`);
     } else {
       setPreviewImageSrc(null);
     }
-  }, [image]);
+  }, [imageIpfsHash]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -97,7 +96,7 @@ function CreateNewCollection({ ual }) {
     if (collectionName && ual.activeUser.accountName) {
       if (!isValidCollectionName(collectionName, ual.activeUser?.accountName)) {
         setCollectionNameError(
-          'Must be up to 12 characters (a-z, 1-5) with no spaces.'
+          'Must be up to 12 characters (a-z, 1-5) with no spaces. Less than 12 characters are only allowed if you control the XPR account with the same name.'
         );
         setIsLoading(false);
         return;
@@ -112,8 +111,6 @@ function CreateNewCollection({ ual }) {
       return false;
     }
 
-    console.log(collectionName.startsWith(`.`));
-
     if (
       (collectionName.length <= 12 &&
         (collectionName === userAccount ||
@@ -127,37 +124,69 @@ function CreateNewCollection({ ual }) {
     return false;
   }
 
+  async function generateCollectionName() {
+    const validNumbers = '12345';
+    let result = '';
+    for (let i = 0; i < 12; i++) {
+      const randomIndex = Math.floor(Math.random() * validNumbers.length);
+      result += validNumbers.charAt(randomIndex);
+    }
+    try {
+      await getCollectionService(router.query.chainKey as string, {
+        collectionName: result,
+      });
+      // expecting an error if the collection does not exist
+      // calling the function again if the ID is already used
+      generateCollectionName();
+    } catch (e) {
+      // we have a unique collection id
+      setValue('collectionName', result);
+    }
+  }
+
   async function onSubmit({
-    image,
+    // image,
+    imageIpfsHash,
     collectionName,
     displayName,
     website,
     marketFee,
     description,
+    telegram,
     twitter,
-    medium,
-    facebook,
-    github,
+    instagram,
     discord,
     youtube,
-    telegram,
-    company,
-    registrationNumber,
-    name,
-    address,
-    city,
-    zipCode,
-    country,
+    snipverse,
+    medium,
   }) {
     setIsLoading(true);
 
     try {
-      const data = await uploadImageToIpfsService(image[0]);
+      const socialLinks = [
+        { name: 'website', link: website },
+        { name: 'twitter', link: twitter },
+        { name: 'telegram', link: telegram },
+        { name: 'instagram', link: instagram },
+        { name: 'youtube', link: youtube },
+        { name: 'discord', link: discord },
+        { name: 'snipverse', link: snipverse },
+        { name: 'medium', link: medium },
+      ];
 
       if (collectionNameError) {
         setIsLoading(false);
         return;
       }
+
+      const socials = socialLinks
+        .map((link) => {
+          const trimmedLink = link.link
+            ? link.link.trim().replace(/\/+$/, '')
+            : '';
+          return `${link.name}:${trimmedLink}`;
+        })
+        .join('\n');
 
       await createCollectionService({
         activeUser: ual.activeUser,
@@ -177,42 +206,12 @@ function CreateNewCollection({ ual }) {
             value: ['string', description],
           },
           {
-            key: 'url',
-            value: ['string', website],
-          },
-          {
             key: 'img',
-            value: ['string', data['IpfsHash']],
+            value: ['string', imageIpfsHash],
           },
           {
-            key: 'socials',
-            value: [
-              'string',
-              JSON.stringify({
-                twitter,
-                medium,
-                facebook,
-                github,
-                discord,
-                youtube,
-                telegram,
-              }),
-            ],
-          },
-          {
-            key: 'creator_info',
-            value: [
-              'string',
-              JSON.stringify({
-                company,
-                registration_number: registrationNumber,
-                name,
-                address,
-                city,
-                zipCode,
-                country,
-              }),
-            ],
+            key: 'url',
+            value: ['string', `${socials}\n`],
           },
         ],
       });
@@ -298,7 +297,7 @@ function CreateNewCollection({ ual }) {
               Details
             </Disclosure.Button>
             <Disclosure.Panel>
-              <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+              <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                 {modal.details}
               </pre>
             </Disclosure.Panel>
@@ -315,8 +314,8 @@ function CreateNewCollection({ ual }) {
         >
           <div className="col-span-4 md:col-span-3 lg:col-span-5">
             <label
-              className={`block aspect-square bg-neutral-800 rounded-xl cursor-pointer p-md border ${
-                errors.image?.message ? 'border-red-600' : 'border-neutral-700'
+              className={`block aspect-square bg-zinc-800 rounded-xl p-md border ${
+                errors.image?.message ? 'border-red-600' : 'border-zinc-700'
               }`}
             >
               {previewImageSrc ? (
@@ -331,22 +330,19 @@ function CreateNewCollection({ ual }) {
               ) : (
                 <div
                   className={`w-full h-full flex flex-col justify-center items-center gap-2 ${
-                    errors.image?.message ? 'text-red-600' : 'text-center'
+                    errors.imageIpfsHash?.message
+                      ? 'text-red-600'
+                      : 'text-center'
                   }`}
                 >
-                  <UploadSimple size={56} weight="bold" />
-                  <p className="title-1">Add Collection Image</p>
+                  <p className="title-1">Collection Image Preview</p>
                   <p className="body-3">
-                    Transparent backgrounds are recommended
+                    Will be shown if you provide a valid IPFS hash in the form.
+                    <br />
+                    Transparent backgrounds are recommended.
                   </p>
                 </div>
               )}
-              <input
-                {...register('image')}
-                type="file"
-                accept="image/png, image/gif, image/jpeg"
-                className="hidden"
-              />
             </label>
           </div>
 
@@ -354,16 +350,31 @@ function CreateNewCollection({ ual }) {
             <Input
               {...register('collectionName')}
               error={errors.collectionName?.message || collectionNameError}
-              label="Collection name"
-              hint="Must be up to 12 characters (a-z, 1-5) with no spaces."
+              label="Collection ID"
+              hint="Unique identifier of the collection. Must be up to 12 characters (a-z, 1-5) with no spaces.
+                Less than 12 characters are only allowed if you control the XPR account with the same name.
+                For simplicity you can simply generate a random ID."
               type="text"
               maxLength={12}
             />
+            <button
+              type="button"
+              className={`btn w-fit whitespace-nowrap`}
+              onClick={generateCollectionName}
+            >
+              Random ID
+            </button>
             <Input
               {...register('displayName')}
               error={errors.displayName?.message}
               type="text"
-              label="Display Name"
+              label="Name"
+            />
+            <Input
+              {...register('imageIpfsHash')}
+              error={errors.imageIpfsHash?.message}
+              type="text"
+              label="Image (IPFS Hash)"
             />
             <Controller
               control={control}
@@ -401,7 +412,7 @@ function CreateNewCollection({ ual }) {
               <Disclosure>
                 {({ open }) => (
                   <>
-                    <Disclosure.Button className="flex flex-row justify-between items-center py-4 border-y border-neutral-700">
+                    <Disclosure.Button className="flex flex-row justify-between items-center py-4 border-y border-zinc-700">
                       <div className="flex flex-row gap-2 items-baseline">
                         <span className="title-1">Social Media</span>
                         <span className="body-1">(optional)</span>
@@ -433,52 +444,18 @@ function CreateNewCollection({ ual }) {
                       />
                       <Controller
                         control={control}
-                        name="medium"
+                        name="telegram"
                         defaultValue=""
                         render={({ field }) => (
                           <Input
-                            label="medium"
+                            label="Telegram"
                             value={field.value}
                             onChange={(event) => {
                               const value = handlePrependHttps(event);
                               field.onChange(value);
                             }}
                             type="text"
-                            placeholder="https://medium.com/@username"
-                          />
-                        )}
-                      />
-                      <Controller
-                        control={control}
-                        name="facebook"
-                        defaultValue=""
-                        render={({ field }) => (
-                          <Input
-                            label="Facebook"
-                            value={field.value}
-                            onChange={(event) => {
-                              const value = handlePrependHttps(event);
-                              field.onChange(value);
-                            }}
-                            type="text"
-                            placeholder="https://facebook.com/pageurl"
-                          />
-                        )}
-                      />
-                      <Controller
-                        control={control}
-                        name="github"
-                        defaultValue=""
-                        render={({ field }) => (
-                          <Input
-                            label="GitHub"
-                            value={field.value}
-                            onChange={(event) => {
-                              const value = handlePrependHttps(event);
-                              field.onChange(value);
-                            }}
-                            type="text"
-                            placeholder="https://github.com/username"
+                            placeholder="https://t.me/username"
                           />
                         )}
                       />
@@ -501,6 +478,40 @@ function CreateNewCollection({ ual }) {
                       />
                       <Controller
                         control={control}
+                        name="snipverse"
+                        defaultValue=""
+                        render={({ field }) => (
+                          <Input
+                            label="Snipverse"
+                            value={field.value}
+                            onChange={(event) => {
+                              const value = handlePrependHttps(event);
+                              field.onChange(value);
+                            }}
+                            type="text"
+                            placeholder="https://snipverse.com/username"
+                          />
+                        )}
+                      />
+                      <Controller
+                        control={control}
+                        name="instagram"
+                        defaultValue=""
+                        render={({ field }) => (
+                          <Input
+                            label="Instagram"
+                            value={field.value}
+                            onChange={(event) => {
+                              const value = handlePrependHttps(event);
+                              field.onChange(value);
+                            }}
+                            type="text"
+                            placeholder="https://www.instagram.com/username"
+                          />
+                        )}
+                      />
+                      <Controller
+                        control={control}
                         name="youtube"
                         defaultValue=""
                         render={({ field }) => (
@@ -518,18 +529,35 @@ function CreateNewCollection({ ual }) {
                       />
                       <Controller
                         control={control}
-                        name="telegram"
+                        name="facebook"
                         defaultValue=""
                         render={({ field }) => (
                           <Input
-                            label="Telegram"
+                            label="Facebook"
                             value={field.value}
                             onChange={(event) => {
                               const value = handlePrependHttps(event);
                               field.onChange(value);
                             }}
                             type="text"
-                            placeholder="https://t.me/username"
+                            placeholder="https://facebook.com/pageurl"
+                          />
+                        )}
+                      />
+                      <Controller
+                        control={control}
+                        name="medium"
+                        defaultValue=""
+                        render={({ field }) => (
+                          <Input
+                            label="Medium"
+                            value={field.value}
+                            onChange={(event) => {
+                              const value = handlePrependHttps(event);
+                              field.onChange(value);
+                            }}
+                            type="text"
+                            placeholder="https://medium.com/@username"
                           />
                         )}
                       />
@@ -537,10 +565,10 @@ function CreateNewCollection({ ual }) {
                   </>
                 )}
               </Disclosure>
-              <Disclosure>
+              {/* <Disclosure>
                 {({ open }) => (
                   <>
-                    <Disclosure.Button className="flex flex-row justify-between items-center pb-4 border-b border-neutral-700">
+                    <Disclosure.Button className="flex flex-row justify-between items-center pb-4 border-b border-zinc-700">
                       <div className="flex flex-row gap-2 items-baseline">
                         <span className="title-1">Company Details</span>
                         <span className="body-1">(optional)</span>
@@ -605,7 +633,7 @@ function CreateNewCollection({ ual }) {
                     </Disclosure.Panel>
                   </>
                 )}
-              </Disclosure>
+              </Disclosure> */}
             </div>
             {isLoading ? (
               <span className="flex gap-2 items-center p-4 body-2 font-bold text-white">

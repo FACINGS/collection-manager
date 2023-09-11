@@ -1,5 +1,5 @@
 import { api } from '@libs/api';
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 import { AxiosResponse } from 'axios';
 
 export interface AssetProps {
@@ -81,6 +81,7 @@ export async function getInventoryService(
     collection_name,
     template_id,
     limit,
+    match,
   } = options;
 
   const response = await api.get(url, {
@@ -90,6 +91,7 @@ export async function getInventoryService(
       template_id,
       page,
       limit: limit || 12,
+      match,
       offset,
       order: 'desc',
       sort: 'transferred_at_time',

@@ -1,4 +1,4 @@
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 
 export function getChainKeyByChainId(chainId: string) {
   const chainsKeys = Object.keys(chainsConfig);

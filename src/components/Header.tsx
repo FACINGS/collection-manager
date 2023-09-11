@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CaretRight } from 'phosphor-react';
+import { CaretRight } from '@phosphor-icons/react';
 import { ReactNode } from 'react';
 
 import { Carousel } from '@components/Carousel';
@@ -32,7 +32,7 @@ function HeaderRoot({ border, breadcrumb, children }: HeaderRootProps) {
   return (
     <header
       className={`${breadcrumb ? 'pb-4 md:pb-8' : 'py-4 md:py-8'} ${
-        border ? 'border-b border-neutral-700' : ''
+        border ? 'border-b border-zinc-700' : ''
       }`}
     >
       {breadcrumb && (
@@ -41,13 +41,13 @@ function HeaderRoot({ border, breadcrumb, children }: HeaderRootProps) {
             {breadcrumb.map(([label, href], index) => (
               <li
                 key={index}
-                className="flex gap-2 items-center text-neutral-400"
+                className="flex gap-2 items-center text-zinc-400"
               >
                 {index !== 0 && <CaretRight size={16} weight="bold" />}
                 {href ? (
                   <Link
                     href={href}
-                    className="block text-neutral-400 hover:text-white py-2"
+                    className="block text-zinc-400 hover:text-white py-2"
                   >
                     {label}
                   </Link>
@@ -61,7 +61,7 @@ function HeaderRoot({ border, breadcrumb, children }: HeaderRootProps) {
           </ul>
         </nav>
       )}
-      <div className="container flex gap-4 md:gap-8 flex-col md:flex-row md:items-center overflow-x-hidden sm:overflow-x-visible">
+      <div className="container flex gap-1 md:gap-8 flex-col md:flex-row md:items-center overflow-x-hidden sm:overflow-x-visible">
         {children}
       </div>
     </header>

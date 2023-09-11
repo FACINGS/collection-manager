@@ -9,7 +9,7 @@ export function NotAllowed() {
 
   return (
     <div className="container py-8">
-      <div className="flex flex-col gap-8 justify-center items-center bg-neutral-800 rounded-xl h-[calc(100vh-14rem)]">
+      <div className="flex flex-col gap-8 justify-center items-center bg-zinc-800 rounded-xl h-[calc(100vh-14rem)]">
         <span className="headline-3">You don't have authorization.</span>
         <Link href={`/${chainKey}`} className="btn">
           My Collections

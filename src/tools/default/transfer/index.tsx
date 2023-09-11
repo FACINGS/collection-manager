@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { CircleNotch, MagnifyingGlass } from 'phosphor-react';
+import { CircleNotch, MagnifyingGlass } from '@phosphor-icons/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
 
@@ -19,7 +18,7 @@ import { CardContainer } from '@components/CardContainer';
 import { SeeMoreButton } from '@components/SeeMoreButton';
 import { Header } from '@components/Header';
 
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 import { ipfsEndpoint, chainKeyDefault, appName } from '@configs/globalsConfig';
 
 import { transferAssetService } from '@services/asset/transferAssetService';
@@ -83,6 +82,13 @@ function Transfer({ ual }) {
 
   const accountName = ual?.activeUser?.accountName;
 
+  const getViewLink = (asset) => {
+    if (chainKey == 'xpr') {
+      return `https://soon.market/nft/templates/${asset.template.template_id}/${asset.asset_id}?utm_medium=transfer-nfts-card&utm_source=nft-manager`;
+    }
+    return `/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`;
+  };
+
   useEffect(() => {
     async function getUserInfo() {
       try {
@@ -128,7 +134,7 @@ function Transfer({ ual }) {
 
     ownedCollections.forEach((item) =>
       options.push({
-        label: item.collection.collection_name,
+        label: `(${item.collection.name}) By ${item.collection.author}`,
         value: item.collection.collection_name,
       })
     );
@@ -160,9 +166,7 @@ function Transfer({ ual }) {
         });
       }
     }
-    if (selectedCollection) {
-      getUserInventory();
-    }
+    getUserInventory();
   }, [selectedCollection, accountName, chainKey]);
 
   async function handleSeeMoreAssets() {
@@ -306,6 +310,16 @@ function Transfer({ ual }) {
           <h2 className="headline-2 mt-4 md:mt-8">
             Send your NFTs to another user
           </h2>
+          <ol className="list-decimal pl-6 body-1 text-zinc-200 mt-2">
+            <li className="pl-1">
+              Select the NFTs by clicking on their pictures.
+            </li>
+            <li className="pl-1">
+              Enter the recipient's account name in the "Recipient account"
+              input field.
+            </li>
+            <li className="pl-1">Click the "Transfer NFT(s)" button.</li>
+          </ol>
           <Modal ref={modalRef} title={modal.title}>
             <p className="body-2 mt-2">{modal.message}</p>
             {!modal.isError ? (
@@ -319,7 +333,7 @@ function Transfer({ ual }) {
                   Details
                 </Disclosure.Button>
                 <Disclosure.Panel>
-                  <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                  <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                     {modal.details}
                   </pre>
                 </Disclosure.Panel>
@@ -357,6 +371,10 @@ function Transfer({ ual }) {
                           image={
                             asset.data['img']
                               ? `${ipfsEndpoint}/${asset.data['img']}`
+                              : asset.data['image']
+                              ? `${ipfsEndpoint}/${asset.data['image']}`
+                              : asset.data['glbthumb']
+                              ? `${ipfsEndpoint}/${asset.data['glbthumb']}`
                               : ''
                           }
                           video={
@@ -366,14 +384,14 @@ function Transfer({ ual }) {
                           }
                           title={asset.name}
                           subtitle={`by ${asset.collection.author}`}
-                          viewLink={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
+                          viewLink={getViewLink(asset)}
                         />
                       </div>
                     ))}
                   </CardContainer>
                 </div>
               ) : (
-                <div className="bg-neutral-800 px-8 py-16 text-center rounded-xl">
+                <div className="bg-zinc-800 px-8 py-16 text-center rounded-xl">
                   <h4 className="title-1">Select a NFT to transfer</h4>
                 </div>
               )}
@@ -394,7 +412,9 @@ function Transfer({ ual }) {
                   }`}
                   disabled={selectedAssets.length === 0}
                 >
-                  {isSaved ? 'Saved' : 'Transfer NFT'}
+                  {isSaved
+                    ? 'Saved'
+                    : `Transfer NFT${selectedAssets.length > 1 ? 's' : ''}`}
                 </button>
               )}
             </form>
@@ -439,8 +459,12 @@ function Transfer({ ual }) {
                                 id={asset.template_mint}
                                 onClick={() => handleAssetSelection(asset)}
                                 image={
-                                  asset.data.img
+                                  asset.data.image
+                                    ? `${ipfsEndpoint}/${asset.data.image}`
+                                    : asset.data.img
                                     ? `${ipfsEndpoint}/${asset.data.img}`
+                                    : asset.data.glbthumb
+                                    ? `${ipfsEndpoint}/${asset.data.glbthumb}`
                                     : ''
                                 }
                                 video={
@@ -450,7 +474,7 @@ function Transfer({ ual }) {
                                 }
                                 title={asset.name}
                                 subtitle={`by ${asset.collection.author}`}
-                                viewLink={`/${chainKey}/collection/${asset.collection.collection_name}/asset/${asset.asset_id}`}
+                                viewLink={getViewLink(asset)}
                               />
                             </div>
                           </div>
@@ -463,7 +487,7 @@ function Transfer({ ual }) {
                     {isLoading ? (
                       <Loading />
                     ) : (
-                      <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+                      <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
                         <h4 className="title-1">NFT not found</h4>
                       </div>
                     )}
@@ -495,7 +519,7 @@ function Transfer({ ual }) {
         <div className="mx-auto my-14 text-center">
           <h2 className="headline-2">Connect your wallet</h2>
           <p className="body-1 mt-2 mb-6">
-            You need to connect your wallet to transfer a NFT
+            You need to connect your wallet to transfer one or multiple NFTs
           </p>
           <button type="button" className="btn" onClick={handleLogin}>
             Connect Wallet

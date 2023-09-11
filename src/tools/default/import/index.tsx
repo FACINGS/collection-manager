@@ -14,7 +14,7 @@ import { WarningCard } from '@components/WarningCard';
 
 import { handleAttributesData } from '@utils/handleAttributesData';
 
-import { pluginInfo, batchOptions } from './config';
+import { toolInfo, batchOptions } from './config';
 import * as utils from './utils/utils';
 import { Review } from './components/review';
 
@@ -660,8 +660,8 @@ function Import({ ual }: ImportProps) {
       <div className="container">
         <div className="flex flex-col pb-8 gap-16">
           <div className="flex flex-col gap-4">
-            <h1 className="headline-1">{pluginInfo.name}</h1>
-            <span className="body-1">{pluginInfo.description}</span>
+            <h1 className="headline-1">{toolInfo.name}</h1>
+            <span className="body-1">{toolInfo.description}</span>
             <span className="body-1">
               For file specification, see{' '}
               <a
@@ -703,7 +703,7 @@ function Import({ ual }: ImportProps) {
                     />
                   )}
                   <button onClick={() => onSubmit()} className="btn w-fit">
-                    {pluginInfo.name}
+                    {toolInfo.name}
                   </button>
                 </>
               )}
@@ -713,7 +713,7 @@ function Import({ ual }: ImportProps) {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col gap-16"
             >
-              <div className="flex gap-4 border-b pb-4 my-4 border-neutral-700 w-fit max-w-sm">
+              <div className="flex gap-4 border-b pb-4 my-4 border-zinc-700 w-fit max-w-sm">
                 <label className="flex flex-row items-center">
                   <input
                     {...register('csvFile')}
@@ -768,7 +768,7 @@ function Import({ ual }: ImportProps) {
                 className="btn w-fit"
                 disabled={!fileName || importErrors.length > 0}
               >
-                {pluginInfo.name}
+                {toolInfo.name}
               </button>
             </form>
           )}
@@ -782,7 +782,7 @@ function Import({ ual }: ImportProps) {
               Details
             </Disclosure.Button>
             <Disclosure.Panel>
-              <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+              <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                 <div dangerouslySetInnerHTML={{ __html: modal.details }}></div>
               </pre>
             </Disclosure.Panel>

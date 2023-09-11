@@ -1,8 +1,8 @@
-export const pluginInfo = {
-  name: 'Airdrop',
-  page: 'plugins',
+export const toolInfo = {
+  name: 'Airdrop NFTs',
+  page: 'tools',
   // prettier-ignore
-  description: 'Simplify NFT Distribution for Large Batches of NFTs using Our User-friendly NFT Drop Tool.',
+  description: 'Distribute a batch of NFTs using this user-friendly NFT drop tool.',
 };
 
 export const searchByOptions = [
@@ -13,7 +13,7 @@ export const searchByOptions = [
 
 export const dropAssetsOptions = [
   { label: 'Select option', value: '' },
-  { label: 'Mint NFTs from template', value: 'template' },
+  { label: 'Mint NFTs from Template', value: 'template' },
   { label: 'Transfer from NFT IDs', value: 'assets' },
 ];
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent, useRef } from 'react';
-import { UploadSimple, CircleNotch } from 'phosphor-react';
+import { UploadSimple, CircleNotch } from '@phosphor-icons/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { GetServerSideProps } from 'next';
 import { Tab, Disclosure } from '@headlessui/react';
@@ -14,7 +14,6 @@ import * as yup from 'yup';
 import { ipfsEndpoint, appName } from '@configs/globalsConfig';
 
 import { editCollectionService } from '@services/collection/editCollectionService';
-import { uploadImageToIpfsService } from '@services/collection/uploadImageToIpfsService';
 import {
   getCollectionService,
   CollectionProps,
@@ -30,8 +29,13 @@ import { Modal } from '@components/Modal';
 import { countriesList } from '@utils/countriesList';
 
 const informationValidations = yup.object().shape({
+  imageIpfsHash: yup
+    .mixed()
+    .test('imageIpfsHash', 'Image IPFS hash is required', (value) => {
+      return value.startsWith('Qm') || value.startsWith('bafy');
+    }),
   displayName: yup.string().required().label('Display name'),
-  website: yup.string().url().label('Website'),
+  // website: yup.string().url().label('Website'),
   description: yup.string(),
 });
 
@@ -53,10 +57,21 @@ const notificationValidations = yup.object().shape({
 });
 
 interface InformationProps {
-  image: File;
+  imageIpfsHash: string;
   displayName: string;
-  website: string;
   description: string;
+  socials: SocialProps;
+}
+
+interface SocialProps {
+  website?: string;
+  twitter?: string;
+  telegram?: string;
+  discord?: string;
+  instagram?: string;
+  youtube?: string;
+  snipverse?: string;
+  medium?: string;
 }
 
 interface EditCollectionProps {
@@ -88,10 +103,12 @@ function EditCollection({
   const router = useRouter();
   const modalRef = useRef(null);
 
-  const [imageSrc, setImageSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [collection, setCollection] = useState(initialCollection);
+  const [previewImageSrc, setPreviewImageSrc] = useState(
+    collection.img ? `${ipfsEndpoint}/${collection.img}` : null
+  );
   const [modal, setModal] = useState<ModalProps>({
     title: '',
     message: '',
@@ -99,10 +116,34 @@ function EditCollection({
     isError: false,
   });
 
-  const creatorInfo =
-    collection.data.creator_info && JSON.parse(collection.data.creator_info);
   const socials =
-    collection.data.socials && JSON.parse(collection.data.socials);
+    collection.data.url && collection.data.url.includes('\n')
+      ? collection.data.url
+          .split('\n')
+          .map((line) => {
+            if (line.includes('https:') || line.includes('www.')) {
+              const colonIndex = line.indexOf(
+                ':',
+                line.indexOf('https:') > -1 ? 6 : 5
+              );
+              const platform = line.substring(0, colonIndex);
+              let url = line.substring(colonIndex + 1);
+              if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+              }
+              return { platform, url };
+            }
+            return null;
+          })
+          .filter((item) => item !== null)
+      : [];
+
+  // this will be used in the future most likely. at this point we stick to the status quo on XPR Network
+  //
+  // const creatorInfo =
+  //   collection.data.creator_info && JSON.parse(collection.data.creator_info);
+  // const socials =
+  //   collection.data.socials && JSON.parse(collection.data.socials);
 
   const {
     register,
@@ -138,13 +179,18 @@ function EditCollection({
     resolver: yupResolver(notificationValidations),
   });
 
-  const image = watch('image');
+  const imageIpfsHash = watch('imageIpfsHash');
 
   useEffect(() => {
-    if (typeof image !== 'string' && image && image.length > 0) {
-      handleImageSource(image[0]);
+    if (
+      imageIpfsHash &&
+      (imageIpfsHash.startsWith('Qm') || imageIpfsHash.startsWith('bafy'))
+    ) {
+      setPreviewImageSrc(`${ipfsEndpoint}/${imageIpfsHash}`);
+    } else {
+      setPreviewImageSrc(null);
     }
-  }, [image]);
+  }, [imageIpfsHash]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -152,16 +198,6 @@ function EditCollection({
     }, 3000);
     return () => clearTimeout(timer);
   }, [isSaved]);
-
-  const handleImageSource = (img) => {
-    if (img) {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        setImageSrc(fileReader.result);
-      };
-      fileReader.readAsDataURL(img);
-    }
-  };
 
   if (!ual?.activeUser || ual?.activeUser?.accountName !== collection?.author) {
     return (
@@ -185,16 +221,40 @@ function EditCollection({
   }
 
   async function onSubmitInformation({
-    image,
+    imageIpfsHash,
     displayName,
-    website,
     description,
-  }: InformationProps) {
+    website,
+    telegram,
+    twitter,
+    instagram,
+    discord,
+    youtube,
+    snipverse,
+    medium,
+  }: InformationProps & SocialProps) {
     setIsLoading(true);
 
     try {
-      const pinataImage =
-        image[0].length > 0 && (await uploadImageToIpfsService(image[0]));
+      const socialLinks = [
+        { name: 'website', link: website },
+        { name: 'twitter', link: twitter },
+        { name: 'telegram', link: telegram },
+        { name: 'instagram', link: instagram },
+        { name: 'youtube', link: youtube },
+        { name: 'discord', link: discord },
+        { name: 'snipverse', link: snipverse },
+        { name: 'medium', link: medium },
+      ];
+
+      const socials = socialLinks
+        .map((link) => {
+          const trimmedLink = link.link
+            ? link.link.trim().replace(/\/+$/, '')
+            : '';
+          return `${link.name}:${trimmedLink}`;
+        })
+        .join('\n');
 
       const editedInformation = await editCollectionService({
         action: 'setcoldata',
@@ -211,12 +271,12 @@ function EditCollection({
               value: ['string', description],
             },
             {
-              key: 'url',
-              value: ['string', website],
+              key: 'img',
+              value: ['string', imageIpfsHash],
             },
             {
-              key: 'img',
-              value: ['string', pinataImage['IpfsHash'] ?? collection.img],
+              key: 'url',
+              value: ['string', `${socials}\n`],
             },
           ],
         },
@@ -536,7 +596,7 @@ function EditCollection({
                 Details
               </Disclosure.Button>
               <Disclosure.Panel>
-                <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
+                <pre className="overflow-auto p-4 rounded-lg bg-zinc-700 max-h-96 mt-4">
                   {modal.details}
                 </pre>
               </Disclosure.Panel>
@@ -561,56 +621,67 @@ function EditCollection({
                 <div className="flex flex-col">
                   <label
                     htmlFor="file"
-                    className="w-80 h-80 flex flex-col justify-center items-center gap-md bg-neutral-800 rounded-xl overflow-hidden cursor-pointer p-4"
+                    className="w-80 h-80 flex flex-col justify-center items-center gap-md bg-zinc-800 rounded-xl overflow-hidden p-4"
                   >
-                    {imageSrc || collection.img ? (
+                    {previewImageSrc ? (
                       <div className="w-full h-full relative">
                         <Image
-                          src={imageSrc ?? `${ipfsEndpoint}/${collection.img}`}
+                          src={previewImageSrc}
                           fill
                           className="object-contain"
                           alt=""
                         />
                       </div>
                     ) : (
-                      <div className="flex flex-col justify-center items-center text-center p-4 gap-2">
-                        <UploadSimple size={56} weight="bold" />
-                        <p className="title-1">Add Collection Image</p>
+                      <div
+                        className={`w-full h-full flex flex-col justify-center items-center gap-2 ${
+                          errors.imageIpfsHash?.message
+                            ? 'text-red-600'
+                            : 'text-center'
+                        }`}
+                      >
+                        <p className="title-1">Collection Image Preview</p>
                         <p className="body-3">
-                          Transparent backgrounds are recommended
+                          Will be shown if you provide a valid IPFS hash in the
+                          form.
+                          <br />
+                          Transparent backgrounds are recommended.
                         </p>
                       </div>
                     )}
-                    <input
-                      id="file"
-                      {...register('image')}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                    />
                   </label>
                 </div>
                 <div className="flex flex-col w-full gap-8">
                   <Input
                     type="text"
                     defaultValue={collection.collection_name}
-                    label="collection Name"
+                    label="Collection ID"
                     readOnly
                     disabled
-                    hint="Collection name cannot be edited."
+                    hint="Collection ID cannot be edited."
                   />
                   <Input
                     {...register('displayName')}
                     error={errors.displayName?.message}
                     type="text"
                     defaultValue={collection.data.name}
-                    label="Display Name"
+                    label="Name"
+                  />
+                  <Input
+                    {...register('imageIpfsHash')}
+                    error={errors.imageIpfsHash?.message}
+                    type="text"
+                    defaultValue={collection.img}
+                    label="Image (IPFS Hash)"
                   />
                   <Input
                     {...register('website')}
                     error={errors.website?.message}
                     type="text"
-                    defaultValue={collection.data.url}
+                    defaultValue={
+                      socials?.find((item) => item.platform === 'website')
+                        ?.url ?? ''
+                    }
                     label="Website"
                   />
                   <Textarea
@@ -628,7 +699,10 @@ function EditCollection({
                     <Controller
                       control={control}
                       name="twitter"
-                      defaultValue={socials?.twitter}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'twitter')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Twitter"
@@ -644,59 +718,31 @@ function EditCollection({
                     />
                     <Controller
                       control={control}
-                      name="medium"
-                      defaultValue={socials?.medium}
+                      name="telegram"
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'telegram')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
-                          label="medium"
+                          label="Telegram"
                           value={field.value}
                           onChange={(event) => {
                             const value = handlePrependHttps(event);
                             field.onChange(value);
                           }}
                           type="text"
-                          placeholder="https://medium.com/@username"
-                        />
-                      )}
-                    />
-                    <Controller
-                      control={control}
-                      name="facebook"
-                      defaultValue={socials?.facebook}
-                      render={({ field }) => (
-                        <Input
-                          label="Facebook"
-                          value={field.value}
-                          onChange={(event) => {
-                            const value = handlePrependHttps(event);
-                            field.onChange(value);
-                          }}
-                          type="text"
-                          placeholder="https://facebook.com/pageurl"
-                        />
-                      )}
-                    />
-                    <Controller
-                      control={control}
-                      name="github"
-                      defaultValue={socials?.github}
-                      render={({ field }) => (
-                        <Input
-                          label="GitHub"
-                          value={field.value}
-                          onChange={(event) => {
-                            const value = handlePrependHttps(event);
-                            field.onChange(value);
-                          }}
-                          type="text"
-                          placeholder="https://github.com/username"
+                          placeholder="https://t.me/username"
                         />
                       )}
                     />
                     <Controller
                       control={control}
                       name="discord"
-                      defaultValue={socials?.discord}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'discord')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Discord"
@@ -712,8 +758,51 @@ function EditCollection({
                     />
                     <Controller
                       control={control}
+                      name="snipverse"
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'snipverse')
+                          ?.url ?? ''
+                      }
+                      render={({ field }) => (
+                        <Input
+                          label="Snipverse"
+                          value={field.value}
+                          onChange={(event) => {
+                            const value = handlePrependHttps(event);
+                            field.onChange(value);
+                          }}
+                          type="text"
+                          placeholder="https://snipverse.com/username"
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="instagram"
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'instagram')
+                          ?.url ?? ''
+                      }
+                      render={({ field }) => (
+                        <Input
+                          label="Instagram"
+                          value={field.value}
+                          onChange={(event) => {
+                            const value = handlePrependHttps(event);
+                            field.onChange(value);
+                          }}
+                          type="text"
+                          placeholder="https://www.instagram.com/username"
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={control}
                       name="youtube"
-                      defaultValue={socials?.youtube}
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'youtube')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
                           label="Youtube"
@@ -729,23 +818,46 @@ function EditCollection({
                     />
                     <Controller
                       control={control}
-                      name="telegram"
-                      defaultValue={socials?.telegram}
+                      name="facebook"
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'facebook')
+                          ?.url ?? ''
+                      }
                       render={({ field }) => (
                         <Input
-                          label="Telegram"
+                          label="Facebook"
                           value={field.value}
                           onChange={(event) => {
                             const value = handlePrependHttps(event);
                             field.onChange(value);
                           }}
                           type="text"
-                          placeholder="https://t.me/username"
+                          placeholder="https://facebook.com/pageurl"
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="medium"
+                      defaultValue={
+                        socials?.find((item) => item.platform === 'medium')
+                          ?.url ?? ''
+                      }
+                      render={({ field }) => (
+                        <Input
+                          label="Medium"
+                          value={field.value}
+                          onChange={(event) => {
+                            const value = handlePrependHttps(event);
+                            field.onChange(value);
+                          }}
+                          type="text"
+                          placeholder="https://medium.com/@username"
                         />
                       )}
                     />
                   </div>
-                  <div className="flex flex-col gap-8 mt-4">
+                  {/* <div className="flex flex-col gap-8 mt-4">
                     <div className="flex flex-row gap-2 items-baseline">
                       <span className="title-1">Company Details</span>
                       <span className="body-1">(optional)</span>
@@ -806,7 +918,7 @@ function EditCollection({
                       defaultValue={creatorInfo?.zipCode}
                       placeholder="e.g: 80803"
                     />
-                  </div>
+                  </div> */}
 
                   {isLoading ? (
                     <span className="flex gap-2 items-center p-4 body-2 font-bold text-white">
@@ -885,7 +997,7 @@ function EditCollection({
                     action={onSubmitRemoveAccountAuthorization}
                   />
                 ) : (
-                  <div className="bg-neutral-800 px-8 py-16 text-center rounded-xl w-full">
+                  <div className="bg-zinc-800 px-8 py-16 text-center rounded-xl w-full">
                     <h4 className="title-1">
                       There are no authorized accounts.
                     </h4>
@@ -939,7 +1051,7 @@ function EditCollection({
                       action={onSubmitRemoveNotificationAccount}
                     />
                   ) : (
-                    <div className="bg-neutral-800 px-8 py-16 text-center rounded-xl w-full">
+                    <div className="bg-zinc-800 px-8 py-16 text-center rounded-xl w-full">
                       <h4 className="title-1">
                         There is no accounts to notify.
                       </h4>
@@ -981,7 +1093,7 @@ function EditCollection({
                   </form>
                 </div>
               ) : (
-                <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+                <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
                   <h4 className="title-1">Notifications were forbidden.</h4>
                 </div>
               )}
@@ -1036,7 +1148,7 @@ function EditCollection({
                   </form>
                 </div>
               ) : (
-                <div className="bg-neutral-800 px-8 py-24 text-center rounded-xl">
+                <div className="bg-zinc-800 px-8 py-24 text-center rounded-xl">
                   <h4 className="title-1">Notifications were forbidden.</h4>
                 </div>
               )}

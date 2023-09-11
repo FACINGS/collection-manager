@@ -36,6 +36,13 @@ export function CollectionTemplatesList({
   const offset = (currentPage - 1) * limit;
   const isEndOfList = Number(totalTemplates) === templates.length;
 
+  const getTemplateLink = (templateId) => {
+    if (chainKey == 'xpr') {
+      return `https://soon.market/nft/templates/${templateId}?utm_medium=template&utm_source=nft-manager`;
+    }
+    return `/${chainKey}/collection/${collectionName}/template/${templateId}`;
+  };
+
   async function handleSeeMoreTemplates() {
     setIsLoading(true);
 
@@ -64,7 +71,7 @@ export function CollectionTemplatesList({
       {templates.length > 0 ? (
         <>
           <CardContainer>
-            {hasAuthorization && (
+            {hasAuthorization && chainKey != 'xpr' && (
               <CreateNewItem
                 href={`/${chainKey}/collection/${collectionName}/template/new`}
                 label="Create template"
@@ -74,10 +81,16 @@ export function CollectionTemplatesList({
               <Card
                 key={template.template_id}
                 id={template.template_id}
-                href={`/${chainKey}/collection/${collectionName}/template/${template.template_id}`}
+                href={getTemplateLink(template.template_id)}
+                target={chainKey == 'xpr' ? '_blank' : '_self'}
+                /* XPR uses data.image as default */
                 image={
-                  template.immutable_data.img
+                  template.immutable_data.image
+                    ? `${ipfsEndpoint}/${template.immutable_data.image}`
+                    : template.immutable_data.img
                     ? `${ipfsEndpoint}/${template.immutable_data.img}`
+                    : template.immutable_data.glbthumb
+                    ? `${ipfsEndpoint}/${template.immutable_data.glbthumb}`
                     : ''
                 }
                 video={

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { withUAL } from 'ual-reactjs-renderer';
-import { MagnifyingGlass } from 'phosphor-react';
+import { ArrowUpRight } from '@phosphor-icons/react';
 
 import { ipfsEndpoint } from '@configs/globalsConfig';
 import { listCollectionsService } from '@services/collection/listCollectionsService';
@@ -73,35 +73,35 @@ function UserCollectionsListComponent({
     ual?.showModal();
   }
 
-  async function handleSearch(event) {
-    const { value } = event.target;
-    clearTimeout(waitToSearch);
+  // async function handleSearch(event) {
+  //   const { value } = event.target;
+  //   clearTimeout(waitToSearch);
 
-    const newWaitToSearch = setTimeout(async () => {
-      const { data: collections } = await listCollectionsService(chainKey, {
-        match: value || '',
-        authorizedAccount: author,
-      });
-      setMatch(value);
-      setCollections(collections.data);
-    });
+  //   const newWaitToSearch = setTimeout(async () => {
+  //     const { data: collections } = await listCollectionsService(chainKey, {
+  //       match: value || '',
+  //       authorizedAccount: author,
+  //     });
+  //     setMatch(value);
+  //     setCollections(collections.data);
+  //   });
 
-    setWaitToSearch(newWaitToSearch);
-  }
+  //   setWaitToSearch(newWaitToSearch);
+  // }
 
   if (author) {
     return (
       <>
         <Header.Root border>
           <Header.Content title="My Collections" />
-          <Header.Search>
+          {/* <Header.Search>
             <Input
               icon={<MagnifyingGlass size={24} />}
               type="search"
               placeholder="Search collection"
               onChange={handleSearch}
             />
-          </Header.Search>
+          </Header.Search> */}
         </Header.Root>
 
         <section className="container py-8">
@@ -154,17 +154,32 @@ function UserCollectionsListComponent({
   return (
     <div className="h-[calc(100vh-5.5rem-5.5rem-5.25rem)] md:h-[calc(100vh-5.5rem-5.375rem)] flex items-center justify-center">
       <div className="md:max-w-lg lg:max-w-3xl text-center px-4">
-        <h2 className="headline-1">Explore and manage NFT Collections</h2>
+        <h2 className="headline-1">NFT Manager</h2>
         <p className="body-1 mt-4 mb-8">
-          Connect your wallet to see and manage your collections
+          Connect your wallet to get access to the collection manager and other
+          useful tools!
         </p>
         <div className="flex flex-col md:flex-row items-center gap-4 justify-center">
           <button type="button" className="btn" onClick={handleLogin}>
             Connect Wallet
           </button>
-          <Link href={`/${chainKey}/explorer`} className="btn border-0">
-            Explorer
-          </Link>
+          <>
+            {'xpr' == chainKey ? (
+              <Link
+                href={`https://soon.market/explore?utm_medium=frontpage&utm_source=nft-manager`}
+                className="btn border-0"
+                target="_blank"
+              >
+                <span className="flex items-center">
+                  Explore on Soon.Market<ArrowUpRight className="icon" size={24} />
+                </span>
+              </Link>
+            ) : (
+              <Link href={`/${chainKey}/explorer`} className="btn border-0">
+                Explorer
+              </Link>
+            )}
+          </>
         </div>
       </div>
     </div>

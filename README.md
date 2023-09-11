@@ -4,7 +4,6 @@ An NFT Collection Manager for the EOS/AtomicAssets ecosystem built by [FACINGS](
 
 This project is meant to both work as a stand-alone NFT publishing platform, as well as a launchpad for NFT developers on EOS.
 
-
 The core feature set is very simple:
 
 1. Login and view resource usage
@@ -18,7 +17,6 @@ Important principles:
 2. Allow publishers, developers, and businesses to build faster
 3. Grow open-source community around core EOS/AtomicAssets needs
 
-
 ## Documentation
 
 1. **Getting Started** (this README document) - Project overview and "Getting Started" guide for devs.
@@ -29,13 +27,11 @@ Important principles:
 6. **[Data Import Plugin](docs/plugin-import.md)** - For users, guide to using the CSV import plugin.
 7. **[Data Types](docs/data-types.md)** - An overview of AtomicAssets data types.
 
-
 ## Dependencies
 
 1. Public AtomicAsset API ([AGPLv3](https://github.com/pinknetworkx/eosio-contract-api); use any [public endpoint](https://support.pink.gg/hc/en-us/articles/4405478859922-Developer-Resources))
 2. Public Node API endpoint ([MIT](https://github.com/EOSIO/eos); use any public [EOS](https://mainnet.eosio.online/endpoints) or [WAX](https://wax.eosio.online/endpoints) endpoint)
 3. Public IPFS endpoint ([MIT](https://github.com/ipfs/ipfs); e.g. https://ipfs.ledgerwise.io/ipfs)
-
 
 ## Getting Started - Development
 
@@ -55,7 +51,6 @@ yarn dev
 
 Now you may open [http://localhost:3000](http://localhost:3000) to access the app.
 
-
 ## Running the application with docker
 
 Install Docker and execute:
@@ -65,7 +60,6 @@ docker-compose up --build --force-recreate
 ```
 
 After build, open [http://localhost:3000](http://localhost:3000) to access the app.
-
 
 ## Environment Variables
 

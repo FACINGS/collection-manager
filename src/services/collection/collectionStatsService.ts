@@ -1,5 +1,5 @@
 import { api } from '@libs/api';
-import * as chainsConfig from '@configs/chainsConfig';
+import chainsConfig from '@configs/chainsConfig';
 import { AxiosResponse } from 'axios';
 
 export interface StatsProps {

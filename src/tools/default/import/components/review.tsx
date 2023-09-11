@@ -1,5 +1,5 @@
 import { Disclosure, Transition } from '@headlessui/react';
-import { CaretDown, WarningCircle } from 'phosphor-react';
+import { CaretDown, WarningCircle } from '@phosphor-icons/react';
 import * as isIPFS from 'is-ipfs';
 import 'tailwindcss/tailwind.css';
 
@@ -88,11 +88,11 @@ export function Review({ actions, errors, schema }: ReviewProps) {
             )}
           </div>
           {schema && (
-            <div className="flex bg-neutral-800 rounded-md border border-yellow-600">
+            <div className="flex bg-zinc-800 rounded-md border border-yellow-600">
               <Disclosure as="div" className="flex flex-col w-full">
                 {({ open }) => (
                   <>
-                    <Disclosure.Button className="flex w-full items-center justify-between py-4 px-8 rounded-md hover:bg-neutral-700 duration-300">
+                    <Disclosure.Button className="flex w-full items-center justify-between py-4 px-8 rounded-md hover:bg-zinc-700 duration-300">
                       <div className="flex flex-row gap-2 items-center">
                         <>
                           <span className="title-1">Schema:</span>
@@ -119,7 +119,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                     >
                       <Disclosure.Panel className="flex flex-col items-start gap-8 pb-8 pt-4 px-8">
                         <>
-                          <div className="flex flex-row items-center p-8 gap-4 bg-yellow-50 text-neutral-900 rounded-md w-full">
+                          <div className="flex flex-row items-center p-8 gap-4 bg-yellow-50 text-zinc-900 rounded-md w-full">
                             <div className="text-yellow-600 p-3.5 rounded-full bg-yellow-400/10">
                               <WarningCircle size={28} />
                             </div>
@@ -138,7 +138,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                             </div>
                           </div>
                           <div className="flex flex-col w-full gap-8">
-                            <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                            <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                               <span>Name</span>
                               <span className="font-bold">
                                 {schema.schema_name}
@@ -148,7 +148,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                               <span className="body-1 font-bold">
                                 Attributes
                               </span>
-                              <span className="badge-small bg-neutral-900 font-bold">
+                              <span className="badge-small bg-zinc-900 font-bold">
                                 {schema.format?.length}
                               </span>
                             </div>
@@ -157,7 +157,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                                 return (
                                   <div
                                     key={item.name}
-                                    className="flex justify-between py-3 body-2 text-white border-b border-neutral-700"
+                                    className="flex justify-between py-3 body-2 text-white border-b border-zinc-700"
                                   >
                                     <span>{item.name}</span>
                                     <span className="font-bold">
@@ -183,7 +183,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
               return (
                 <div
                   key={index}
-                  className={`flex bg-neutral-800 rounded-md ${
+                  className={`flex bg-zinc-800 rounded-md ${
                     error.some((item) => item.index === index) &&
                     'border-2 border-red-600'
                   }`}
@@ -192,7 +192,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                     <Disclosure as="div" className="flex flex-col w-full">
                       {({ open }) => (
                         <>
-                          <Disclosure.Button className="flex w-full items-center justify-between py-4 px-8 rounded-md hover:bg-neutral-700 duration-300">
+                          <Disclosure.Button className="flex w-full items-center justify-between py-4 px-8 rounded-md hover:bg-zinc-700 duration-300">
                             <div className="flex flex-row gap-2 items-center">
                               {action.name === 'createschema' ? (
                                 <>
@@ -234,7 +234,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                                         return (
                                           <div
                                             key={key}
-                                            className="flex flex-row items-center p-8 gap-4 bg-red-50 text-neutral-900 rounded-md w-full"
+                                            className="flex flex-row items-center p-8 gap-4 bg-red-50 text-zinc-900 rounded-md w-full"
                                           >
                                             <div className="text-red-600 p-3.5 rounded-full bg-red-400/10">
                                               <WarningCircle size={28} />
@@ -254,7 +254,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                                       }
                                     })}
                                   <div className="flex flex-col w-full gap-8">
-                                    <div className="flex justify-between py-3 body-2 text-white border-b border-neutral-700">
+                                    <div className="flex justify-between py-3 body-2 text-white border-b border-zinc-700">
                                       <span>Name</span>
                                       <span className="font-bold">
                                         {action.data.schema_name}
@@ -264,7 +264,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                                       <span className="body-1 font-bold">
                                         Attributes
                                       </span>
-                                      <span className="badge-small bg-neutral-900 font-bold">
+                                      <span className="badge-small bg-zinc-900 font-bold">
                                         {action.data.schema_format.length}
                                       </span>
                                     </div>
@@ -273,7 +273,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                                         return (
                                           <div
                                             key={item.name}
-                                            className="flex justify-between py-3 body-2 text-white border-b border-neutral-700"
+                                            className="flex justify-between py-3 body-2 text-white border-b border-zinc-700"
                                           >
                                             <span>{item.name}</span>
                                             <span className="font-bold">
@@ -296,7 +296,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                                         return (
                                           <div
                                             key={key}
-                                            className="flex flex-row items-center p-8 gap-4 bg-red-50 text-neutral-900 rounded-md w-full"
+                                            className="flex flex-row items-center p-8 gap-4 bg-red-50 text-zinc-900 rounded-md w-full"
                                           >
                                             <div className="text-red-600 p-3.5 rounded-full bg-red-400/10">
                                               <WarningCircle size={28} />
@@ -333,7 +333,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                                             return (
                                               <div
                                                 key={item.key}
-                                                className="flex flex-row gap-4 justify-between py-3 body-2 text-white border-b border-neutral-700"
+                                                className="flex flex-row gap-4 justify-between py-3 body-2 text-white border-b border-zinc-700"
                                               >
                                                 <span>{item.key}</span>
                                                 <span className="font-bold">
@@ -366,7 +366,7 @@ export function Review({ actions, errors, schema }: ReviewProps) {
                                           return (
                                             <div
                                               key={item}
-                                              className="flex flex-row gap-4 justify-between py-3 body-2 text-white border-b border-neutral-700"
+                                              className="flex flex-row gap-4 justify-between py-3 body-2 text-white border-b border-zinc-700"
                                             >
                                               <span>{item}</span>
                                               <span className="font-bold">

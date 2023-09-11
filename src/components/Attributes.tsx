@@ -20,7 +20,7 @@ function AttributesItem({ name, value, type }: AttributesItemProps) {
   if (!value) return;
 
   return (
-    <div className="flex justify-between items-center py-3 body-2 gap-8 text-white border-b border-neutral-700">
+    <div className="flex justify-between items-center py-3 body-2 gap-8 text-white border-b border-zinc-700">
       <span>{name}</span>
       {type === 'bool' ? (
         <span className="font-bold break-keep">{`${Boolean(value)}`}</span>

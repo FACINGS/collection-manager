@@ -4,6 +4,24 @@ interface BurnAssetServiceProps {
   asset_id: string;
 }
 
+interface ActionProps {
+  account: string;
+  name: string;
+  authorization: {
+    actor: string;
+    permission: string;
+  }[];
+  data: {
+    asset_owner: string;
+    asset_id: string;
+  };
+}
+
+interface BurnMultipleAssetProps {
+  activeUser: any;
+  actions: ActionProps[];
+}
+
 export async function burnAssetService({
   activeUser,
   asset_owner,
@@ -30,7 +48,24 @@ export async function burnAssetService({
     },
     {
       blocksBehind: 3,
-      expireSeconds: 30,
+      expireSeconds: 120,
+    }
+  );
+
+  return response;
+}
+
+export async function burnMultipleAssetService({
+  activeUser,
+  actions,
+}: BurnMultipleAssetProps) {
+  const response = await activeUser.signTransaction(
+    {
+      actions,
+    },
+    {
+      blocksBehind: 3,
+      expireSeconds: 120,
     }
   );
 
