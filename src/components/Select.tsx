@@ -48,9 +48,7 @@ export function Select({
           {selectedOption ? (
             <span className="flex-1 truncate">{selectedOption?.label}</span>
           ) : (
-            <span className="flex-1 truncate text-zinc-500">
-              {placeholder}
-            </span>
+            <span className="flex-1 truncate text-zinc-500">{placeholder}</span>
           )}
           <CaretDown size={24} className="flex-none" aria-hidden="true" />
         </Listbox.Button>

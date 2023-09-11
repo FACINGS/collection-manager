@@ -45,9 +45,7 @@ export function BaseField({
       {error ? (
         <span className="block body-3 text-red-600 mt-2">{error}</span>
       ) : (
-        hint && (
-          <span className="block body-3 text-zinc-400 mt-2">{hint}</span>
-        )
+        hint && <span className="block body-3 text-zinc-400 mt-2">{hint}</span>
       )}
     </label>
   );

@@ -39,10 +39,7 @@ function HeaderRoot({ border, breadcrumb, children }: HeaderRootProps) {
         <nav className="container py-2" aria-label="Breadcrumb">
           <ul className="flex flex-wrap gap-2 items-center body-2 font-bold">
             {breadcrumb.map(([label, href], index) => (
-              <li
-                key={index}
-                className="flex gap-2 items-center text-zinc-400"
-              >
+              <li key={index} className="flex gap-2 items-center text-zinc-400">
                 {index !== 0 && <CaretRight size={16} weight="bold" />}
                 {href ? (
                   <Link

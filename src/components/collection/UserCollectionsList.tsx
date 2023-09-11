@@ -171,7 +171,8 @@ function UserCollectionsListComponent({
                 target="_blank"
               >
                 <span className="flex items-center">
-                  Explore on Soon.Market<ArrowUpRight className="icon" size={24} />
+                  Explore on Soon.Market
+                  <ArrowUpRight className="icon" size={24} />
                 </span>
               </Link>
             ) : (

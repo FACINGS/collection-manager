@@ -6,7 +6,6 @@ import { NavItem } from './components/NavItem';
 import { Login } from './components/Login';
 import { List, X, ArrowUpRight } from '@phosphor-icons/react';
 
-
 import { chainKeyDefault } from '@configs/globalsConfig';
 
 export function TopAppBar() {
@@ -33,24 +32,30 @@ export function TopAppBar() {
             href="https://soon.market/explore?utm_medium=navbar&utm_source=nft-manager"
             onClick={() => setOpen(false)}
             target="_blank"
-          ><span className="flex items-center">
-            Explore<ArrowUpRight className="icon" size={24} />
+          >
+            <span className="flex items-center">
+              Explore
+              <ArrowUpRight className="icon" size={24} />
             </span>
           </NavItem>
           <NavItem
             href="https://soon.market/sell?utm_medium=navbar&utm_source=nft-manager"
             onClick={() => setOpen(false)}
             target="_blank"
-          ><span className="flex items-center">
-            Sell<ArrowUpRight className="icon" size={24} />
+          >
+            <span className="flex items-center">
+              Sell
+              <ArrowUpRight className="icon" size={24} />
             </span>
           </NavItem>
           <NavItem
             href="https://soon.market/soon-spot-nfts?utm_medium=navbar&utm_source=nft-manager"
             onClick={() => setOpen(false)}
             target="_blank"
-          ><span className="flex items-center">
-            Promote<ArrowUpRight className="icon" size={24} />
+          >
+            <span className="flex items-center">
+              Promote
+              <ArrowUpRight className="icon" size={24} />
             </span>
           </NavItem>
           <NavItem href={`/${chainKey}/about`} onClick={() => setOpen(false)}>

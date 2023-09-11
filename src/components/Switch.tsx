@@ -65,9 +65,7 @@ export function Switch({ label, hint, checked, onChange }: SwitchProps) {
       {label && (
         <SwitchComponent.Label className="flex-1">
           <span className="block body-1 font-bold text-white">{label}</span>
-          {hint && (
-            <span className="block body-2 text-zinc-400">{hint}</span>
-          )}
+          {hint && <span className="block body-2 text-zinc-400">{hint}</span>}
         </SwitchComponent.Label>
       )}
     </SwitchComponent.Group>

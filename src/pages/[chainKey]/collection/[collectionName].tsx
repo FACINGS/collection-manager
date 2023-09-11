@@ -119,7 +119,8 @@ function Collection({
                 className="btn"
               >
                 <span className="flex items-center">
-                  Create NFT on Soon.Market<ArrowUpRight className="icon" size={24} />
+                  Create NFT on Soon.Market
+                  <ArrowUpRight className="icon" size={24} />
                 </span>
               </a>
             )}
@@ -131,7 +132,8 @@ function Collection({
                 className="btn"
               >
                 <span className="flex items-center">
-                  Show on Soon.Market<ArrowUpRight className="icon" size={24} />
+                  Show on Soon.Market
+                  <ArrowUpRight className="icon" size={24} />
                 </span>
               </a>
             )}

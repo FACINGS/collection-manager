@@ -79,8 +79,7 @@ export function CardContent({
         )}
         {viewLink && (
           <>
-            {viewLink.includes('soon.market')
-              ?
+            {viewLink.includes('soon.market') ? (
               <>
                 <a
                   href={viewLink}
@@ -89,11 +88,12 @@ export function CardContent({
                   className="btn"
                 >
                   <span className="flex items-center">
-                    View {saleInfo ? 'Sale' : 'NFT'}<ArrowUpRight className="icon" size={24} />
+                    View {saleInfo ? 'Sale' : 'NFT'}
+                    <ArrowUpRight className="icon" size={24} />
                   </span>
                 </a>
               </>
-              :
+            ) : (
               <Link
                 href={viewLink}
                 className="btn btn-small mt-4 whitespace-nowrap w-full text-center truncate"
@@ -102,7 +102,7 @@ export function CardContent({
               >
                 View {saleInfo ? 'Sale' : 'NFT'}
               </Link>
-            }
+            )}
           </>
         )}
       </div>
