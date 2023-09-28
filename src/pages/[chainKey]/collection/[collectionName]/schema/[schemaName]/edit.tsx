@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { Disclosure } from '@headlessui/react';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 
 import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,6 +21,7 @@ import { Modal } from '@components/Modal';
 import { Attributes } from '@components/schema/Attributes';
 import { Header } from '@components/Header';
 
+import { isResourceError } from '@utils/isResourceError';
 import { collectionTabs } from '@utils/collectionTabs';
 import { usePermission } from '@hooks/usePermission';
 
@@ -36,6 +38,7 @@ interface ModalProps {
   message?: string;
   details?: string;
   isError?: boolean;
+  resourceError?: boolean;
 }
 
 interface AttributeProps {
@@ -65,6 +68,7 @@ function EditSchema({
     message: '',
     details: '',
     isError: false,
+    resourceError: false,
   });
 
   const schemaValidation = yup.object().shape({
@@ -134,12 +138,14 @@ function EditSchema({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to update schema';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
 
@@ -184,9 +190,18 @@ function EditSchema({
           </span>
         ) : (
           <Disclosure>
-            <Disclosure.Button className="btn btn-small mt-4">
-              Details
-            </Disclosure.Button>
+            <div className="flex flex-row gap-4 items-baseline">
+              <Disclosure.Button className="btn btn-small mt-4">
+                Details
+              </Disclosure.Button>
+              {modal.resourceError && (
+                <Link href={`/${chainKey}/resources`}>
+                  <div className="btn btn-small">
+                    <span>Manage resources</span>
+                  </div>
+                </Link>
+              )}
+            </div>
             <Disclosure.Panel>
               <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
                 {modal.details}

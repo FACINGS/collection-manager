@@ -33,9 +33,16 @@ export function validationSchema({
             accounts.map(async (account) => {
               if (!queriedAccounts.includes(account)) {
                 try {
-                  await getAccountsService(chainKey, {
-                    owner: account,
-                  });
+                  const { data: accountData } = await getAccountsService(
+                    chainKey,
+                    {
+                      owner: account,
+                    }
+                  );
+
+                  if (accountData.data.length === 0) {
+                    throw new Error('Data is empty or falsy');
+                  }
                 } catch (error) {
                   invalidAccounts.push(account);
                 }

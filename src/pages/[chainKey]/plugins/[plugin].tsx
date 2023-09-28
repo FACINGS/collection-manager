@@ -56,7 +56,7 @@ function Plugin({ ual, plugin, type, collection, chainKey }: PluginProps) {
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const plugin = query.plugin as string;
-  const type = query.type as string;
+  const type = (query.type || 'default') as string;
   const chainKey = query.chainKey as string;
   const collectionName = query.collection as string;
 

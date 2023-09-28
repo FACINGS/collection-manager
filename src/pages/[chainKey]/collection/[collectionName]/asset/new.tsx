@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment, useRef } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
@@ -14,6 +15,7 @@ import * as yup from 'yup';
 import { appName } from '@configs/globalsConfig';
 
 import { collectionTabs } from '@utils/collectionTabs';
+import { isResourceError } from '@utils/isResourceError';
 
 import { collectionAssetsService } from '@services/collection/collectionAssetsService';
 import { createAssetService } from '@services/asset/createAssetService';
@@ -56,6 +58,7 @@ interface ModalProps {
   message?: string;
   details?: string;
   isError?: boolean;
+  resourceError?: boolean;
 }
 
 interface FormDataProps {
@@ -321,12 +324,14 @@ function NewAsset({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to create NFT';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -779,9 +784,18 @@ function NewAsset({
             </span>
           ) : (
             <Disclosure>
-              <Disclosure.Button className="btn btn-small mt-4">
-                Details
-              </Disclosure.Button>
+              <div className="flex flex-row gap-4 items-baseline">
+                <Disclosure.Button className="btn btn-small mt-4">
+                  Details
+                </Disclosure.Button>
+                {modal.resourceError && (
+                  <Link href={`/${chainKey}/resources`}>
+                    <div className="btn btn-small">
+                      <span>Manage resources</span>
+                    </div>
+                  </Link>
+                )}
+              </div>
               <Disclosure.Panel>
                 <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
                   {modal.details}

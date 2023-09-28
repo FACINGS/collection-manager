@@ -21,9 +21,11 @@ There are three options for querying holders:
    retrieve a list of all accounts holding any NFT in this collection, excluding
    those which hold the specified template.
 
+The "Minimum entry quantity" field allows you to specify the minimum number of NFTs required for an account to participate in the Airdrop.
+
 #### Unique Accounts
 
-When "Unique accounts only" is selected, the query will not return duplicate accounts.
+When "Limit 1 per account" is selected, duplicate entries will be ignored.
 
 If this toggle is not selected:
 1. When searching by a template, accounts holding multiple ("X") copies will be added "X" times.

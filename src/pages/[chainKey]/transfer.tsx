@@ -22,6 +22,8 @@ import { Header } from '@components/Header';
 import * as chainsConfig from '@configs/chainsConfig';
 import { ipfsEndpoint, chainKeyDefault, appName } from '@configs/globalsConfig';
 
+import { isResourceError } from '@utils/isResourceError';
+
 import { transferAssetService } from '@services/asset/transferAssetService';
 import {
   getInventoryService,
@@ -39,6 +41,7 @@ interface ModalProps {
   message?: string;
   details?: string;
   isError?: boolean;
+  resourceError?: boolean;
 }
 
 function Transfer({ ual }) {
@@ -67,6 +70,7 @@ function Transfer({ ual }) {
     message: '',
     details: '',
     isError: false,
+    resourceError: false,
   });
 
   const chainKey = (router.query.chainKey ?? chainKeyDefault) as string;
@@ -104,11 +108,13 @@ function Transfer({ ual }) {
         const message =
           jsonError?.cause?.json?.error?.details[0]?.message ??
           'Unable to get user inventory or collections';
+        const resourceError = isResourceError(message);
 
         setModal({
           title: 'Error',
           message,
           details,
+          resourceError,
         });
       }
     }
@@ -315,9 +321,18 @@ function Transfer({ ual }) {
               </span>
             ) : (
               <Disclosure>
-                <Disclosure.Button className="btn btn-small mt-4">
-                  Details
-                </Disclosure.Button>
+                <div className="flex flex-row gap-4 items-baseline">
+                  <Disclosure.Button className="btn btn-small mt-4">
+                    Details
+                  </Disclosure.Button>
+                  {modal.resourceError && (
+                    <Link href={`/${chainKey}/resources`}>
+                      <div className="btn btn-small">
+                        <span>Manage resources</span>
+                      </div>
+                    </Link>
+                  )}
+                </div>
                 <Disclosure.Panel>
                   <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
                     {modal.details}

@@ -4,6 +4,7 @@ import { withUAL } from 'ual-reactjs-renderer';
 import { Tab, Disclosure } from '@headlessui/react';
 import { CircleNotch } from 'phosphor-react';
 import Head from 'next/head';
+import Link from 'next/link';
 
 import { useForm, Controller } from 'react-hook-form';
 
@@ -16,6 +17,7 @@ import {
 } from '@services/collection/getCollectionService';
 
 import { collectionTabs } from '@utils/collectionTabs';
+import { isResourceError } from '@utils/isResourceError';
 
 import { Input } from '@components/Input';
 import { Modal } from '@components/Modal';
@@ -33,6 +35,7 @@ interface ModalProps {
   message?: string;
   details?: string;
   isError?: boolean;
+  resourceError?: boolean;
 }
 
 interface EditAssetProps {
@@ -133,12 +136,14 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to edit mutable data';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -165,11 +170,13 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to burn NFT';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -216,9 +223,18 @@ function EditAsset({ ual, collection, asset, chainKey }: EditAssetProps) {
           </span>
         ) : (
           <Disclosure>
-            <Disclosure.Button className="btn btn-small mt-4">
-              Details
-            </Disclosure.Button>
+            <div className="flex flex-row gap-4 items-baseline">
+              <Disclosure.Button className="btn btn-small mt-4">
+                Details
+              </Disclosure.Button>
+              {modal.resourceError && (
+                <Link href={`/${chainKey}/resources`}>
+                  <div className="btn btn-small">
+                    <span>Manage resources</span>
+                  </div>
+                </Link>
+              )}
+            </div>
             <Disclosure.Panel>
               <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
                 {modal.details}

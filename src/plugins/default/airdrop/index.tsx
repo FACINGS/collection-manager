@@ -3,12 +3,14 @@ import { withUAL } from 'ual-reactjs-renderer';
 import { Disclosure } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 import { DiceFive, CircleNotch } from 'phosphor-react';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { debounce } from '@utils/debounce';
+import { isResourceError } from '@utils/isResourceError';
 
 import { Modal } from '@components/Modal';
 import { Input } from '@components/Input';
@@ -37,6 +39,8 @@ interface ModalProps {
   title: string;
   message?: string;
   details?: string;
+  resourceError?: boolean;
+  transactionsIDs?: any[];
 }
 
 interface TemplateDataProps {
@@ -147,6 +151,8 @@ function Airdrop({ ual }: AirdropProps) {
     title: '',
     message: '',
     details: '',
+    transactionsIDs: [],
+    resourceError: false,
   });
 
   const chainIdLogged =
@@ -180,6 +186,22 @@ function Airdrop({ ual }: AirdropProps) {
   const watchQuantity = watch('quantity');
   const watchAssets = watch('assets');
   const watchMemo = watch('memo');
+  const recipientsBlacklist = watch('recipientsBlacklist');
+
+  function handleEOSAuthorityChain() {
+    switch (chainKey) {
+      case 'wax-test':
+        return 'waxtest';
+
+      case 'jungle4':
+        return 'jungle';
+
+      default:
+        return chainKey;
+    }
+  }
+
+  const EOSAuthorityChain = handleEOSAuthorityChain();
 
   useEffect(() => {
     if (watchRecipients) {
@@ -209,10 +231,15 @@ function Airdrop({ ual }: AirdropProps) {
   useEffect(() => {
     if (accountsToReward.length > 0) {
       let accounts = [];
+      const blacklist = recipientsBlacklist.split(',');
 
       accounts = unique
         ? utils.filterRepeatedElements(accountsToReward)
         : accountsToReward;
+
+      if (blacklist.length > 0) {
+        accounts = accounts.filter((account) => !blacklist.includes(account));
+      }
 
       const assetsList = assetsToReward ?? [];
 
@@ -256,6 +283,7 @@ function Airdrop({ ual }: AirdropProps) {
     collection,
     assetsToReward,
     accountsToReward,
+    recipientsBlacklist,
     selectedDropAssetOption,
   ]);
 
@@ -351,6 +379,8 @@ function Airdrop({ ual }: AirdropProps) {
 
         let updatedBatch = [...transactions];
 
+        const transactionsIDs = [];
+
         for (const actions of transactions) {
           const result = await ual.activeUser.signTransaction(
             { actions },
@@ -363,26 +393,21 @@ function Airdrop({ ual }: AirdropProps) {
           if (result.status === 'executed') {
             updatedBatch = updatedBatch.filter((item) => item !== actions);
             setTransactionBatch(updatedBatch);
+            transactionsIDs.push(result.transactionId);
           }
         }
 
         modalRef.current?.openModal();
-        const title = 'Airdrop was successful';
-        const message = 'Please await while we refresh the page.';
+        const title = 'Airdrop has been broadcast successfully';
+        const message =
+          'To verify that your transaction is included in a block:';
         setModal({
           title,
           message,
+          transactionsIDs,
         });
-        setTimeout(() => {
-          router.reload();
-        }, 3000);
 
         localStorage.removeItem('airdropTransactionBatch');
-
-        async function redirect() {
-          router.push(`/${chainKey}/collection/${collection}`);
-        }
-        setTimeout(redirect, 8000);
       }
     } catch (error) {
       modalRef.current?.openModal();
@@ -391,11 +416,13 @@ function Airdrop({ ual }: AirdropProps) {
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to airdrop NFTs';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Transaction error',
         message,
         details,
+        resourceError,
       });
     }
   }
@@ -528,7 +555,7 @@ function Airdrop({ ual }: AirdropProps) {
                     <Input
                       {...register('quantity')}
                       type="number"
-                      label="Holding quantity"
+                      label="Minimum entry quantity"
                       defaultValue={1}
                     />
                   </div>
@@ -540,7 +567,7 @@ function Airdrop({ ual }: AirdropProps) {
                     defaultValue={false}
                     render={() => (
                       <Switch
-                        label="Unique accounts only"
+                        label="Limit 1 per account"
                         onChange={setUnique}
                         checked={unique}
                       />
@@ -622,6 +649,33 @@ function Airdrop({ ual }: AirdropProps) {
                         queriedAccounts.length > 0 &&
                         'You may add additional accounts above separated by commas and no spaces. Example: nftflow,jumpnft,newgamer234'
                       }
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-row gap-2">
+                  <label className="body-2 font-bold">Blacklist accounts</label>
+                  <span className="badge-small font-bold">{`${
+                    recipientsBlacklist
+                      ? recipientsBlacklist.split(',').length
+                      : 0
+                  }`}</span>
+                </div>
+                <Controller
+                  name="recipientsBlacklist"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <Textarea
+                      {...field}
+                      error={utils.convertErrorToString(
+                        errors.recipientsBlacklist
+                      )}
+                      placeholder="Comma-separated"
+                      onChange={(event) => {
+                        field.onChange(event.target.value);
+                      }}
                     />
                   )}
                 />
@@ -810,20 +864,29 @@ function Airdrop({ ual }: AirdropProps) {
         )}
         <Modal ref={modalRef} title={modal.title}>
           <p className="body-2 mt-2">{modal.message}</p>
-          {modal.details && (
-            <Disclosure>
-              <Disclosure.Button className="btn btn-small mt-4">
-                Details
-              </Disclosure.Button>
-              <Disclosure.Panel>
-                <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
-                  <div
-                    dangerouslySetInnerHTML={{ __html: modal.details }}
-                  ></div>
-                </pre>
-              </Disclosure.Panel>
-            </Disclosure>
-          )}
+
+          <Disclosure>
+            <div className="flex flex-row gap-4 items-baseline">
+              {modal.transactionsIDs &&
+                modal.transactionsIDs.map((transaction) => (
+                  <Link
+                    className="flex py-2 underline underline-offset-2"
+                    key={transaction}
+                    href={`https://eosauthority.com/transaction/${transaction}?network=${EOSAuthorityChain}`}
+                    target="_blank"
+                  >
+                    <span className="break-all">{transaction}</span>
+                  </Link>
+                ))}
+              {modal.resourceError && (
+                <Link href={`/${chainKey}/resources`}>
+                  <div className="btn btn-small">
+                    <span>Manage Resources</span>
+                  </div>
+                </Link>
+              )}
+            </div>
+          </Disclosure>
         </Modal>
       </div>
     );

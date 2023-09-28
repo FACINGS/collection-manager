@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { withUAL } from 'ual-reactjs-renderer';
@@ -21,8 +22,17 @@ import { Header } from '@components/Header';
 import { Select } from '@components/Select';
 
 import { countriesList } from '@utils/countriesList';
+import { isResourceError } from '@utils/isResourceError';
 
 import { appName } from '@configs/globalsConfig';
+
+interface ModalProps {
+  title: string;
+  message?: string;
+  details?: string;
+  isError?: boolean;
+  resourceError?: boolean;
+}
 
 const schema = yup.object().shape({
   image: yup.mixed().test('image', 'Image is required', (value) => {
@@ -47,15 +57,18 @@ function CreateNewCollection({ ual }) {
   const router = useRouter();
   const modalRef = useRef(null);
 
+  const chainKey = router.query.chainKey as string;
+
   const [previewImageSrc, setPreviewImageSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [collectionNameError, setCollectionNameError] = useState('');
-  const [modal, setModal] = useState({
+  const [modal, setModal] = useState<ModalProps>({
     title: '',
     message: '',
     details: '',
     isError: false,
+    resourceError: false,
   });
 
   const {
@@ -226,12 +239,14 @@ function CreateNewCollection({ ual }) {
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to create collection';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
 
@@ -294,9 +309,18 @@ function CreateNewCollection({ ual }) {
           </span>
         ) : (
           <Disclosure>
-            <Disclosure.Button className="btn btn-small mt-4">
-              Details
-            </Disclosure.Button>
+            <div className="flex flex-row gap-4 items-baseline">
+              <Disclosure.Button className="btn btn-small mt-4">
+                Details
+              </Disclosure.Button>
+              {modal.resourceError && (
+                <Link href={`/${chainKey}/resources`}>
+                  <div className="btn btn-small">
+                    <span>Manage resources</span>
+                  </div>
+                </Link>
+              )}
+            </div>
             <Disclosure.Panel>
               <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
                 {modal.details}

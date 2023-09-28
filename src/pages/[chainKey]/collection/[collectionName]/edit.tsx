@@ -6,6 +6,7 @@ import { Tab, Disclosure } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Head from 'next/head';
+import Link from 'next/link';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -28,6 +29,7 @@ import { Select } from '@components/Select';
 import { Modal } from '@components/Modal';
 
 import { countriesList } from '@utils/countriesList';
+import { isResourceError } from '@utils/isResourceError';
 
 const informationValidations = yup.object().shape({
   displayName: yup.string().required().label('Display name'),
@@ -78,6 +80,7 @@ interface ModalProps {
   message?: string;
   details?: string;
   isError?: boolean;
+  resourceError?: boolean;
 }
 
 function EditCollection({
@@ -97,6 +100,7 @@ function EditCollection({
     message: '',
     details: '',
     isError: false,
+    resourceError: false,
   });
 
   const creatorInfo =
@@ -193,10 +197,13 @@ function EditCollection({
     setIsLoading(true);
 
     try {
-      const pinataImage =
-        image[0].length > 0 && (await uploadImageToIpfsService(image[0]));
+      let pinataImage;
 
-      const editedInformation = await editCollectionService({
+      if (image && image.length > 0) {
+        pinataImage = await uploadImageToIpfsService(image[0]);
+      }
+
+      await editCollectionService({
         action: 'setcoldata',
         activeUser: ual.activeUser,
         data: {
@@ -216,7 +223,10 @@ function EditCollection({
             },
             {
               key: 'img',
-              value: ['string', pinataImage['IpfsHash'] ?? collection.img],
+              value: [
+                'string',
+                pinataImage ? pinataImage['IpfsHash'] : collection.img,
+              ],
             },
           ],
         },
@@ -234,12 +244,14 @@ function EditCollection({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to edit collection';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -270,12 +282,14 @@ function EditCollection({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to edit collection market fee';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -311,12 +325,14 @@ function EditCollection({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to add account to authorization list';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -355,12 +371,14 @@ function EditCollection({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to remove account from authorization list';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -396,12 +414,14 @@ function EditCollection({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to add account to notification list';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -440,12 +460,14 @@ function EditCollection({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to remove account from notification list';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -485,12 +507,14 @@ function EditCollection({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to forbid notifications';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
     setIsLoading(false);
@@ -532,9 +556,18 @@ function EditCollection({
           <p className="body-2 mt-2">{modal.message}</p>
           {modal.details && (
             <Disclosure>
-              <Disclosure.Button className="btn btn-small mt-4">
-                Details
-              </Disclosure.Button>
+              <div className="flex flex-row gap-4 items-baseline">
+                <Disclosure.Button className="btn btn-small mt-4">
+                  Details
+                </Disclosure.Button>
+                {modal.resourceError && (
+                  <Link href={`/${chainKey}/resources`}>
+                    <div className="btn btn-small">
+                      <span>Manage resources</span>
+                    </div>
+                  </Link>
+                )}
+              </div>
               <Disclosure.Panel>
                 <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
                   {modal.details}

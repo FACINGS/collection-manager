@@ -3,6 +3,7 @@ import { Disclosure } from '@headlessui/react';
 import { withUAL } from 'ual-reactjs-renderer';
 import { useRouter } from 'next/router';
 import Papa from 'papaparse';
+import Link from 'next/link';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +14,7 @@ import { Select } from '@components/Select';
 import { WarningCard } from '@components/WarningCard';
 
 import { handleAttributesData } from '@utils/handleAttributesData';
+import { isResourceError } from '@utils/isResourceError';
 
 import { pluginInfo, batchOptions } from './config';
 import * as utils from './utils/utils';
@@ -26,6 +28,7 @@ interface ModalProps {
   title: string;
   message?: string;
   details?: string;
+  resourceError?: boolean;
 }
 
 interface ImportProps {
@@ -112,6 +115,7 @@ function Import({ ual }: ImportProps) {
     title: '',
     message: '',
     details: '',
+    resourceError: false,
   });
   const [transactions, setTransactions] = useState([]);
   const [transactionBatch, setTransactionBatch] = useState(
@@ -191,11 +195,13 @@ function Import({ ual }: ImportProps) {
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to import schema';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Transaction error',
         message,
         details,
+        resourceError,
       });
     }
   }
@@ -467,7 +473,7 @@ function Import({ ual }: ImportProps) {
           schemaName: fileName,
         });
 
-        if (!schemaInfo.status) {
+        if (!schemaInfo.schema) {
           const createSchema = {
             account: 'atomicassets',
             name: 'createschema',
@@ -778,9 +784,18 @@ function Import({ ual }: ImportProps) {
         <p className="body-2 mt-2">{modal.message}</p>
         {modal.details && (
           <Disclosure>
-            <Disclosure.Button className="btn btn-small mt-4">
-              Details
-            </Disclosure.Button>
+            <div className="flex flex-row gap-4 items-baseline">
+              <Disclosure.Button className="btn btn-small mt-4">
+                Details
+              </Disclosure.Button>
+              {modal.resourceError && (
+                <Link href={`/${chainKey}/resources`}>
+                  <div className="btn btn-small">
+                    <span>Manage resources</span>
+                  </div>
+                </Link>
+              )}
+            </div>
             <Disclosure.Panel>
               <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
                 <div dangerouslySetInnerHTML={{ __html: modal.details }}></div>

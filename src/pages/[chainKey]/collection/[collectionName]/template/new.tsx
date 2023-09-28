@@ -17,7 +17,6 @@ import {
   collectionSchemasService,
   SchemaProps,
 } from '@services/collection/collectionSchemasService';
-import { uploadImageToIpfsService } from '@services/collection/uploadImageToIpfsService';
 import { collectionTemplatesService } from '@services/collection/collectionTemplatesService';
 
 import { Select } from '@components/Select';
@@ -28,6 +27,7 @@ import { InputPreview } from '@components/InputPreview';
 import { Header } from '@components/Header';
 
 import { collectionTabs } from '@utils/collectionTabs';
+import { isResourceError } from '@utils/isResourceError';
 import { handleAttributesData } from '@utils/handleAttributesData';
 
 import { usePermission } from '@hooks/usePermission';
@@ -49,6 +49,7 @@ interface ModalProps {
   message?: string;
   details?: string;
   isError?: boolean;
+  resourceError?: boolean;
 }
 
 interface SchemaAttributesProps {
@@ -102,6 +103,7 @@ function NewTemplate({
     message: '',
     details: '',
     isError: false,
+    resourceError: false,
   });
 
   const hasImmutableAttributes = schemasAttributes.some(
@@ -204,12 +206,14 @@ function NewTemplate({
       const message =
         jsonError?.cause?.json?.error?.details[0]?.message ??
         'Unable to create template';
+      const resourceError = isResourceError(message);
 
       setModal({
         title: 'Error',
         message,
         details,
         isError: true,
+        resourceError,
       });
     }
 
@@ -297,9 +301,18 @@ function NewTemplate({
           <>
             {modal.details && (
               <Disclosure>
-                <Disclosure.Button className="btn btn-small mt-4">
-                  Details
-                </Disclosure.Button>
+                <div className="flex flex-row gap-4 items-baseline">
+                  <Disclosure.Button className="btn btn-small mt-4">
+                    Details
+                  </Disclosure.Button>
+                  {modal.resourceError && (
+                    <Link href={`/${chainKey}/resources`}>
+                      <div className="btn btn-small">
+                        <span>Manage resources</span>
+                      </div>
+                    </Link>
+                  )}
+                </div>
                 <Disclosure.Panel>
                   <pre className="overflow-auto p-4 rounded-lg bg-neutral-700 max-h-96 mt-4">
                     {modal.details}
